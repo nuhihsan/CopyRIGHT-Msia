@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meja Copy Hannah</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#fff7f4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meja Copy">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f1; --card:#ffffff; --ink:#1d1b18; --muted:#6b665e; --line:#e6e1d8;
+  --accent:#c2410c; --accent-soft:#fdeee5; --ok:#15803d; --ok-soft:#e8f6ec;
+  --warn:#b45309; --warn-soft:#fdf3e1; --bad:#b91c1c; --bad-soft:#fdeaea;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.5}
+header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:12px 0 6px}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand span{color:var(--accent)}
+.pill{font-size:12px;padding:3px 10px;border-radius:999px;background:#eee9e0;color:var(--muted);white-space:nowrap}
+.pill.cloud{background:var(--ok-soft);color:var(--ok)}
+.clientbar{display:flex;gap:8px;align-items:center;padding:4px 0 8px}
+.clientbar label{font-size:13px;color:var(--muted);font-weight:600}
+.clientbar select{flex:1;min-width:0}
+nav{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 13px;border-radius:999px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+nav button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+main{padding:16px 0 80px}
+section{display:none}
+section.active{display:block}
+h2{font-size:20px;margin:4px 0 2px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.card h3{margin:0 0 10px;font-size:16px}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+textarea,input[type=text],input[type=number],select{width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical}
+textarea.short{min-height:64px}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+button.primary,button.ghost,button.small{font:inherit;font-weight:600;border-radius:10px;cursor:pointer}
+button.primary{background:var(--accent);color:#fff;border:none;padding:11px 18px}
+button.primary:disabled{opacity:.55;cursor:default}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);padding:9px 14px}
+button.small{background:#f2eee7;border:none;color:var(--ink);padding:6px 10px;font-size:13px}
+button.small.danger{color:var(--bad)}
+.status{font-size:13px;color:var(--muted)}
+.hidden{display:none!important}
+.banner{background:var(--warn-soft);color:#7a4a06;border-radius:12px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+.opt{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;background:#fff}
+.opt .lab{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 9px;border-radius:999px;margin-bottom:8px}
+.bm{white-space:pre-wrap;font-size:16px;font-weight:500}
+.meta{font-size:13px;color:var(--muted);margin-top:8px}
+.meta b{color:var(--ink);font-weight:600}
+mark{background:#fde2e2;color:var(--bad);border-radius:3px;padding:0 2px}
+mark.avoid{background:#fdf0d9;color:#8a5200}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:#eee9e0;color:var(--muted)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+ul.clean{margin:6px 0 0;padding-left:18px}
+ul.clean li{margin:3px 0}
+.vitem{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.vitem:first-child{border-top:none}
+.vitem .t{flex:1;white-space:pre-wrap}
+.vitem .a{font-size:12px;color:var(--muted)}
+.issue{border-left:4px solid var(--line);padding:8px 12px;margin-top:10px;background:#fcfbf9;border-radius:0 10px 10px 0}
+.issue.high{border-color:var(--bad)}
+.issue.medium{border-color:var(--warn)}
+.issue.low{border-color:#a8a29e}
+.issue q{font-style:italic}
+.rule{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.rule:first-child{border-top:none}
+.rule .t{flex:1}
+.rule .ex{font-size:13px;color:var(--muted)}
+.kv{margin:10px 0}
+.kv .k{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.kv .v{margin-top:2px}
+.verdict{font-weight:700;font-size:15px;padding:10px 12px;border-radius:10px;margin-bottom:6px}
+.verdict.ok{background:var(--ok-soft);color:var(--ok)}
+.verdict.minor{background:var(--warn-soft);color:var(--warn)}
+.verdict.fix{background:var(--bad-soft);color:var(--bad)}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+.checks label{display:flex;gap:6px;align-items:center;font-size:14px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+footer{color:var(--muted);font-size:12.5px;padding:10px 0 30px;border-top:1px solid var(--line);margin-top:10px}
+footer select{width:auto;padding:4px 8px;font-size:12.5px}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+.jawi{direction:rtl;text-align:right;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:21px;line-height:2;white-space:pre-wrap;background:#fbf8f2;border-radius:10px;padding:8px 12px;margin-top:8px}
+.stylebox{border:1px dashed var(--line);border-radius:12px;padding:4px 12px 12px;margin-top:12px;background:#fcfbf8}
+.stylebox h4{margin:10px 0 0;font-size:14px}
+input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
+.scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+.fval{font-weight:700;color:var(--accent)}
+.up{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 6px}
+.upstat{font-size:12.5px;color:var(--muted)}
+textarea.drag{outline:2px dashed var(--accent);background:var(--accent-soft)}
+
+/* ---- soft floral theme ---- */
+:root{
+  --bg:#fff7f4; --card:#fffdfb; --ink:#4a2e35; --muted:#8c6d72; --line:#f2dcd9;
+  --accent:#c24d69; --accent-soft:#fde8ec; --peach:#f8d9c8; --leaf:#b7c9a3;
+  --ok:#3f7a4f; --ok-soft:#eaf4e6; --warn:#a8620f; --warn-soft:#fdf0dc; --bad:#b4364c; --bad-soft:#fde6ea;
+  --radius:18px;
+}
+html,body{font-family:"Quicksand",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-weight:500;
+  background:var(--bg);background-image:radial-gradient(circle at 0% 0%,#fde6e6 0,transparent 38%),radial-gradient(circle at 100% 100%,#fbe7da 0,transparent 40%);background-attachment:fixed}
+header{background:rgba(255,247,244,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);overflow:hidden}
+header .vine{position:absolute;right:-10px;top:-6px;width:230px;height:70px;pointer-events:none;opacity:.75}
+header .wrap{position:relative;z-index:1}
+.brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;display:flex;align-items:center;gap:7px}
+.brand::before{content:"";width:20px;height:20px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23f2a5b4'%3E%3Ccircle cx='20' cy='11' r='7'/%3E%3Ccircle cx='28.6' cy='17.2' r='7'/%3E%3Ccircle cx='25.3' cy='27.3' r='7'/%3E%3Ccircle cx='14.7' cy='27.3' r='7'/%3E%3Ccircle cx='11.4' cy='17.2' r='7'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='4.6' fill='%23f6c56f'/%3E%3C/svg%3E") no-repeat center/contain}
+.brand span{font-style:italic;color:var(--accent)}
+h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:18px;height:18px;flex:0 0 18px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23f2a5b4'%3E%3Ccircle cx='20' cy='11' r='7'/%3E%3Ccircle cx='28.6' cy='17.2' r='7'/%3E%3Ccircle cx='25.3' cy='27.3' r='7'/%3E%3Ccircle cx='14.7' cy='27.3' r='7'/%3E%3Ccircle cx='11.4' cy='17.2' r='7'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='4.6' fill='%23f6c56f'/%3E%3C/svg%3E") no-repeat center/contain;opacity:.9}
+.card h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:17px}
+.card{position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(194,77,105,.06);border-color:var(--line)}
+.card::after{content:"";position:absolute;top:0;right:0;width:64px;height:64px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90'%3E%3Cpath d='M92 -2 C70 8 66 24 50 32 S22 44 14 74' fill='none' stroke='%23b7c9a3' stroke-width='1.6' stroke-linecap='round'/%3E%3Cg fill='%23c9d9b6'%3E%3Cellipse cx='70' cy='13' rx='8' ry='3.4' transform='rotate(-30 70 13)'/%3E%3Cellipse cx='60' cy='26' rx='7' ry='3' transform='rotate(40 60 26)'/%3E%3Cellipse cx='36' cy='38' rx='7' ry='3' transform='rotate(-20 36 38)'/%3E%3Cellipse cx='22' cy='54' rx='7' ry='3' transform='rotate(55 22 54)'/%3E%3C/g%3E%3Cg fill='%23f5b8c3'%3E%3Ccircle cx='50' cy='27.5' r='4'/%3E%3Ccircle cx='54.3' cy='30.6' r='4'/%3E%3Ccircle cx='52.6' cy='35.6' r='4'/%3E%3Ccircle cx='47.4' cy='35.6' r='4'/%3E%3Ccircle cx='45.7' cy='30.6' r='4'/%3E%3C/g%3E%3Ccircle cx='50' cy='32' r='2.4' fill='%23f6c56f'/%3E%3Ccircle cx='16' cy='72' r='3' fill='%23f7cdb8'/%3E%3Ccircle cx='80' cy='22' r='2.4' fill='%23f7cdb8'/%3E%3C/svg%3E") no-repeat top right/contain;opacity:.55;pointer-events:none}
+.opt{border-radius:16px;border-color:var(--line);background:#fffefd}
+nav button{border-radius:999px;border-color:var(--line);background:#fffdfb;color:var(--ink);font-weight:600}
+nav button.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 3px 10px rgba(194,77,105,.25)}
+button.primary{border-radius:999px;background:var(--accent);box-shadow:0 3px 10px rgba(194,77,105,.25)}
+button.primary:hover:not(:disabled){background:#ad3f5b}
+button.ghost{border-radius:999px;border-color:#efcfd3}
+button.small{border-radius:999px;background:var(--accent-soft);color:#8f3449}
+button.small.danger{background:#fdecee;color:var(--bad)}
+textarea,input[type=text],input[type=number],select{border-radius:12px;border-color:#efd7d6;background:#fffefd}
+textarea:focus,input:focus,select:focus{outline:3px solid var(--accent-soft);border-color:#e59aab}
+.pill{background:#f6e6e3} .pill.cloud{background:var(--ok-soft)}
+.opt .lab{background:var(--accent-soft);color:var(--accent)}
+.stylebox{border-color:#f0d2d4;background:linear-gradient(180deg,#fff9f7,#fffdfb)}
+.chip{background:#f6ebe7}
+mark{background:#fbdde3}
+.jawi{background:#fff6f3}
+.banner{border-radius:14px}
+.issue{background:#fffaf8}
+footer{position:relative;padding-top:34px}
+footer::before{content:"";position:absolute;left:50%;top:6px;transform:translateX(-50%);width:120px;height:22px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 22'%3E%3Cpath d='M4 11 C30 2 40 20 60 11 S90 2 116 11' fill='none' stroke='%23b7c9a3' stroke-width='1.5' stroke-linecap='round'/%3E%3Cellipse cx='30' cy='7' rx='5' ry='2.2' fill='%23c9d9b6' transform='rotate(-25 30 7)'/%3E%3Cellipse cx='90' cy='15' rx='5' ry='2.2' fill='%23c9d9b6' transform='rotate(25 90 15)'/%3E%3Ccircle cx='60' cy='11' r='4' fill='%23f2a5b4'/%3E%3Ccircle cx='60' cy='11' r='1.6' fill='%23f6c56f'/%3E%3C/svg%3E") no-repeat center/contain}
+footer{border-top:none}
+#toast{background:var(--accent)}
+#tcHint{background:var(--accent-soft);color:#8f3449}
+.verdict{border-radius:12px}
+
+.switch{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.switch .track{width:38px;height:22px;border-radius:999px;background:#ecd6d6;position:relative;transition:background .2s}
+.switch .knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:left .2s}
+.switch input:checked + .track{background:var(--accent)}
+.switch input:checked + .track .knob{left:19px}
+.switch input:focus-visible + .track{outline:3px solid var(--accent-soft)}
+details.more{margin-top:14px;border-top:1px dashed #efd2d4;padding-top:6px}
+details.more > summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0;list-style:none}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary::before{content:"✿ ";color:#f2a5b4}
+details.more[open] > summary{margin-bottom:4px}
+.seg{display:inline-flex;background:#f8e8e6;border-radius:999px;padding:3px;gap:2px}
+.seg button{border:none;background:transparent;font:inherit;font-weight:600;color:var(--ink);padding:7px 16px;border-radius:999px;cursor:pointer}
+.seg button.on{background:#fff;color:var(--accent);box-shadow:0 1px 4px rgba(194,77,105,.18)}
+.dlrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 0}
+.dlSel{width:auto!important;padding:7px 12px!important;border-radius:999px!important;font-size:13.5px!important;background:#fff!important}
+.entry .head{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.entry .date{font-size:12.5px;color:var(--muted);margin-left:auto}
+.entry .src{font-size:13.5px;color:var(--muted);margin-top:8px;white-space:pre-wrap;max-height:4.6em;overflow:hidden}
+.entry .item{border-top:1px solid var(--line);padding:9px 0 2px;margin-top:8px}
+.entry .item .il{font-size:12px;font-weight:700;color:var(--accent)}
+.entry .item .it{white-space:pre-wrap}
+.star{background:none;border:none;font-size:20px;cursor:pointer;color:#e3b6be;padding:0 4px;line-height:1}
+.star.on{color:#e0a43a}
+mark.q{background:#fff0b8;color:inherit}
+footer .pill{margin-right:8px}
+
+.trendtog{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:600;color:var(--accent);cursor:pointer}
+.trendtog input{accent-color:var(--accent);width:17px;height:17px}
+.tcard .top{display:flex;gap:8px;align-items:flex-start}
+.tcard .top input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:0 0 18px}
+.tcard .ttl{font-weight:700;font-size:16px}
+.tcard .src a{font-size:12.5px;color:var(--accent);margin-right:10px}
+.dateRow{display:flex;gap:10px;padding:6px 0;border-top:1px solid var(--line)}
+.dateRow:first-child{border-top:none}
+.dateRow .d{flex:0 0 88px;font-weight:700;color:var(--accent);font-size:13.5px}
+.slangRow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.slangRow:first-child{border-top:none}
+.slangRow .t{flex:1}
+
+.topR{display:flex;align-items:center;gap:8px}
+.lockBtn,.gearBtn{border:1px solid var(--line);background:#fffdfb;border-radius:999px;width:34px;height:34px;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.lockBtn.on{background:var(--accent);border-color:var(--accent)}
+.rcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:700;letter-spacing:.06em;background:#fff6f3;border:1px dashed #e9aab8;border-radius:12px;padding:12px;text-align:center;word-break:break-all;color:var(--ink);margin-top:8px}
+.provChip{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:999px;background:#eef3ea;color:#3f7a4f;margin-left:6px}
+
+.brand{white-space:nowrap}
+@media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
+
+/* ===== responsive: phone bottom bar, tablet top tabs, laptop side menu ===== */
+nav button{display:inline-flex;align-items:center;gap:6px}
+nav button svg{width:16px;height:16px;flex:0 0 16px}
+nav button em{display:none;font-style:normal}
+nav button b{font-weight:inherit}
+.paneHint{display:none}
+#tcOut,#vOut,#bOut,#cOut,#taOut{scroll-margin-top:150px}
+@media (max-width:700px){
+  header{backdrop-filter:none;background:rgba(255,247,244,.97);padding-top:env(safe-area-inset-top)}
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,251,249,.97);border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(194,77,105,.08);
+      padding:6px 2px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(7,1fr);gap:0;overflow:visible}
+  nav button{flex-direction:column;gap:3px;border:none!important;background:none!important;box-shadow:none!important;border-radius:12px;padding:4px 0;font-size:10.5px;color:var(--muted);min-width:0}
+  nav button b{display:none}
+  nav button em{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  nav button svg{width:23px;height:23px;flex-basis:auto}
+  nav button.active{color:var(--accent)!important}
+  nav button.active svg{fill:var(--accent-soft)}
+  main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  #toast{bottom:calc(86px + env(safe-area-inset-bottom))}
+  .clientbar{padding-bottom:10px}
+  textarea,input[type=text],input[type=number],input[type=password],select{font-size:16px}
+}
+@media (min-width:701px) and (max-width:1099px){
+  .wrap{max-width:980px;padding:0 24px}
+}
+@media (min-width:1100px){
+  header{backdrop-filter:none;background:rgba(255,247,244,.96)}
+  .wrap{max-width:1320px;padding:0 28px}
+  header .wrap{display:flex;align-items:center;gap:22px;min-height:70px}
+  header .top{flex:1;padding:0}
+  header .clientbar{width:400px;padding:0}
+  header .vine{right:430px}
+  nav{position:fixed;top:92px;left:max(28px, calc(50% - 660px + 28px));width:206px;display:flex;flex-direction:column;gap:3px;overflow:visible;padding:0}
+  nav button{width:100%;justify-content:flex-start;gap:11px;padding:10px 14px;border-radius:12px;border:none;background:transparent;font-size:14.5px;box-shadow:none}
+  nav button svg{width:19px;height:19px;flex-basis:19px}
+  nav button:hover:not(.active){background:#fbecea}
+  main.wrap{padding-left:264px;padding-top:22px}
+  #transcreate.active,#variants.active,#brief.active,#check.active{display:grid;grid-template-columns:minmax(380px,480px) minmax(0,1fr);column-gap:26px;align-items:start}
+  #transcreate>h2,#variants>h2,#brief>h2,#check>h2,#transcreate>.sub,#variants>.sub,#brief>.sub,#check>.sub,#transcreate>.banner{grid-column:1/-1}
+  #transcreate>.card,#variants>.card,#brief>.card,#check>.card{grid-column:1;position:sticky;top:92px;max-height:calc(100vh - 110px);overflow:auto;margin-bottom:0}
+  #tcOut,#vOut,#bOut,#cOut{grid-column:2;min-width:0}
+  #tcOut .opt:first-of-type,#bOut>.card:first-child,#cOut>.card:first-child{margin-top:0}
+  .paneHint{display:block}
+  #tcOut:empty::before,#vOut:empty::before,#bOut:empty::before,#cOut:empty::before{content:"✿  Results will appear here";display:flex;align-items:center;justify-content:center;min-height:320px;border:2px dashed #efd5d5;border-radius:20px;color:var(--muted);font-weight:600;background:rgba(255,253,251,.6)}
+  #tone.active,#trends.active,#connection.active{display:block;columns:2 440px;column-gap:22px}
+  #tone>h2,#tone>.sub,#trends>h2,#trends>.sub,#connection>h2,#connection>.sub{column-span:all}
+  #tone .card,#trends .card,#connection .card{break-inside:avoid;display:inline-block;width:100%}
+  #trList{display:contents}
+  #libList{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:0 18px;align-items:start}
+  #library>.card:first-of-type{max-width:none}
+  footer{margin-top:24px}
+}
+</style>
+</head>
+<body>
+<header>
+  <svg class="vine" viewBox="0 0 230 70" aria-hidden="true"><path d="M230 8 C200 4 190 26 165 24 S130 6 110 18 S80 40 60 30" fill="none" stroke="#b7c9a3" stroke-width="1.5" stroke-linecap="round"/><g fill="#c9d9b6"><ellipse cx="196" cy="12" rx="7" ry="3" transform="rotate(-20 196 12)"/><ellipse cx="150" cy="17" rx="7" ry="3" transform="rotate(25 150 17)"/><ellipse cx="122" cy="13" rx="6" ry="2.6" transform="rotate(-30 122 13)"/><ellipse cx="80" cy="34" rx="6" ry="2.6" transform="rotate(20 80 34)"/></g><g transform="translate(165 24)"><g fill="#f5b8c3"><circle cx="0" cy="-4.5" r="4"/><circle cx="4.3" cy="-1.4" r="4"/><circle cx="2.6" cy="3.6" r="4"/><circle cx="-2.6" cy="3.6" r="4"/><circle cx="-4.3" cy="-1.4" r="4"/></g><circle r="2.3" fill="#f6c56f"/></g><g transform="translate(108 19) scale(.7)"><g fill="#f7cdb8"><circle cx="0" cy="-4.5" r="4"/><circle cx="4.3" cy="-1.4" r="4"/><circle cx="2.6" cy="3.6" r="4"/><circle cx="-2.6" cy="3.6" r="4"/><circle cx="-4.3" cy="-1.4" r="4"/></g><circle r="2.3" fill="#f6c56f"/></g><circle cx="60" cy="30" r="3" fill="#f2a5b4"/></svg>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">Meja Copy <span>Hannah</span></div>
+      <div class="topR">
+      <button class="lockBtn" id="lockBtn" type="button" aria-pressed="false" title="Confidential mode: skips free Gemini so client briefs stay private">🔓</button>
+      <label class="switch" title="Simple mode hides extra settings"><input type="checkbox" id="simpleMode"><span class="track"><span class="knob"></span></span><span id="modeLabel">Simple</span></label>
+      <button class="gearBtn" id="gearBtn" type="button" aria-label="Connection settings" title="Connection settings">⚙</button>
+      </div>
+    </div>
+    <div class="clientbar">
+      <label for="clientSel">Client</label>
+      <select id="clientSel"></select>
+      <button class="ghost" id="editClientBtn" type="button">Edit</button>
+    </div>
+    <nav id="tabs">
+      <button data-tab="transcreate" class="active" title="Transcreate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg><b>Transcreate</b><em>Write</em></button>
+      <button data-tab="variants" title="Variants"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg><b>Variants</b><em>Variants</em></button>
+      <button data-tab="tone" title="Client tone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><b>Client tone</b><em>Clients</em></button>
+      <button data-tab="brief" title="Brief"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 3h6v3H9zM9 12h6M9 16h4"/></svg><b>Brief</b><em>Brief</em></button>
+      <button data-tab="trends" title="Trends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg><b>Trends</b><em>Trends</em></button>
+      <button data-tab="check" title="Check copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><b>Check copy</b><em>Check</em></button>
+      <button data-tab="library" title="My copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><b>My copy</b><em>Saved</em></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="aiBanner" class="banner hidden"></div>
+
+  <!-- TRANSCREATE -->
+  <section id="transcreate" class="active">
+    <h2>Transcreate</h2>
+    <p class="sub">English in, natural Malaysian BM out, in the selected client's voice.</p>
+    <div id="tcHint" class="banner hidden">Tip: add a client under <b>Client tone</b> so drafts follow their rules automatically.</div>
+    <div class="card">
+      <label class="f" for="tcSrc">English copy</label>
+      <div class="up"><button class="small" type="button" data-up="tcSrc">📎 Upload file</button><span class="upstat" id="up_tcSrc">Word, PDF, PowerPoint, text or image</span></div>
+      <textarea id="tcSrc" placeholder="Paste the English copy here"></textarea>
+      <label class="f" for="tcFormality">Formality: <span class="fval" id="tcFormalityLabel"></span></label>
+      <input id="tcFormality" type="range" min="1" max="5" step="1" value="3">
+      <div class="scale"><span>Baku</span><span>Formal</span><span>Neutral</span><span>Santai</span><span>Bahasa pasar</span></div>
+      <label class="f" for="tcCount">How many versions</label>
+      <div class="seg" id="tcCountSeg"><button type="button" data-n="1">Just 1</button><button type="button" data-n="3" class="on">3</button><button type="button" data-n="5">5</button></div>
+      <input type="hidden" id="tcCount" value="3">
+      <label class="trendtog"><input type="checkbox" id="tcTrend"> ✿ Trend-aware <span class="status" id="tcTrendInfo"></span></label>
+      <details class="more" id="tcMore">
+        <summary>More options <span class="status" id="tcMoreSum"></span></summary>
+        <label class="f" for="tcPreset">My saved styles</label>
+        <div class="row" style="margin-top:0">
+          <select id="tcPreset" style="flex:1;min-width:0"></select>
+          <button class="small" id="psSaveShow" type="button">Save current</button>
+          <button class="small danger hidden" id="psDel" type="button">Delete</button>
+        </div>
+        <div class="row hidden" id="psSaveRow">
+          <input id="psName" type="text" placeholder="Style name, e.g. Kelate santai for FB" style="flex:1;min-width:0">
+          <button class="small" id="psSave" type="button">Save</button>
+        </div>
+        <div class="grid">
+          <div><label class="f" for="tcFormat">Format</label>
+            <select id="tcFormat">
+              <option>Social caption</option><option>Headline / key visual</option><option>Tagline / slogan</option>
+              <option>OOH / billboard</option><option>Video or radio script</option><option>Push notification / SMS</option>
+              <option>EDM / email</option><option>Website / app UI</option>
+            </select></div>
+          <div><label class="f" for="tcAudience">Audience</label>
+            <select id="tcAudience">
+              <option>General Malaysian</option><option>Gen Z / students</option><option>Young working adults</option>
+              <option>Parents / families</option><option>Professionals / B2B</option><option>Older audience</option>
+            </select></div>
+        </div>
+        <div class="grid">
+          <div><label class="f" for="tcFlavour">Flavour</label>
+            <select id="tcFlavour">
+              <option value="">None</option><option>Gen Z</option><option>Rojak (BM-English mix)</option><option>Festive / warm</option><option>Corporate</option>
+            </select></div>
+          <div><label class="f" for="tcDialect">Dialect</label>
+            <select id="tcDialect">
+              <option value="">Standard Malay</option>
+              <option>Kelantan (Kecek Kelate)</option>
+              <option>Terengganu (Cakak Ganu)</option>
+              <option>Kedah / Utara (Perlis, Kedah, Pulau Pinang)</option>
+              <option>Perak</option>
+              <option>Pahang</option>
+              <option>Negeri Sembilan</option>
+              <option>Melaka</option>
+              <option>Johor</option>
+              <option>Sarawak (Bahasa Sarawak)</option>
+              <option>Sabah (Bahasa Sabah)</option>
+              <option value="custom">Other…</option>
+            </select></div>
+          <div><label class="f" for="tcScript">Script</label>
+            <select id="tcScript"><option value="rumi">Rumi</option><option value="both">Rumi + Jawi</option><option value="jawi">Jawi</option></select></div>
+        </div>
+        <input id="tcDialectCustom" class="hidden" type="text" placeholder="Name the dialect or community, e.g. Kedah Pattani, Banjar" style="margin-top:8px">
+        <label class="f" for="tcStyleNote">Your style notes (optional)</label>
+        <textarea id="tcStyleNote" class="short" placeholder="e.g. Use 'hang' for you. Keep sentences short. End with a light pantun."></textarea>
+        <label class="f" for="tcContext">Extra context (optional)</label>
+        <textarea id="tcContext" class="short" placeholder="Campaign, festive season, what must stay, character limit…"></textarea>
+        </details>
+      <p class="status" id="tcDialectNote" style="margin:8px 0 0"></p>
+      <div class="row">
+        <button class="primary" id="tcGo" type="button">Transcreate</button>
+        <button class="ghost hidden" id="tcStop" type="button">Stop</button>
+        <span class="status" id="tcStatus"></span>
+      </div>
+    </div>
+    <div id="tcOut"></div>
+  </section>
+
+  <!-- VARIANTS -->
+  <section id="variants">
+    <h2>Variants</h2>
+    <p class="sub">Lots of headlines, CTAs or captions at once, each counted against the platform limit.</p>
+    <div class="card">
+      <label class="f" for="vSrc">Key message or benefit (BM or English)</label>
+      <div class="up"><button class="small" type="button" data-up="vSrc">📎 Upload file</button><span class="upstat" id="up_vSrc">Word, PDF, PowerPoint, text or image</span></div>
+      <textarea id="vSrc" class="short" placeholder="e.g. Raya sale, up to 50% off home appliances, ends 30 March"></textarea>
+      <div class="grid">
+        <div><label class="f" for="vType">Type</label>
+          <select id="vType">
+            <option>Headline</option><option>CTA / button</option><option>Social caption</option>
+            <option>Tagline / slogan</option><option>Push notification</option><option>Email subject line</option>
+          </select></div>
+        <div><label class="f" for="vPlat">Platform limit</label>
+          <select id="vPlat">
+            <option value="40">Meta headline (40)</option>
+            <option value="125">Meta primary text (125)</option>
+            <option value="30">Google Ads headline (30)</option>
+            <option value="90">Google Ads description (90)</option>
+            <option value="50">Push title (50)</option>
+            <option value="160">SMS (160)</option>
+            <option value="20">Button / CTA (20)</option>
+            <option value="0">No limit</option>
+            <option value="custom">Custom…</option>
+          </select></div>
+        <div><label class="f" for="vLimit">Max characters</label>
+          <input id="vLimit" type="number" min="0" value="40"></div>
+        <div><label class="f" for="vCount">How many</label>
+          <select id="vCount"><option>5</option><option selected>10</option><option>15</option></select></div>
+      </div>
+      <details class="more">
+        <summary>More options</summary>
+        <label class="f" for="vTone">Tone</label>
+        <select id="vTone" class="toneSel"></select>
+        <label class="trendtog"><input type="checkbox" id="vTrend"> ✿ Trend-aware</label>
+        <label class="f" for="vMust">Must include (optional)</label>
+        <input id="vMust" type="text" placeholder="Brand name, promo code, date…">
+      </details>
+      <div class="row">
+        <button class="primary" id="vGo" type="button">Generate</button>
+        <button class="ghost hidden" id="vStop" type="button">Stop</button>
+        <span class="status" id="vStatus"></span>
+      </div>
+      <p class="status" style="margin:10px 0 0">Limits shown are common recommended lengths. Check the client's spec sheet when it says otherwise.</p>
+    </div>
+    <div id="vOut"></div>
+  </section>
+
+  <!-- CLIENT TONE -->
+  <section id="tone">
+    <h2>Client tone</h2>
+    <p class="sub">Save each client's voice once. Every tool uses it. Turn corrections from your CD into rules so the same feedback never comes twice.</p>
+
+    <div class="card">
+      <h3 id="cfTitle">Client profile</h3>
+      <label class="f" for="cfName">Client name</label>
+      <input id="cfName" type="text" placeholder="e.g. Client A (Telco)">
+      <label class="f" for="cfTone">Tone of voice</label>
+      <textarea id="cfTone" class="short" placeholder="e.g. Mesra dan yakin, macam kawan yang tahu banyak. Ayat pendek. Tak terlalu skema."></textarea>
+      <div class="grid">
+        <div><label class="f" for="cfRegister">Default register</label>
+          <select id="cfRegister"><option>Neutral</option><option>Formal</option><option>Santai</option><option>Gen Z</option></select></div>
+        <div><label class="f" for="cfPronoun">Address audience as</label>
+          <select id="cfPronoun"><option value="">No preference</option><option>anda</option><option>awak</option><option>korang</option><option>kamu</option><option>kita (inclusive)</option><option>avoid pronouns</option></select></div>
+      </div>
+      <label class="f" for="cfTerms">Preferred terms, one per line: avoid =&gt; use</label>
+      <textarea id="cfTerms" class="short" placeholder="pelanggan =&gt; anda&#10;muat turun =&gt; download&#10;promosi =&gt; tawaran"></textarea>
+      <label class="f" for="cfBanned">Banned words (comma or new line)</label>
+      <textarea id="cfBanned" class="short" placeholder="murah, terbaik, percuma*"></textarea>
+      <label class="f" for="cfSamples">Approved copy samples (paste copy the client already signed off)</label>
+      <div class="up"><button class="small" type="button" data-up="cfSamples">📎 Upload file</button><span class="upstat" id="up_cfSamples">Word, PDF, PowerPoint, text or image</span></div>
+      <textarea id="cfSamples" placeholder="Paste 2 to 5 approved pieces. The more real examples, the better the match."></textarea>
+      <label class="f" for="cfNotes">Mandatories and notes</label>
+      <textarea id="cfNotes" class="short" placeholder="Tagline never translated. Brand name always in caps. No festive greetings without legal check…"></textarea>
+      <label class="trendtog" style="color:var(--ink)"><input type="checkbox" id="cfConf"> 🔒 Always confidential (never send this client's work to free Gemini)</label>
+      <div class="row">
+        <button class="primary" id="cfSave" type="button">Save client</button>
+        <button class="ghost" id="cfNew" type="button">New client</button>
+        <button class="small danger" id="cfDelete" type="button">Delete</button>
+        <span class="status" id="cfStatus"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Learned rules <span class="chip" id="ruleCount">0</span></h3>
+      <div id="rulesList"></div>
+      <div class="row">
+        <input id="ruleAdd" type="text" placeholder="Add a rule yourself, e.g. Never start with 'Jom'">
+        <button class="small" id="ruleAddBtn" type="button">Add rule</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Learn from a correction</h3>
+      <p class="status" style="margin-top:-4px">Paste what you wrote and what came back. The AI works out the general rule behind the edit.</p>
+      <label class="f" for="lcDraft">Your draft</label>
+      <textarea id="lcDraft" class="short"></textarea>
+      <label class="f" for="lcFixed">Corrected version</label>
+      <textarea id="lcFixed" class="short"></textarea>
+      <label class="f" for="lcComment">What they said (optional)</label>
+      <input id="lcComment" type="text" placeholder="e.g. Too formal, client hates 'anda'">
+      <div class="row">
+        <button class="primary" id="lcGo" type="button">Find the rules</button>
+        <button class="ghost hidden" id="lcStop" type="button">Stop</button>
+        <span class="status" id="lcStatus"></span>
+      </div>
+      <div id="lcOut"></div>
+    </div>
+
+    <div class="card">
+      <h3>Backup</h3>
+      <p class="status" style="margin-top:-4px">Copy all clients and saved styles as text to keep somewhere safe, or paste a backup to restore it on another device.</p>
+      <div class="row" style="margin-top:4px">
+        <button class="ghost" id="bkCopy" type="button">Copy backup</button>
+        <button class="ghost" id="bkShow" type="button">Restore from backup</button>
+      </div>
+      <div id="bkBox" class="hidden">
+        <textarea id="bkText" class="short" placeholder="Paste backup text here"></textarea>
+        <div class="row"><button class="small" id="bkImport" type="button">Import</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRIEF -->
+  <section id="brief">
+    <h2>Brief decoder</h2>
+    <p class="sub">Paste a brief or a long client email. Get what's actually being asked, the deliverables and the questions to raise.</p>
+    <div class="card">
+      <label class="f" for="bSrc">Brief</label>
+      <div class="up"><button class="small" type="button" data-up="bSrc">📎 Upload file</button><span class="upstat" id="up_bSrc">Word, PDF, PowerPoint, text or image</span></div>
+      <textarea id="bSrc" placeholder="Paste the brief here"></textarea>
+      <div class="row">
+        <button class="primary" id="bGo" type="button">Decode</button>
+        <button class="ghost hidden" id="bStop" type="button">Stop</button>
+        <span class="status" id="bStatus"></span>
+      </div>
+    </div>
+    <div id="bOut"></div>
+  </section>
+
+  <!-- CHECK -->
+  <section id="check">
+    <h2>Check copy</h2>
+    <p class="sub">Run your draft past the client's rules, BM grammar, and cultural and claims risks before it goes to your CD.</p>
+    <div class="card">
+      <label class="f" for="cSrc">Your BM copy</label>
+      <div class="up"><button class="small" type="button" data-up="cSrc">📎 Upload file</button><span class="upstat" id="up_cSrc">Word, PDF, PowerPoint, text or image</span></div>
+      <textarea id="cSrc" placeholder="Paste your draft"></textarea>
+      <div id="cLocal" class="meta"></div>
+      <details class="more">
+        <summary>More options</summary>
+      <div class="checks">
+        <label><input type="checkbox" id="ckTone" checked> Client tone and terms</label>
+        <label><input type="checkbox" id="ckLang" checked> BM language and spelling</label>
+        <label><input type="checkbox" id="ckSens" checked> Cultural and religious sensitivity</label>
+        <label><input type="checkbox" id="ckClaims" checked> Ad claims and regulation</label>
+      </div>
+      <label class="f" for="cContext">Context (optional)</label>
+      <input id="cContext" type="text" placeholder="e.g. Raya Instagram post for a food brand">
+      </details>
+      <div class="row">
+        <button class="primary" id="cGo" type="button">Check</button>
+        <button class="ghost hidden" id="cStop" type="button">Stop</button>
+        <span class="status" id="cStatus"></span>
+      </div>
+    </div>
+    <div id="cOut"></div>
+  </section>
+
+  <!-- TRENDS -->
+  <section id="trends">
+    <h2>Trends</h2>
+    <p class="sub">What Malaysia is talking about, refreshed every Monday. Tick the ones worth using, keep her own slang bank, and switch on <b>Trend-aware</b> in Transcreate.</p>
+    <div class="card">
+      <div class="row" style="margin-top:0;justify-content:space-between"><b id="trWeek">Loading trends…</b><span class="status" id="trUpdated"></span></div>
+      <p class="meta" id="trSummary"></p>
+      <div class="checks"><label><input type="checkbox" id="trShowRisky"> Show sensitive topics (politics, disasters, crime)</label></div>
+    </div>
+    <div id="trList"></div>
+    <div class="card"><h3>Coming up</h3><div id="trDates"></div></div>
+    <div class="card"><h3>Trending words</h3><p class="status" style="margin-top:-6px">Tap Add to put a word in her bank. Only words in the bank are used in copy.</p><div id="trSlang"></div></div>
+    <div class="card">
+      <h3>My slang bank <span class="chip" id="bankCount">0</span></h3>
+      <div class="grid">
+        <div><label class="f" for="bkTerm">Word or phrase</label><input id="bkTerm" type="text" placeholder="e.g. padu"></div>
+        <div><label class="f" for="bkAud">Who says it</label>
+          <select id="bkAud"><option>Everyone</option><option>Gen Z</option><option>Young adults</option><option>Online / TikTok</option><option>Northern (Utara)</option><option>East Coast</option><option>Sabah / Sarawak</option></select></div>
+      </div>
+      <label class="f" for="bkMean">Meaning and how to use it</label>
+      <input id="bkMean" type="text" placeholder="e.g. Awesome, solid. Fine for food and lifestyle. Not for banks.">
+      <div class="row"><button class="small" id="bkAdd" type="button">Add to bank</button></div>
+      <div id="bankList" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>Trend angles</h3>
+      <p class="status" style="margin-top:-6px">Paste a product or key message. Get topical hooks built on this week's trends.</p>
+      <textarea id="taSrc" class="short" placeholder="e.g. New iced coffee range, launching December"></textarea>
+      <div class="row">
+        <button class="primary" id="taGo" type="button">Find angles</button>
+        <button class="ghost hidden" id="taStop" type="button">Stop</button>
+        <span class="status" id="taStatus"></span>
+      </div>
+      <div id="taOut"></div>
+    </div>
+  </section>
+
+  <!-- CONNECTION -->
+  <section id="connection">
+    <h2>Connection</h2>
+    <p class="sub">Set this once on each phone or laptop. The link and passcode come from whoever set up the app.</p>
+    <div class="card">
+      <label class="f" for="cnUrl">Server link</label>
+      <input id="cnUrl" type="text" inputmode="url" placeholder="https://meja-copy.yourname.workers.dev">
+      <label class="f" for="cnPass">Passcode</label>
+      <input id="cnPass" type="password" autocomplete="current-password" placeholder="Passcode">
+      <div class="row">
+        <button class="primary" id="cnSave" type="button">Save and test</button>
+        <span class="status" id="cnStatus"></span>
+      </div>
+      <div id="cnInfo" class="meta"></div>
+    </div>
+    <div class="card" id="installCard">
+      <h3>📱 Install as an app</h3>
+      <p class="meta" style="margin-top:0">Puts Meja Copy on her home screen or laptop dock. It opens full screen in its own window, like a normal app, and starts even with a weak connection.</p>
+      <div class="row" style="margin-top:4px"><button class="primary hidden" id="installBtn" type="button">Install app</button><span class="status" id="installStatus"></span></div>
+      <div class="meta" id="installHow"></div>
+    </div>
+    <div class="card" id="syncCard">
+      <h3>🔄 Sync between devices</h3>
+      <p class="meta" style="margin-top:0">Keeps her clients, rules, styles, slang bank and history the same on her laptop and phone. Everything is locked with her own sync password before it leaves the device, so nobody else can read it, including whoever runs the server.</p>
+      <p class="status" id="syStatus"></p>
+      <div id="syOff"><button class="primary" id="syStart" type="button">Turn on sync</button></div>
+      <div id="syCreate" class="hidden">
+        <p class="meta">First device. Create a sync password she'll remember. She'll type it once on each new device.</p>
+        <input id="syNew1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)">
+        <input id="syNew2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
+        <div class="row"><button class="primary" id="syCreateBtn" type="button">Create and turn on</button><button class="ghost" id="syBack2" type="button">Cancel</button></div>
+      </div>
+      <div id="syUnlock" class="hidden">
+        <p class="meta">Sync is already set up on another device. Type the sync password to bring her data here.</p>
+        <input id="syPw" type="password" autocomplete="current-password" placeholder="Sync password">
+        <div class="row"><button class="primary" id="syUnlockBtn" type="button">Unlock</button><button class="small" id="syForgotLink" type="button">Forgot password?</button></div>
+      </div>
+      <div id="syForgot" class="hidden">
+        <p class="meta"><b>Forgot the sync password?</b> Use the recovery code she saved when sync was set up. If any of her devices still has sync on, she can also change the password there (Sync &gt; Change password) without the old one.</p>
+        <input id="syRc" type="text" autocomplete="off" autocapitalize="characters" placeholder="Recovery code, e.g. ABCD-EFGH-…">
+        <input id="syRp1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)" style="margin-top:8px">
+        <input id="syRp2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
+        <div class="row"><button class="primary" id="syResetBtn" type="button">Reset password</button><button class="ghost" id="syBack1" type="button">Back</button></div>
+        <p class="meta" style="margin-top:14px">Lost the recovery code too, and no device has sync on? <button class="small danger" id="syWipe2" type="button">Start sync over from this device</button><br><span class="status">This deletes only the synced copy. Data already on each device stays.</span></p>
+      </div>
+      <div id="syRecovery" class="hidden">
+        <p class="meta" id="syCodeWhy"></p>
+        <div class="rcode" id="syCode"></div>
+        <div class="row"><button class="small" id="syCopyCode" type="button">Copy</button><button class="small" id="syDlCode" type="button">Download as a file</button></div>
+        <label class="trendtog" style="color:var(--ink)"><input type="checkbox" id="sySaved"> I've saved my recovery code somewhere safe</label>
+        <div class="row"><button class="primary" id="syDone" type="button" disabled>Done</button></div>
+      </div>
+      <div id="syOn" class="hidden">
+        <div class="row" style="margin-top:4px">
+          <button class="ghost" id="sySyncNow" type="button">Sync now</button>
+          <button class="small" id="syChangeShow" type="button">Change password</button>
+          <button class="small" id="syNewCode" type="button">New recovery code</button>
+        </div>
+        <div class="row">
+          <button class="small" id="syOffBtn" type="button">Turn off on this device</button>
+          <button class="small danger" id="syWipe" type="button">Start sync over</button>
+        </div>
+      </div>
+      <div id="syChange" class="hidden">
+        <p class="meta">Change the sync password. The old one isn't needed because this device is already unlocked. Her other devices stay synced.</p>
+        <input id="syCp1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)">
+        <input id="syCp2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
+        <div class="row"><button class="primary" id="syChangeBtn" type="button">Save new password</button><button class="ghost" id="syBack3" type="button">Cancel</button></div>
+      </div>
+      <p class="status" id="syMsg" style="margin-top:10px"></p>
+    </div>
+    <div class="card">
+      <h3>🔒 Confidential mode</h3>
+      <p class="meta" style="margin-top:0">When the lock at the top is closed, the app skips free Gemini and uses SEA-LION or Groq, which don't train on what you send. Use it for real client briefs. You can also tick "Always confidential" on a client's profile. Reading images needs Gemini, so it pauses while the lock is on.</p>
+    </div>
+    <div class="card">
+      <h3>Trends</h3>
+      <p class="meta" style="margin-top:0">The trend board refreshes automatically every Monday. You can also refresh it now.</p>
+      <div class="row"><button class="ghost" id="cnTrends" type="button">Refresh trends now</button><span class="status" id="cnTrStatus"></span></div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section id="library">
+    <h2>My copy</h2>
+    <p class="sub">Everything she has written here is saved automatically. Search it, star the good ones, and download as Word, PDF, PowerPoint or Excel.</p>
+    <div class="card">
+      <input id="libQ" type="text" placeholder="Search words, client, campaign…">
+      <div class="grid">
+        <div><label class="f" for="libType">Type</label>
+          <select id="libType"><option value="">All</option><option>Transcreate</option><option>Variants</option><option>Check</option><option>Brief</option><option>Trend angles</option></select></div>
+        <div><label class="f" for="libClient">Client</label><select id="libClient"></select></div>
+        <div><label class="f" for="libWhen">When</label>
+          <select id="libWhen"><option value="">Any time</option><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></div>
+      </div>
+      <div class="row">
+        <label class="checks" style="margin:0"><label><input type="checkbox" id="libStar"> Starred only</label></label>
+        <span class="status" id="libCount"></span>
+      </div>
+      <div class="row">
+        <select class="dlSel" id="libDlAll" style="width:auto"><option value="">Download all shown as…</option><option value="docx">Word (.docx)</option><option value="pdf">PDF</option><option value="pptx">PowerPoint (.pptx)</option><option value="xlsx">Excel copy deck (.xlsx)</option><option value="txt">Text (.txt)</option></select>
+      </div>
+    </div>
+    <div id="libList"></div>
+    <div class="row"><button class="ghost hidden" id="libMore" type="button">Show more</button></div>
+  </section>
+
+  <footer>
+    <span id="syncPill" class="pill">Loading…</span>
+    Explanations in
+    <select id="noteLang"><option value="English">English</option><option value="Bahasa Melayu">Bahasa Melayu</option></select>
+    <p>Follow your agency's rules on AI tools. Don't paste confidential client material unless the agency allows it. Sensitivity and claims checks are a first pass, not legal or client approval. Word, PDF and PowerPoint files are read on this device; only the text you then send goes to the AI. Images and scanned PDFs are sent to Gemini to read. With 🔒 on, free Gemini is never used.</p>
+  </footer>
+</main>
+<div id="toast"></div>
+<input type="file" id="fileIn" class="hidden" accept=".txt,.md,.csv,.docx,.pdf,.pptx,image/png,image/jpeg,image/webp,image/gif" multiple>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const len = s => [...String(s ?? "")].length;
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- toast & copy ---------- */
+let toastT;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2200); }
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); toast("Copied"); return; }catch(e){}
+  try{
+    const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select(); const ok = document.execCommand("copy"); ta.remove();
+    toast(ok ? "Copied" : "Couldn't copy. Select the text and copy it manually.");
+  }catch(e){ toast("Couldn't copy. Select the text and copy it manually."); }
+}
+
+/* ---------- tabs ---------- */
+const TABS = ["transcreate","variants","tone","brief","trends","check","library","connection"];
+function showTab(name){
+  if(!TABS.includes(name)) name = "transcreate";
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === name));
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  if(name === "library") renderLibrary(true);
+  if(location.hash !== "#" + name){ try{ history.replaceState(null, "", "#" + name); }catch(e){ location.hash = name; } }
+  window.scrollTo(0,0); setTimeout(() => window.scrollTo(0,0), 0);
+}
+window.addEventListener("load", () => setTimeout(() => window.scrollTo(0,0), 0));
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if(b) showTab(b.dataset.tab); });
+window.addEventListener("hashchange", () => showTab(location.hash.slice(1)));
+
+/* ---------- state & storage ---------- */
+const state = {
+  clients: LS.get("mc_clients", {}),
+  deleted: LS.get("mc_deleted", []),
+  activeId: LS.get("mc_active", ""),
+};
+const store = { col: null };
+function persistLocal(){ LS.set("mc_clients", state.clients); LS.set("mc_deleted", state.deleted); LS.set("mc_active", state.activeId); markDirty(); }
+function setPill(mode){
+  const p = $("syncPill");
+  if(mode === "cloud"){ p.textContent = "Synced"; p.className = "pill cloud"; }
+  else { p.textContent = "Saved on this device"; p.className = "pill"; }
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function plain(o){ return JSON.parse(JSON.stringify(o)); }
+
+async function cloudWrite(c){
+  if(!store.col) return;
+  for(let attempt = 0; attempt < 2; attempt++){
+    try{ await store.col.doc(c.id).set(plain(c)); return; }
+    catch(e){
+      if(e && e.code === "unavailable" && attempt === 0){ await sleep(600 + Math.random()*600); continue; }
+      if(e && e.code === "quota_exceeded"){ toast("Online storage is full. Saved on this device."); }
+      store.col = null; setPill("local"); return;
+    }
+  }
+}
+async function cloudDelete(id){
+  if(!store.col) return;
+  try{ await store.col.doc(id).delete(); }catch(e){}
+}
+async function initCloud(){
+  setPill("local");
+  if(!window.claude || typeof window.claude.use !== "function") return;
+  try{
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    if(!db || !user) return;
+    const uid = await user.id();
+    if(!uid) return;
+    const col = db.collection("data/users/" + uid);
+    const snap = await Promise.race([col.get(), sleep(10000).then(() => { throw {code:"timeout"}; })]);
+    store.col = col;
+    const cloud = {};
+    const cloudH = {}; let cloudBank = null;
+    snap.docs.forEach(d => { const v = d.exists ? d.data() : null; if(!v || typeof v.id !== "string") return; if(v.id.startsWith("c-")) cloud[v.id] = v; else if(v.id.startsWith("h-")) cloudH[v.id] = v; else if(v.id === "w-bank") cloudBank = v; });
+    if(cloudBank && (cloudBank.updated||0) > (state.bank.updated||0)){ state.bank = plain(cloudBank); if(!Array.isArray(state.bank.items)) state.bank.items = []; if(!Array.isArray(state.bank.pinned)) state.bank.pinned = []; LS.set("mc_bank", state.bank); renderTrends(); }
+    else if(state.bank.updated && (!cloudBank || (state.bank.updated||0) > (cloudBank.updated||0))) setTimeout(() => cloudWrite(state.bank), 1200);
+    const localH = {}; (state.history || []).forEach(x => localH[x.id] = x);
+    const pushH = [];
+    for(const id in localH){ if(!cloudH[id] || (localH[id].updated||0) > (cloudH[id].updated||0)) pushH.push(localH[id]); }
+    for(const id in cloudH){
+      if(state.deleted.includes(id)){ cloudDelete(id); continue; }
+      if(!localH[id] || (cloudH[id].updated||0) > (localH[id].updated||0)) localH[id] = plain(cloudH[id]);
+    }
+    state.history = Object.values(localH).sort((a,b) => b.ts - a.ts).slice(0, HISTORY_CAP);
+    persistHistory();
+    setTimeout(async () => { for(const x of pushH.slice(0, 60)){ await cloudWrite(x); if(!store.col) break; } }, 1500);
+    const pushes = [];
+    for(const id in state.clients){ if(!cloud[id] || (state.clients[id].updated||0) > (cloud[id].updated||0)) pushes.push(state.clients[id]); }
+    for(const id in cloud){
+      if(state.deleted.includes(id)){ cloudDelete(id); continue; }
+      if(!state.clients[id] || (cloud[id].updated||0) > (state.clients[id].updated||0)) state.clients[id] = plain(cloud[id]);
+    }
+    persistLocal(); renderClientSelect(); fillClientForm();
+    setPill("cloud");
+    for(const c of pushes){ await cloudWrite(c); if(!store.col) break; }
+  }catch(e){ store.col = null; setPill("local"); }
+}
+
+/* ---------- clients ---------- */
+const newId = () => "c-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function active(){ return state.clients[state.activeId] || null; }
+function sortedClients(){ return Object.values(state.clients).sort((a,b) => (a.name||"").localeCompare(b.name||"")); }
+
+function renderClientSelect(){
+  const sel = $("clientSel");
+  const list = sortedClients();
+  sel.innerHTML = '<option value="">No client (general)</option>' +
+    list.map(c => `<option value="${esc(c.id)}">${esc(c.name || "Untitled client")}</option>`).join("") +
+    '<option value="__new">+ Add a client…</option>';
+  if(!state.clients[state.activeId]) state.activeId = "";
+  sel.value = state.activeId;
+  $("tcHint").classList.toggle("hidden", list.length > 0);
+  renderToneSelects();
+  scanCheck();
+}
+$("clientSel").addEventListener("change", e => {
+  if(e.target.value === "__new"){ startNewClient(); showTab("tone"); return; }
+  state.activeId = e.target.value; persistLocal(); fillClientForm(); renderToneSelects(); scanCheck(); syncFormalityToClient(); updateLock();
+});
+$("editClientBtn").addEventListener("click", () => { fillClientForm(); showTab("tone"); });
+
+function renderToneSelects(){
+  const c = active();
+  const def = c ? `Client default (${c.register || "Neutral"})` : "Neutral (default)";
+  document.querySelectorAll(".toneSel").forEach(s => {
+    const v = s.value;
+    s.innerHTML = `<option value="">${esc(def)}</option><option>Formal</option><option>Neutral</option><option>Santai</option><option>Gen Z</option>`;
+    s.value = [...s.options].some(o => o.value === v) ? v : "";
+  });
+}
+function toneOf(sel){ const v = $(sel).value; if(v) return v; const c = active(); return (c && c.register) || "Neutral"; }
+
+let editingId = null;
+function fillClientForm(){
+  const c = active();
+  editingId = c ? c.id : null;
+  $("cfTitle").textContent = c ? "Client profile: " + (c.name || "Untitled") : "New client";
+  $("cfName").value = c?.name || "";
+  $("cfTone").value = c?.tone || "";
+  $("cfRegister").value = c?.register || "Neutral";
+  $("cfPronoun").value = c?.pronoun || "";
+  $("cfTerms").value = c?.terms || "";
+  $("cfBanned").value = c?.banned || "";
+  $("cfSamples").value = c?.samples || "";
+  $("cfNotes").value = c?.notes || "";
+  $("cfConf").checked = !!(c && c.confidential);
+  $("cfDelete").classList.toggle("hidden", !c);
+  renderRules();
+}
+function startNewClient(){
+  state.activeId = ""; editingId = null; persistLocal();
+  $("clientSel").value = "";
+  fillClientForm(); $("cfName").focus();
+}
+$("cfNew").addEventListener("click", startNewClient);
+$("cfSave").addEventListener("click", async () => {
+  const name = $("cfName").value.trim();
+  if(!name){ toast("Give the client a name first"); $("cfName").focus(); return; }
+  const prev = editingId ? state.clients[editingId] : null;
+  const c = {
+    id: prev ? prev.id : newId(),
+    name, tone: $("cfTone").value.trim(), register: $("cfRegister").value, pronoun: $("cfPronoun").value,
+    terms: $("cfTerms").value.trim(), banned: $("cfBanned").value.trim(),
+    samples: $("cfSamples").value.trim(), notes: $("cfNotes").value.trim(), confidential: $("cfConf").checked,
+    rules: prev ? (prev.rules || []) : [], updated: Date.now()
+  };
+  await saveClient(c);
+  state.activeId = c.id; editingId = c.id; persistLocal();
+  renderClientSelect(); fillClientForm();
+  $("cfStatus").textContent = "Saved"; setTimeout(() => $("cfStatus").textContent = "", 1800);
+});
+$("cfDelete").addEventListener("click", async () => {
+  const c = active(); if(!c) return;
+  const btn = $("cfDelete");
+  if(btn.dataset.confirm !== "1"){ btn.dataset.confirm = "1"; btn.textContent = "Tap again to delete"; setTimeout(() => { btn.dataset.confirm = ""; btn.textContent = "Delete"; }, 3000); return; }
+  btn.dataset.confirm = ""; btn.textContent = "Delete";
+  delete state.clients[c.id]; state.deleted.push(c.id); state.activeId = ""; persistLocal();
+  cloudDelete(c.id);
+  renderClientSelect(); fillClientForm(); toast("Client deleted");
+});
+async function saveClient(c){
+  c.updated = Date.now();
+  state.clients[c.id] = c;
+  state.deleted = state.deleted.filter(x => x !== c.id);
+  persistLocal();
+  await cloudWrite(c);
+}
+
+/* rules */
+function renderRules(){
+  const c = active();
+  const box = $("rulesList");
+  const rules = c?.rules || [];
+  $("ruleCount").textContent = rules.length;
+  if(!c){ box.innerHTML = '<div class="empty">Save a client first, then rules from corrections land here.</div>'; return; }
+  if(!rules.length){ box.innerHTML = '<div class="empty">No rules yet. Use "Learn from a correction" below.</div>'; return; }
+  box.innerHTML = rules.map((r,i) => `<div class="rule"><div class="t">${esc(r.text)}${r.before || r.after ? `<div class="ex">${r.before ? "✗ " + esc(r.before) : ""}${r.before && r.after ? "<br>" : ""}${r.after ? "✓ " + esc(r.after) : ""}</div>` : ""}</div><button class="small danger" data-del="${i}" type="button">Remove</button></div>`).join("");
+}
+$("rulesList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-del]"); if(!b) return;
+  const c = active(); if(!c) return;
+  c.rules.splice(Number(b.dataset.del), 1); await saveClient(c); renderRules();
+});
+$("ruleAddBtn").addEventListener("click", async () => {
+  const c = active(); const t = $("ruleAdd").value.trim();
+  if(!c){ toast("Save a client first"); return; }
+  if(!t) return;
+  c.rules = c.rules || []; c.rules.push({text:t, added:Date.now()});
+  await saveClient(c); $("ruleAdd").value = ""; renderRules(); toast("Rule added");
+});
+
+/* backup */
+$("bkCopy").addEventListener("click", () => copyText(JSON.stringify({mejaCopy:1, clients: sortedClients(), styles: state.styles, bank: state.bank})));
+$("bkShow").addEventListener("click", () => $("bkBox").classList.toggle("hidden"));
+$("bkImport").addEventListener("click", async () => {
+  try{
+    const data = JSON.parse($("bkText").value);
+    const list = Array.isArray(data?.clients) ? data.clients : [];
+    let n = 0;
+    for(const c of list){
+      if(!c || typeof c.name !== "string") continue;
+      const clean = {id: (typeof c.id === "string" && /^c-[A-Za-z0-9]+$/.test(c.id)) ? c.id : newId(),
+        name:c.name, tone:String(c.tone||""), register:String(c.register||"Neutral"), pronoun:String(c.pronoun||""),
+        terms:String(c.terms||""), banned:String(c.banned||""), samples:String(c.samples||""), notes:String(c.notes||""),
+        rules: Array.isArray(c.rules) ? c.rules.filter(r => r && r.text).map(r => ({text:String(r.text), before:r.before?String(r.before):"", after:r.after?String(r.after):"", added:Number(r.added)||Date.now()})) : []};
+      await saveClient(clean); n++;
+    }
+    const styles = Array.isArray(data?.styles) ? data.styles.filter(s => s && typeof s.name === "string") : [];
+    for(const s of styles){
+      const st = {name:s.name, formality:Math.min(5, Math.max(1, Number(s.formality)||3)), flavour:String(s.flavour||""), dialect:String(s.dialect||""),
+        dialectCustom:String(s.dialectCustom||""), script:String(s.script||"rumi"), note:String(s.note||""), format:String(s.format||""), audience:String(s.audience||"")};
+      const at = state.styles.findIndex(x => x.name.toLowerCase() === st.name.toLowerCase());
+      if(at >= 0) state.styles[at] = st; else state.styles.push(st);
+      n++;
+    }
+    if(styles.length){ persistStyles(); renderPresets(); }
+    if(data && data.bank && Array.isArray(data.bank.items)){
+      for(const b of data.bank.items){ if(b && b.term && !state.bank.items.some(x => x.term.toLowerCase() === String(b.term).toLowerCase())){ state.bank.items.push({term:String(b.term), audience:String(b.audience||"Everyone"), meaning:String(b.meaning||"")}); n++; } }
+      await saveBank(); renderTrends();
+    }
+    renderClientSelect(); fillClientForm(); $("bkText").value = ""; $("bkBox").classList.add("hidden");
+    toast(n ? `Imported ${n} item${n>1?"s":""}` : "Nothing to import in that text");
+  }catch(e){ toast("That doesn't look like a backup"); }
+});
+
+/* ---------- term scanning ---------- */
+function parseTerms(c){
+  const out = [];
+  (c?.terms || "").split("\n").forEach(line => {
+    const m = line.split(/\s*(?:=>|->|→|=)\s*/);
+    if(m.length >= 2 && m[0].trim()) out.push({avoid:m[0].trim(), use:m.slice(1).join(" ").trim()});
+  });
+  return out;
+}
+function parseBanned(c){ return (c?.banned || "").split(/[\n,]/).map(s => s.trim()).filter(Boolean); }
+function termRegex(word){
+  const star = word.endsWith("*");
+  const w = (star ? word.slice(0,-1) : word).replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+");
+  return new RegExp(`(^|[^\\p{L}\\p{N}])(${w}${star ? "[\\p{L}\\p{N}-]*" : ""})(?=$|[^\\p{L}\\p{N}])`, "giu");
+}
+function findHits(text, c){
+  const hits = [];
+  if(!c || !text) return hits;
+  const add = (word, type, use) => {
+    const re = termRegex(word); let m;
+    while((m = re.exec(text))){ const start = m.index + m[1].length; hits.push({start, end:start + m[2].length, word:m[2], type, use}); if(re.lastIndex === m.index) re.lastIndex++; }
+  };
+  parseBanned(c).forEach(w => add(w, "banned"));
+  parseTerms(c).forEach(t => add(t.avoid, "avoid", t.use));
+  hits.sort((a,b) => a.start - b.start || b.end - a.end);
+  const clean = []; let last = -1;
+  for(const h of hits){ if(h.start >= last){ clean.push(h); last = h.end; } }
+  return clean;
+}
+function highlight(text, c){
+  const hits = findHits(text, c);
+  if(!hits.length) return esc(text);
+  let out = "", pos = 0;
+  for(const h of hits){
+    out += esc(text.slice(pos, h.start));
+    out += `<mark class="${h.type === "avoid" ? "avoid" : ""}" title="${h.type === "avoid" ? "Client prefers: " + esc(h.use) : "Banned for this client"}">${esc(text.slice(h.start, h.end))}</mark>`;
+    pos = h.end;
+  }
+  return out + esc(text.slice(pos));
+}
+function hitSummary(text, c){
+  const hits = findHits(text, c);
+  if(!c) return "";
+  if(!hits.length) return '<span class="chip ok">No banned or avoided terms</span>';
+  const banned = [...new Set(hits.filter(h => h.type === "banned").map(h => h.word.toLowerCase()))];
+  const avoid = []; const seen = new Set();
+  hits.filter(h => h.type === "avoid").forEach(h => { const k = h.word.toLowerCase(); if(!seen.has(k)){ seen.add(k); avoid.push(`"${esc(h.word)}" → ${esc(h.use)}`); } });
+  return (banned.length ? `<span class="chip bad">Banned: ${banned.map(esc).join(", ")}</span> ` : "") +
+         (avoid.length ? `<span class="chip warn">Client prefers: ${avoid.join("; ")}</span>` : "");
+}
+
+/* ---------- AI CONNECTION (Cloudflare Worker) ---------- */
+const CONN = { url: LS.get("mc_worker", ""), pass: LS.get("mc_pass", "") };
+(function(){
+  try{
+    const qp = new URLSearchParams(location.search);
+    const w = qp.get("w");
+    if(w && /^https:\/\//.test(w)){ CONN.url = w.replace(/\/+$/, ""); LS.set("mc_worker", CONN.url); history.replaceState(null, "", location.pathname + location.hash); }
+  }catch(e){}
+})();
+let lastProvider = "", lastFallbacks = [];
+let sampleFn = null, sampleState = "pending";
+function isConfidential(){ const c = active(); return LS.get("mc_conf", false) || !!(c && c.confidential); }
+function updateLock(){
+  const on = isConfidential(), forced = !!(active() && active().confidential);
+  const b = $("lockBtn");
+  b.textContent = on ? "🔒" : "🔓"; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on));
+  b.title = on ? (forced ? "Confidential: this client is always confidential" : "Confidential mode is on") : "Confidential mode is off: free Gemini may be used";
+}
+$("lockBtn").addEventListener("click", () => {
+  if(active() && active().confidential){ toast("This client is set to always confidential"); return; }
+  LS.set("mc_conf", !LS.get("mc_conf", false)); updateLock();
+  toast(isConfidential() ? "🔒 Confidential: free Gemini is skipped" : "🔓 Confidential off: Gemini may be used");
+});
+$("gearBtn").addEventListener("click", () => showTab("connection"));
+function parseLooseJson(text){
+  const s = String(text || "").trim();
+  try{ return JSON.parse(s); }catch(e){}
+  const f = s.match(/```(?:json)?\s*([\s\S]*?)```/); if(f){ try{ return JSON.parse(f[1]); }catch(e){} }
+  const i = Math.min(...["{","["].map(c => { const k = s.indexOf(c); return k < 0 ? Infinity : k; }));
+  const j = Math.max(s.lastIndexOf("}"), s.lastIndexOf("]"));
+  if(i !== Infinity && j > i){ try{ return JSON.parse(s.slice(i, j + 1)); }catch(e){} }
+  return null;
+}
+async function blobToImage(blob){
+  const bmp = await createImageBitmap(blob);
+  const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+  const cv = document.createElement("canvas"); cv.width = Math.round(bmp.width * scale); cv.height = Math.round(bmp.height * scale);
+  cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+  const url = cv.toDataURL("image/jpeg", 0.85);
+  return { mime:"image/jpeg", data:url.split(",")[1] };
+}
+async function workerFetch(path, opts = {}){
+  if(!CONN.url || !CONN.pass) throw {code:"not_connected"};
+  let res;
+  try{
+    res = await fetch(CONN.url.replace(/\/+$/, "") + path, Object.assign({}, opts, {headers:Object.assign({"Content-Type":"application/json", "X-Passcode":CONN.pass}, opts.headers || {})}));
+  }catch(e){ if(e && e.name === "AbortError") throw {code:"cancelled"}; throw {code:"network"}; }
+  let data = null; try{ data = await res.json(); }catch(e){}
+  if(!res.ok || !data || data.error) throw {code:(data && data.error && data.error.code) || (res.status === 401 ? "bad_passcode" : "upstream_error")};
+  return data;
+}
+function makeSample(){
+  async function call(prompt, opts, wantJson){
+    opts = opts || {};
+    const text = typeof prompt === "string" ? prompt : (Array.isArray(prompt) ? prompt.map(m => m.content).join("\n\n") : "");
+    const list = opts.images ? (opts.images instanceof FileList ? [...opts.images] : [].concat(opts.images)) : [];
+    const images = await Promise.all(list.map(blobToImage));
+    const data = await workerFetch("/ai", {method:"POST", signal:opts.signal, body:JSON.stringify({prompt:text, json:!!wantJson, confidential:isConfidential(), images})});
+    lastProvider = data.provider || ""; lastFallbacks = data.fallbacks || [];
+    if(opts.onText) try{ opts.onText({text:data.text, delta:data.text}); }catch(e){}
+    return String(data.text || "");
+  }
+  const fn = async (p, o) => ({text: await call(p, o, false), truncated:false});
+  fn.json = async (p, o) => { const t = await call(p, o, true); const v = parseLooseJson(t); if(v == null) throw {code:"invalid_json", text:t}; return v; };
+  fn.limits = async () => isConfidential() ? {} : {images:{maxCount:6, maxInputBytes:20e6, mediaTypes:["image/png","image/jpeg","image/webp","image/gif"]}};
+  return fn;
+}
+async function initSample(){
+  sampleFn = makeSample();
+  sampleState = CONN.url && CONN.pass ? "ok" : "none";
+  showAiBanner();
+}
+function showAiBanner(msg){
+  const b = $("aiBanner");
+  if(msg){ b.textContent = msg; b.classList.remove("hidden"); return; }
+  if(sampleState === "none"){ b.innerHTML = 'Connect the app first: tap <b>⚙</b> at the top and enter the server link and passcode. Client profiles and term checks already work.'; b.classList.remove("hidden"); }
+  else b.classList.add("hidden");
+}
+function errCopy(e){
+  switch(e && e.code){
+    case "cancelled": return "Stopped.";
+    case "not_connected": return "Connect the app first (⚙ at the top).";
+    case "bad_passcode": return "Wrong passcode. Check it under ⚙.";
+    case "not_configured": return "The AI keys aren't set up on the server yet.";
+    case "network": return "Couldn't reach the server. Check your internet and try again.";
+    case "rate_limited": return "All the AIs are busy or at their daily limit. Try again later.";
+    case "images_unavailable": return "Reading images needs Gemini. Turn off 🔒, or paste the text instead.";
+    case "invalid_json": return "The answer came back in the wrong shape. Tap again.";
+    case "refused": return "The AI declined this one. Try rewording the input.";
+    case "prompt_too_large": return "That's too long. Paste a shorter piece.";
+    default: return "Something went wrong. Try again.";
+  }
+}
+function runner(goId, stopId, statusId){
+  let ctl = null, timer = null;
+  const go = $(goId), stop = $(stopId), status = $(statusId);
+  stop.addEventListener("click", () => ctl && ctl.abort());
+  return async function(prompt, opts = {}){
+    if(sampleState !== "ok"){ status.textContent = errCopy({code:"not_connected"}); return null; }
+    ctl = new AbortController();
+    go.disabled = true; stop.classList.remove("hidden");
+    const t0 = Date.now();
+    const tick = () => { status.textContent = "Writing… " + Math.round((Date.now()-t0)/1000) + "s"; };
+    tick(); timer = setInterval(tick, 1000);
+    try{
+      const res = await sampleFn.json(prompt, { signal: ctl.signal });
+      status.innerHTML = lastProvider ? `Written by <span class="provChip">${esc(lastProvider)}</span>${lastFallbacks.length ? ' <span class="status">(backup)</span>' : ""}` : "";
+      return res;
+    }catch(e){
+      status.textContent = errCopy(e);
+      return null;
+    }finally{
+      clearInterval(timer); go.disabled = false; stop.classList.add("hidden"); ctl = null;
+    }
+  };
+}
+/* connection page */
+$("cnUrl").value = CONN.url; $("cnPass").value = CONN.pass;
+async function testConnection(){
+  const st = $("cnStatus"); st.textContent = "Testing…"; $("cnInfo").innerHTML = "";
+  try{
+    const d = await workerFetch("/check", {method:"GET"});
+    st.textContent = "Connected ✓";
+    const ps = (d.providers || []).map(p => `${esc(p.name)} ${p.key ? "✓" : "<span style='color:var(--bad)'>no key</span>"}`).join(" → ");
+    $("cnInfo").innerHTML = `<b>AI order:</b> ${ps || "none"}<br><b>Trend board:</b> ${d.trends ? "on" : "not set up"}${d.geminiPaid ? "<br><b>Gemini:</b> paid plan, so it stays private even in 🔒 mode" : ""}`;
+    sampleState = "ok"; showAiBanner(); initTrends(); if(syncOn()) syncNow(true);
+  }catch(e){ st.textContent = errCopy(e); }
+}
+$("cnSave").addEventListener("click", () => {
+  CONN.url = $("cnUrl").value.trim().replace(/\/+$/, ""); CONN.pass = $("cnPass").value;
+  if(CONN.url && !/^https:\/\//.test(CONN.url)){ $("cnStatus").textContent = "The link must start with https://"; return; }
+  LS.set("mc_worker", CONN.url); LS.set("mc_pass", CONN.pass);
+  sampleState = CONN.url && CONN.pass ? "ok" : "none"; showAiBanner();
+  testConnection();
+});
+$("cnTrends").addEventListener("click", async () => {
+  const st = $("cnTrStatus"); st.textContent = "Refreshing… this can take a minute";
+  try{ const d = await workerFetch("/trends/refresh", {method:"POST", body:"{}"}); state.trends = d; LS.set("mc_trends", d); renderTrends(); st.textContent = "Done ✓"; }
+  catch(e){ st.textContent = errCopy(e); }
+});
+const notesLang = () => $("noteLang").value;
+$("noteLang").value = LS.get("mc_notelang", "English");
+$("noteLang").addEventListener("change", () => LS.set("mc_notelang", $("noteLang").value));
+
+function baseRules(){
+  return `You are a senior Bahasa Melayu (Malaysia) copywriter and transcreation lead at a Malaysian advertising agency, helping a junior copywriter.
+Language rules:
+- Write Bahasa Melayu as used in Malaysia. Never use Bahasa Indonesia vocabulary or spelling (for example "percuma" not "gratis", "wang" not "uang", "kereta" not "mobil", "telefon" not "telepon", "pejabat" not "kantor").
+- Formal and Neutral registers follow DBP standard spelling and grammar. Santai is natural, friendly Malaysian conversational BM. Gen Z is current Malaysian youth voice, light natural English mixing allowed where real Malaysians would mix, never forced or cringe.
+- Transcreate, never translate word for word: keep the intent, emotion and selling point, adapt idioms, puns and cultural references for Malaysians.
+- Keep brand names, product names, trademarks, prices, dates, promo codes, hashtags and legal lines exactly as given unless told otherwise.
+- The client's rules below override your own preferences. Never use the client's banned words. Always use the client's preferred terms.
+- Write all explanations, notes and reasons in ${notesLang()}, short and practical.`;
+}
+function clientBlock(){
+  const c = active();
+  if(!c) return "CLIENT: none selected. Use sensible agency defaults.";
+  const terms = parseTerms(c).map(t => `- "${t.avoid}" -> "${t.use}"`).join("\n");
+  const rules = (c.rules || []).map(r => `- ${r.text}${r.before||r.after ? ` (e.g. "${r.before||""}" -> "${r.after||""}")` : ""}`).join("\n");
+  return `CLIENT: ${c.name}
+Tone of voice: ${c.tone || "(not given)"}
+Default register: ${c.register || "Neutral"}
+Address the audience as: ${c.pronoun || "no preference"}
+Preferred terms (avoid -> use):
+${terms || "- none"}
+Banned words (a * means any word starting with it): ${parseBanned(c).join(", ") || "none"}
+Rules learned from past corrections (follow strictly):
+${rules || "- none"}
+Mandatories and notes: ${c.notes || "none"}
+Approved copy samples, match this voice:
+"""${(c.samples || "none").slice(0, 4000)}"""`;
+}
+
+/* ---------- TRANSCREATE STYLE ---------- */
+const FORMALITY = {
+  1: ["Baku", "Very formal, standard DBP Malay (bahasa baku). Complete sentences, no slang, no contractions, respectful address."],
+  2: ["Formal", "Formal and polished but warm, as in a bank or government campaign. Standard spelling, no slang."],
+  3: ["Neutral", "Clear everyday Malaysian BM, friendly but correct. Standard spelling, very light conversational touches only."],
+  4: ["Santai", "Relaxed conversational BM, like talking to a friend. Contractions and common spoken forms allowed (tak, nak, dah, je)."],
+  5: ["Bahasa pasar", "Street-level bahasa pasar: very casual, simplified grammar, spoken spellings (camne, takpe, best gila), particles like lah, kan, je, weh. It must still be readable and never crude or offensive."]
+};
+const REG_TO_F = {Formal:2, Neutral:3, Santai:4, "Gen Z":4};
+function updateFormalityLabel(){ $("tcFormalityLabel").textContent = FORMALITY[$("tcFormality").value][0]; }
+$("tcFormality").addEventListener("input", updateFormalityLabel);
+function syncFormalityToClient(){
+  const c = active();
+  $("tcFormality").value = c ? (REG_TO_F[c.register] || 3) : 3;
+  if(c && c.register === "Gen Z" && !$("tcFlavour").value) $("tcFlavour").value = "Gen Z";
+  updateFormalityLabel();
+}
+function dialectName(){
+  const v = $("tcDialect").value;
+  if(v === "custom") return $("tcDialectCustom").value.trim() || "";
+  return v;
+}
+function updateDialectUI(){
+  $("tcDialectCustom").classList.toggle("hidden", $("tcDialect").value !== "custom");
+  const d = dialectName(), s = $("tcScript").value;
+  const notes = [];
+  if(d) notes.push("Dialect output is a strong first draft. Get a native speaker to check it before it goes to the client.");
+  if(s !== "rumi") notes.push("Jawi follows the modern DBP spelling system. Proofread it, or have it checked if it's for print or packaging.");
+  $("tcDialectNote").textContent = notes.join(" ");
+}
+["tcDialect","tcScript"].forEach(id => $(id).addEventListener("change", updateDialectUI));
+$("tcDialectCustom").addEventListener("input", updateDialectUI);
+
+/* saved styles */
+state.styles = LS.get("mc_styles", []);
+function persistStyles(){ LS.set("mc_styles", state.styles); markDirty(); }
+function currentStyle(){
+  return { formality: Number($("tcFormality").value), flavour: $("tcFlavour").value, dialect: $("tcDialect").value,
+           dialectCustom: $("tcDialectCustom").value.trim(), script: $("tcScript").value, note: $("tcStyleNote").value.trim(),
+           format: $("tcFormat").value, audience: $("tcAudience").value };
+}
+function applyStyle(s){
+  if(!s) return;
+  $("tcFormality").value = s.formality || 3;
+  $("tcFlavour").value = s.flavour || "";
+  $("tcDialect").value = [...$("tcDialect").options].some(o => o.value === s.dialect) ? s.dialect : "";
+  $("tcDialectCustom").value = s.dialectCustom || "";
+  $("tcScript").value = ["rumi","both","jawi"].includes(s.script) ? s.script : "rumi";
+  $("tcStyleNote").value = s.note || "";
+  if(s.format) $("tcFormat").value = s.format;
+  if(s.audience) $("tcAudience").value = s.audience;
+  updateFormalityLabel(); updateDialectUI();
+}
+function renderPresets(sel){
+  const p = $("tcPreset");
+  p.innerHTML = '<option value="">Choose a saved style…</option>' + state.styles.map((s,i) => `<option value="${i}">${esc(s.name)}</option>`).join("");
+  p.value = sel != null ? String(sel) : "";
+  $("psDel").classList.toggle("hidden", p.value === "");
+}
+$("tcPreset").addEventListener("change", () => {
+  const i = $("tcPreset").value;
+  $("psDel").classList.toggle("hidden", i === "");
+  if(i !== "") applyStyle(state.styles[Number(i)]);
+});
+$("psSaveShow").addEventListener("click", () => { $("psSaveRow").classList.toggle("hidden"); $("psName").focus(); });
+$("psSave").addEventListener("click", () => {
+  const name = $("psName").value.trim();
+  if(!name){ toast("Name the style first"); return; }
+  const s = Object.assign({name, updated:Date.now()}, currentStyle());
+  const at = state.styles.findIndex(x => x.name.toLowerCase() === name.toLowerCase());
+  if(at >= 0) state.styles[at] = s; else state.styles.push(s);
+  state.deleted = state.deleted.filter(x => x !== "s:" + name.toLowerCase()); persistLocal();
+  persistStyles(); renderPresets(at >= 0 ? at : state.styles.length - 1);
+  $("psName").value = ""; $("psSaveRow").classList.add("hidden");
+  toast(at >= 0 ? "Style updated" : "Style saved");
+});
+$("psDel").addEventListener("click", () => {
+  const i = $("tcPreset").value; if(i === "") return;
+  const btn = $("psDel");
+  if(btn.dataset.confirm !== "1"){ btn.dataset.confirm = "1"; btn.textContent = "Tap again"; setTimeout(() => { btn.dataset.confirm = ""; btn.textContent = "Delete"; }, 3000); return; }
+  btn.dataset.confirm = ""; btn.textContent = "Delete";
+  const gone = state.styles.splice(Number(i), 1)[0]; if(gone) state.deleted.push("s:" + gone.name.toLowerCase()); persistLocal(); persistStyles(); renderPresets(); toast("Style deleted");
+});
+
+function styleBlock(){
+  const f = FORMALITY[$("tcFormality").value];
+  const d = dialectName(), s = $("tcScript").value, fl = $("tcFlavour").value, note = $("tcStyleNote").value.trim();
+  let t = `Formality: level ${$("tcFormality").value} of 5, "${f[0]}". ${f[1]}`;
+  if(fl) t += `\nFlavour: ${fl}.`;
+  if(d) t += `\nDialect: write in authentic ${d} as its speakers actually say it in everyday life, with its own vocabulary, pronouns, particles and spoken spelling conventions. Do not just sprinkle a few dialect words over standard Malay. Apply the formality level as far as is natural within the dialect (dialects lean casual, so level 1 or 2 means the most polite, respectful form of the dialect). If you are unsure of a dialect word, prefer a word you are confident speakers use, and mention it in notes.`;
+  else t += `\nDialect: standard Malaysian Malay.`;
+  if(s !== "rumi") t += `\nScript: also give each option in Jawi, using the modern DBP Jawi spelling system (Pedoman Umum Ejaan Jawi). Brand names, numbers, hashtags and English words: keep them in Rumi or Latin letters inside the Jawi text where that is standard practice. ${d ? "For dialect words, spell them in Jawi the way they are pronounced." : ""}`;
+  if(note) t += `\nHer own style notes (follow these): ${note}`;
+  t += `\nIf the client's rules clash with these style settings, follow the style settings for register and dialect, but never break the client's banned words or mandatories.`;
+  return t;
+}
+
+/* ---------- TRANSCREATE ---------- */
+const tcRun = runner("tcGo", "tcStop", "tcStatus");
+$("tcGo").addEventListener("click", async () => {
+  const src = $("tcSrc").value.trim();
+  if(!src){ toast("Paste the English copy first"); return; }
+  const n = Number($("tcCount").value);
+  if($("tcDialect").value === "custom" && !dialectName()){ toast("Type the dialect name, or pick one from the list"); $("tcDialectCustom").focus(); return; }
+  const wantJawi = $("tcScript").value !== "rumi";
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+TASK: Transcreate the English copy below into Malaysian Bahasa Melayu${dialectName() ? " (" + dialectName() + " dialect)" : ""}.
+Format: ${$("tcFormat").value}
+Audience: ${$("tcAudience").value}
+STYLE SETTINGS:
+${styleBlock()}
+${$("tcTrend").checked ? trendBlock() : ""}
+Extra context: ${$("tcContext").value.trim() || "none"}
+${n === 1 ? "Give exactly 1 option: your single best version." : `Give exactly ${n} distinct options, each a different creative angle (for example closest in meaning, punchier, more emotional, more playful).`} Keep line breaks where the format needs them.
+
+ENGLISH COPY:
+"""${src.slice(0, 12000)}"""
+
+Reply with only JSON in this shape:
+{"literal":"a plain literal standard BM translation for reference only","options":[{"label":"2-4 word angle name","bm":"the copy in Rumi script${dialectName() ? ", in the dialect" : ""}","jawi":"${wantJawi ? "the same copy in Jawi script" : "leave empty"}","standard_bm":"${dialectName() ? "the same line in standard Malay, so non-speakers on the team can follow" : "leave empty"}","back_translation":"English back-translation","why":"1-2 sentences on the key word, tone${dialectName() ? ", dialect" : ""} choices"}],"notes":["anything she should know, e.g. a pun that does not work in BM, or a dialect word to double-check"],"questions":["anything ambiguous to confirm with the team, or empty"]}`;
+  const res = await tcRun(prompt);
+  if(res){
+    renderTranscreate(res);
+    const opts = (Array.isArray(res.options) ? res.options : []).filter(o => o && (o.bm || o.jawi));
+    if(opts.length){
+      const he = addHistory({type:"Transcreate", input:src, meta:styleSummary(),
+        items: opts.map((o,i) => ({label:String(o.label || "Option " + (i+1)), text:String(o.bm || ""), jawi:$("tcScript").value !== "rumi" ? String(o.jawi || "") : "", note:String(o.back_translation || "")}))});
+      prependDl("tcOut", he);
+    }
+  }
+});
+function renderTranscreate(res){
+  const c = active();
+  const opts = Array.isArray(res.options) ? res.options : [];
+  let html = "";
+  const script = $("tcScript").value;
+  const clean = v => { const s = String(v || "").trim(); return /^leave empty$/i.test(s) ? "" : s; };
+  opts.forEach((o, i) => {
+    const bm = clean(o.bm), jawi = clean(o.jawi), std = clean(o.standard_bm);
+    o.bm = bm; o.jawi = jawi;
+    const showRumi = script !== "jawi" || !jawi;
+    html += `<div class="opt"><span class="lab">${esc(o.label || "Option " + (i+1))}</span>
+      ${showRumi ? `<div class="bm">${highlight(bm, c)}</div>` : ""}
+      ${jawi && script !== "rumi" ? `<div class="jawi" lang="ms-Arab" dir="rtl">${esc(jawi)}</div>` : ""}
+      <div class="meta"><span class="chip">${len(bm)} characters</span> ${hitSummary(bm, c)}</div>
+      ${std && std !== bm ? `<div class="meta"><b>Standard BM:</b> ${esc(std)}</div>` : ""}
+      ${o.back_translation ? `<div class="meta"><b>Back-translation:</b> ${esc(o.back_translation)}</div>` : ""}
+      ${o.why ? `<div class="meta"><b>Why:</b> ${esc(o.why)}</div>` : ""}
+      <div class="row"><button class="small" data-copy="${i}" type="button">Copy${jawi && script !== "rumi" ? " Rumi" : ""}</button>${jawi && script !== "rumi" ? `<button class="small" data-copyj="${i}" type="button">Copy Jawi</button>` : ""}<button class="small" data-check="${i}" type="button">Check this</button><button class="small" data-var="${i}" type="button">Make variants</button></div></div>`;
+  });
+  if(res.literal) html += `<div class="card" style="margin-top:12px"><div class="kv"><div class="k">Literal translation (reference only)</div><div class="v">${esc(res.literal)}</div></div></div>`;
+  const notes = (res.notes || []).filter(Boolean), qs = (res.questions || []).filter(Boolean);
+  if(notes.length || qs.length){
+    html += `<div class="card">${notes.length ? `<div class="kv"><div class="k">Notes</div><ul class="clean">${notes.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}${qs.length ? `<div class="kv"><div class="k">Check with the team</div><ul class="clean">${qs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>`;
+  }
+  $("tcOut").innerHTML = html || '<div class="empty">No options came back. Try again.</div>';
+  $("tcOut").onclick = e => {
+    const b = e.target.closest("button"); if(!b) return;
+    const o = opts[Number(b.dataset.copy ?? b.dataset.copyj ?? b.dataset.check ?? b.dataset.var)]; if(!o) return;
+    if(b.dataset.copy != null) copyText(String(o.bm || ""));
+    if(b.dataset.copyj != null) copyText(String(o.jawi || ""));
+    if(b.dataset.check != null){ $("cSrc").value = String(o.bm || ""); scanCheck(); showTab("check"); }
+    if(b.dataset.var != null){ $("vSrc").value = String(o.bm || ""); showTab("variants"); }
+  };
+}
+
+/* ---------- VARIANTS ---------- */
+$("vPlat").addEventListener("change", () => {
+  const v = $("vPlat").value;
+  if(v !== "custom") $("vLimit").value = v;
+  else $("vLimit").focus();
+});
+const vRun = runner("vGo", "vStop", "vStatus");
+$("vGo").addEventListener("click", async () => {
+  const src = $("vSrc").value.trim();
+  if(!src){ toast("Add the key message first"); return; }
+  const limit = Math.max(0, Number($("vLimit").value) || 0);
+  const n = Number($("vCount").value);
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+TASK: Write ${n} distinct ${$("vType").value} options in Malaysian Bahasa Melayu.
+Key message: """${src.slice(0, 4000)}"""
+Register: ${toneOf("vTone")}
+${limit ? `HARD LIMIT: each option must be ${limit} characters or fewer, counting spaces and punctuation. Count carefully. Shorter is fine.` : "No character limit."}
+Must include: ${$("vMust").value.trim() || "nothing specific"}
+${$("vTrend").checked ? trendBlock() : ""}
+Cover a spread of angles (benefit, urgency, emotion, curiosity, wordplay, straightforward) and avoid near-duplicates.
+
+Reply with only JSON: {"variants":[{"text":"the BM line","angle":"1-3 word angle"}]}`;
+  const res = await vRun(prompt);
+  if(res){
+    renderVariants(res, limit);
+    const items = (Array.isArray(res.variants) ? res.variants : []).filter(v => v && v.text);
+    if(items.length){
+      const he = addHistory({type:"Variants", input:src, meta:`${$("vType").value}${limit ? " · max " + limit + " chars" : ""}`,
+        items: items.map(v => ({label:String(v.angle || ""), text:String(v.text), note: limit && len(v.text) > limit ? "Over limit" : ""}))});
+      prependDl("vOut", he);
+    }
+  }
+});
+function renderVariants(res, limit){
+  const c = active();
+  const items = (Array.isArray(res.variants) ? res.variants : []).filter(v => v && v.text);
+  if(!items.length){ $("vOut").innerHTML = '<div class="empty">Nothing came back. Try again.</div>'; return; }
+  const over = items.filter(v => limit && len(v.text) > limit).length;
+  let html = `<div class="card"><div class="row" style="margin-top:0;justify-content:space-between"><span class="status">${items.length} options${over ? `, ${over} over the limit` : ""}</span><button class="small" id="vCopyAll" type="button">Copy all within limit</button></div>`;
+  items.forEach((v, i) => {
+    const L = len(v.text); const bad = limit && L > limit;
+    html += `<div class="vitem"><div class="t">${highlight(String(v.text), c)}<div class="a">${esc(v.angle || "")}</div></div><span class="chip ${bad ? "bad" : "ok"}">${L}${limit ? "/" + limit : ""}</span><button class="small" data-i="${i}" type="button">Copy</button></div>`;
+  });
+  html += "</div>";
+  $("vOut").innerHTML = html;
+  $("vOut").onclick = e => {
+    if(e.target.id === "vCopyAll"){ copyText(items.filter(v => !limit || len(v.text) <= limit).map(v => v.text).join("\n")); return; }
+    const b = e.target.closest("[data-i]"); if(b) copyText(String(items[Number(b.dataset.i)].text));
+  };
+}
+
+/* ---------- LEARN FROM CORRECTION ---------- */
+const lcRun = runner("lcGo", "lcStop", "lcStatus");
+$("lcGo").addEventListener("click", async () => {
+  const d = $("lcDraft").value.trim(), f = $("lcFixed").value.trim();
+  if(!d || !f){ toast("Paste both versions"); return; }
+  if(!active()) toast("Tip: select or save a client so the rules can be stored");
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+TASK: A junior copywriter's BM draft was corrected by her creative director or the client. Compare the two and work out the GENERAL, reusable rules behind the edits, so she gets it right next time for this client. Skip one-off content changes (a new fact, a changed date) and anything already covered by the client's existing rules. Each rule is a short instruction she could follow on a new brief. Give at most 6.
+
+DRAFT:
+"""${d.slice(0, 6000)}"""
+CORRECTED:
+"""${f.slice(0, 6000)}"""
+FEEDBACK GIVEN: ${$("lcComment").value.trim() || "none"}
+
+Reply with only JSON: {"summary":"one or two sentences on what the editor wanted overall","rules":[{"rule":"short imperative rule","before":"short example from the draft","after":"how it was fixed","type":"terminology|tone|grammar|structure|mandatory"}],"terms":[{"avoid":"word","use":"replacement"}]}
+"terms" lists simple word swaps only.`;
+  const res = await lcRun(prompt);
+  if(res) renderLearn(res);
+});
+function renderLearn(res){
+  const rules = (Array.isArray(res.rules) ? res.rules : []).filter(r => r && r.rule);
+  const terms = (Array.isArray(res.terms) ? res.terms : []).filter(t => t && t.avoid && t.use);
+  let html = `<div class="opt">${res.summary ? `<div class="meta" style="margin-top:0"><b>What they wanted:</b> ${esc(res.summary)}</div>` : ""}`;
+  if(rules.length){
+    html += rules.map((r,i) => `<div class="rule"><input type="checkbox" checked data-r="${i}"><div class="t">${esc(r.rule)} <span class="chip">${esc(r.type || "")}</span>${r.before || r.after ? `<div class="ex">${r.before ? "✗ " + esc(r.before) : ""}${r.before && r.after ? "<br>" : ""}${r.after ? "✓ " + esc(r.after) : ""}</div>` : ""}</div></div>`).join("");
+  } else html += '<div class="empty">No reusable rules found. The edits look like one-off changes.</div>';
+  if(terms.length){
+    html += `<div class="kv"><div class="k">Word swaps</div>${terms.map((t,i) => `<div class="rule"><input type="checkbox" checked data-t="${i}"><div class="t">${esc(t.avoid)} =&gt; ${esc(t.use)}</div></div>`).join("")}</div>`;
+  }
+  if(rules.length || terms.length) html += `<div class="row"><button class="primary" id="lcSave" type="button">Add selected to client</button></div>`;
+  html += "</div>";
+  $("lcOut").innerHTML = html;
+  const saveBtn = $("lcSave");
+  if(saveBtn) saveBtn.addEventListener("click", async () => {
+    const c = active();
+    if(!c){ toast("Select or save a client first"); return; }
+    c.rules = c.rules || [];
+    let added = 0;
+    $("lcOut").querySelectorAll("input[data-r]:checked").forEach(cb => {
+      const r = rules[Number(cb.dataset.r)];
+      if(r && !c.rules.some(x => x.text.toLowerCase() === String(r.rule).toLowerCase())){ c.rules.push({text:String(r.rule), before:String(r.before||""), after:String(r.after||""), added:Date.now()}); added++; }
+    });
+    const existing = parseTerms(c).map(t => t.avoid.toLowerCase());
+    const newLines = [];
+    $("lcOut").querySelectorAll("input[data-t]:checked").forEach(cb => {
+      const t = terms[Number(cb.dataset.t)];
+      if(t && !existing.includes(String(t.avoid).toLowerCase())){ newLines.push(`${t.avoid} => ${t.use}`); added++; }
+    });
+    if(newLines.length) c.terms = (c.terms ? c.terms + "\n" : "") + newLines.join("\n");
+    await saveClient(c); fillClientForm();
+    $("lcOut").innerHTML = ""; $("lcDraft").value = ""; $("lcFixed").value = ""; $("lcComment").value = "";
+    toast(added ? `Added ${added} to ${c.name}` : "Those were already saved");
+  });
+}
+
+/* ---------- BRIEF ---------- */
+const bRun = runner("bGo", "bStop", "bStatus");
+let lastBrief = null;
+$("bGo").addEventListener("click", async () => {
+  const src = $("bSrc").value.trim();
+  if(!src){ toast("Paste the brief first"); return; }
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+TASK: Decode this creative brief for a junior BM copywriter. Be concrete. If something is missing or vague, say so instead of inventing it.
+
+BRIEF:
+"""${src.slice(0, 20000)}"""
+
+Reply with only JSON:
+{"one_liner":"the whole job in one sentence","objective":"","audience":"","key_message":"the single thing the copy must say","reasons_to_believe":[""],"tone":"","mandatories":["must-include items, legal lines, logos, hashtags"],"deliverables":[{"item":"","format":"","limit":"character or time limit if stated"}],"timeline":"deadlines if stated","watch_outs":["risks: sensitivity, claims, conflicts in the brief"],"questions_to_ask":["questions to raise with the CD or account team before writing"]}`;
+  const res = await bRun(prompt);
+  if(res){
+    lastBrief = res; renderBrief(res);
+    const L = a => (Array.isArray(a) ? a.filter(Boolean) : []).map(x => "• " + x).join("\n");
+    const dels = (Array.isArray(res.deliverables) ? res.deliverables : []).filter(d => d && d.item).map(d => "• " + [d.item, d.format, d.limit].filter(Boolean).join(" · ")).join("\n");
+    const items = [["In one line", res.one_liner],["Key message", res.key_message],["Objective", res.objective],["Audience", res.audience],["Tone", res.tone],
+      ["Reasons to believe", L(res.reasons_to_believe)],["Mandatories", L(res.mandatories)],["Deliverables", dels],["Timeline", res.timeline],
+      ["Watch outs", L(res.watch_outs)],["Questions to ask", L(res.questions_to_ask)]].filter(x => x[1]).map(x => ({label:x[0], text:String(x[1])}));
+    const he = addHistory({type:"Brief", input:src, meta:"Brief decode", items});
+    prependDl("bOut", he);
+  }
+});
+function renderBrief(r){
+  const list = a => (Array.isArray(a) && a.filter(Boolean).length) ? `<ul class="clean">${a.filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : '<span class="status">Not stated</span>';
+  const kv = (k, v) => `<div class="kv"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+  const dels = (Array.isArray(r.deliverables) ? r.deliverables : []).filter(d => d && d.item);
+  let html = `<div class="card">
+    ${r.one_liner ? `<div class="verdict ok" style="background:var(--accent-soft);color:var(--accent)">${esc(r.one_liner)}</div>` : ""}
+    ${kv("Key message", esc(r.key_message || "Not clear from the brief"))}
+    ${kv("Objective", esc(r.objective || "Not stated"))}
+    ${kv("Audience", esc(r.audience || "Not stated"))}
+    ${kv("Tone", esc(r.tone || "Not stated"))}
+    ${kv("Reasons to believe", list(r.reasons_to_believe))}
+    ${kv("Mandatories", list(r.mandatories))}
+    ${kv("Deliverables", dels.length ? `<ul class="clean">${dels.map(d => `<li><b>${esc(d.item)}</b>${d.format ? " · " + esc(d.format) : ""}${d.limit ? " · " + esc(d.limit) : ""}</li>`).join("")}</ul>` : '<span class="status">Not stated</span>')}
+    ${kv("Timeline", esc(r.timeline || "Not stated"))}
+    ${kv("Watch outs", list(r.watch_outs))}
+    ${kv("Questions to ask before writing", list(r.questions_to_ask))}
+    <div class="row">
+      <button class="small" id="bToVar" type="button">Key message to Variants</button>
+      <button class="small" id="bToTc" type="button">Key message to Transcreate</button>
+      <button class="small" id="bCopyQ" type="button">Copy questions</button>
+    </div></div>`;
+  $("bOut").innerHTML = html;
+  $("bToVar").onclick = () => { $("vSrc").value = r.key_message || ""; showTab("variants"); };
+  $("bToTc").onclick = () => { $("tcSrc").value = r.key_message || ""; $("tcContext").value = [r.tone && "Tone: " + r.tone, (r.mandatories||[]).length && "Mandatories: " + r.mandatories.join("; ")].filter(Boolean).join("\n"); showTab("transcreate"); };
+  $("bCopyQ").onclick = () => copyText((r.questions_to_ask || []).map((q,i) => `${i+1}. ${q}`).join("\n"));
+}
+
+/* ---------- CHECK ---------- */
+let scanT;
+function scanCheck(){
+  const text = $("cSrc").value; const c = active();
+  const el = $("cLocal");
+  if(!text.trim()){ el.innerHTML = c ? "" : '<span class="status">Select a client to check against their terms instantly.</span>'; return; }
+  el.innerHTML = `<span class="chip">${len(text)} characters</span> ${hitSummary(text, c)}`;
+}
+$("cSrc").addEventListener("input", () => { clearTimeout(scanT); scanT = setTimeout(scanCheck, 250); });
+const cRun = runner("cGo", "cStop", "cStatus");
+$("cGo").addEventListener("click", async () => {
+  const src = $("cSrc").value.trim();
+  if(!src){ toast("Paste your draft first"); return; }
+  const areas = [];
+  if($("ckTone").checked) areas.push("CLIENT TONE AND TERMS: does it match the client's tone of voice, register, pronoun, preferred terms, banned words, learned rules and mandatories above?");
+  if($("ckLang").checked) areas.push("LANGUAGE: Malaysian BM grammar, imbuhan, DBP spelling for formal/neutral copy, Indonesian words or spelling slipping in, awkward literal-translation phrasing, typos, punctuation.");
+  if($("ckSens").checked) areas.push("SENSITIVITY: Malaysian race, religion and royalty (3R) sensitivities; Islamic terms or festive greetings used carelessly; halal implications; imagery or words that could offend Malay, Chinese, Indian, East Malaysian or other communities; gender and stereotypes.");
+  if($("ckClaims").checked) areas.push("CLAIMS AND REGULATION: unsubstantiated superlatives (terbaik, No. 1, paling), health or medical claims, halal claims without certification, price and promo terms, alcohol, gambling, children, and anything likely to clash with the Malaysian Code of Advertising Practice or MCMC content rules. Flag as 'check with legal or the client', never as a final legal ruling.");
+  if(!areas.length){ toast("Tick at least one check"); return; }
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+TASK: Review this BM ad copy like a supportive senior copywriter before it goes to the creative director. Only flag real issues. Do not invent problems to fill space, and do not rewrite for taste when the copy already works.
+Check these areas:
+${areas.map(a => "- " + a).join("\n")}
+Context: ${$("cContext").value.trim() || "none"}
+
+COPY:
+"""${src.slice(0, 12000)}"""
+
+Reply with only JSON:
+{"verdict":"ok|minor|fix","summary":"one sentence","issues":[{"area":"Client tone|Terms|Language|Sensitivity|Claims","severity":"high|medium|low","quote":"the exact words from the copy","problem":"what is wrong","suggestion":"the fixed wording"}],"revised":"the full copy with all fixes applied, or the original if nothing needs fixing"}`;
+  const res = await cRun(prompt);
+  if(res){
+    renderCheck(res);
+    const label = {ok:"Good to send", minor:"Minor tweaks suggested", fix:"Fix before sending"}[res.verdict] || "Checked";
+    const issues = (Array.isArray(res.issues) ? res.issues : []).filter(i => i && i.problem).map(i => `• [${i.area || ""}] ${i.quote ? '"' + i.quote + '": ' : ""}${i.problem}${i.suggestion ? " → " + i.suggestion : ""}`).join("\n");
+    const items = [{label:"Revised version", text:String(res.revised || src)}];
+    if(issues) items.push({label:"Issues found", text:issues});
+    const he = addHistory({type:"Check", input:src, meta:label, items});
+    prependDl("cOut", he);
+  }
+});
+function renderCheck(r){
+  const c = active();
+  const v = ["ok","minor","fix"].includes(r.verdict) ? r.verdict : "minor";
+  const label = {ok:"Good to send", minor:"Minor tweaks suggested", fix:"Fix before sending"}[v];
+  const issues = (Array.isArray(r.issues) ? r.issues : []).filter(i => i && (i.problem || i.quote));
+  const order = {high:0, medium:1, low:2};
+  issues.sort((a,b) => (order[a.severity] ?? 3) - (order[b.severity] ?? 3));
+  let html = `<div class="card"><div class="verdict ${v}">${label}</div>${r.summary ? `<div class="meta" style="margin-top:4px">${esc(r.summary)}</div>` : ""}`;
+  html += issues.map(i => `<div class="issue ${esc(i.severity || "low")}"><div><span class="chip">${esc(i.area || "")}</span> <span class="chip ${i.severity === "high" ? "bad" : i.severity === "medium" ? "warn" : ""}">${esc(i.severity || "low")}</span></div>
+    ${i.quote ? `<div class="meta"><q>${esc(i.quote)}</q></div>` : ""}
+    <div class="meta" style="color:var(--ink)">${esc(i.problem || "")}</div>
+    ${i.suggestion ? `<div class="meta"><b>Try:</b> ${esc(i.suggestion)}</div>` : ""}</div>`).join("");
+  if(r.revised && r.revised.trim() !== $("cSrc").value.trim()){
+    html += `<div class="opt"><span class="lab">Revised version</span><div class="bm">${highlight(String(r.revised), c)}</div><div class="meta"><span class="chip">${len(r.revised)} characters</span> ${hitSummary(String(r.revised), c)}</div><div class="row"><button class="small" id="cCopyRev" type="button">Copy</button><button class="small" id="cUseRev" type="button">Replace my draft</button></div></div>`;
+  }
+  html += "</div>";
+  $("cOut").innerHTML = html;
+  const cp = $("cCopyRev"), use = $("cUseRev");
+  if(cp) cp.onclick = () => copyText(String(r.revised));
+  if(use) use.onclick = () => { $("cSrc").value = String(r.revised); scanCheck(); $("cOut").innerHTML = ""; window.scrollTo({top:0}); };
+}
+
+/* ---------- SIMPLE MODE & COUNT ---------- */
+function applySimple(){
+  const on = $("simpleMode").checked;
+  $("modeLabel").textContent = on ? "Simple" : "Full";
+  document.querySelectorAll("details.more").forEach(d => d.open = !on);
+  LS.set("mc_simple", on);
+}
+$("simpleMode").checked = LS.get("mc_simple", true);
+$("simpleMode").addEventListener("change", applySimple);
+$("tcCountSeg").addEventListener("click", e => {
+  const b = e.target.closest("button[data-n]"); if(!b) return;
+  $("tcCount").value = b.dataset.n;
+  $("tcCountSeg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  LS.set("mc_count", b.dataset.n);
+});
+(function(){ const n = LS.get("mc_count", "3"); const b = $("tcCountSeg").querySelector(`[data-n="${n}"]`); if(b) b.click(); })();
+function styleSummary(){
+  const parts = [FORMALITY[$("tcFormality").value][0]];
+  if($("tcFlavour").value) parts.push($("tcFlavour").value);
+  if(dialectName()) parts.push(dialectName());
+  parts.push({rumi:"Rumi", both:"Rumi + Jawi", jawi:"Jawi"}[$("tcScript").value]);
+  parts.push($("tcFormat").value);
+  if($("tcTrend").checked) parts.push("Trend-aware");
+  return parts.join(" · ");
+}
+function updateMoreSummary(){
+  const d = dialectName(), s = $("tcScript").value, f = $("tcFlavour").value;
+  const bits = [d, f, s !== "rumi" ? (s === "jawi" ? "Jawi" : "Rumi + Jawi") : ""].filter(Boolean);
+  $("tcMoreSum").textContent = bits.length ? "(" + bits.join(", ") + ")" : "";
+}
+["tcDialect","tcScript","tcFlavour","tcDialectCustom","tcPreset"].forEach(id => { $(id).addEventListener("change", updateMoreSummary); $(id).addEventListener("input", updateMoreSummary); });
+
+/* ---------- HISTORY ---------- */
+const HISTORY_CAP = 300;
+state.history = LS.get("mc_history", []);
+function persistHistory(){
+  try{ localStorage.setItem("mc_history", JSON.stringify(state.history)); }
+  catch(e){ state.history = state.history.slice(0, Math.floor(state.history.length * 0.7)); try{ localStorage.setItem("mc_history", JSON.stringify(state.history)); }catch(e2){} }
+  markDirty();
+}
+function addHistory(entry){
+  const c = active();
+  const he = Object.assign({id:"h-" + Date.now().toString(36) + Math.random().toString(36).slice(2,6), ts:Date.now(), client:c ? c.name : "", clientId:c ? c.id : "", star:false, updated:Date.now()}, entry);
+  he.input = String(he.input || "").slice(0, 20000);
+  state.history.unshift(he);
+  const dropped = state.history.splice(HISTORY_CAP);
+  persistHistory();
+  cloudWrite(he);
+  dropped.filter(d => !d.star).forEach(d => cloudDelete(d.id));
+  return he;
+}
+async function updateHistory(he){ he.updated = Date.now(); persistHistory(); await cloudWrite(he); }
+function deleteHistory(id){
+  state.history = state.history.filter(x => x.id !== id);
+  state.deleted.push(id); persistLocal(); persistHistory(); cloudDelete(id);
+}
+const DL_OPTS = '<option value="docx">Word (.docx)</option><option value="pdf">PDF</option><option value="pptx">PowerPoint (.pptx)</option><option value="xlsx">Excel copy deck (.xlsx)</option><option value="txt">Text (.txt)</option>';
+function dlSelect(id, label){ return `<select class="dlSel" data-h="${esc(id)}"><option value="">${label || "Download as…"}</option>${DL_OPTS}</select>`; }
+function prependDl(containerId, he){
+  $(containerId).insertAdjacentHTML("afterbegin", `<div class="dlrow">${dlSelect(he.id)}<span class="status">Saved to My copy</span></div>`);
+  if(window.innerWidth < 1100){ try{ $(containerId).scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){} }
+}
+document.addEventListener("change", e => {
+  const s = e.target.closest(".dlSel"); if(!s || !s.value) return;
+  const fmt = s.value; s.value = "";
+  if(s.id === "libDlAll"){ const list = filteredHistory(); if(!list.length){ toast("Nothing to download"); return; } exportEntries(list, fmt); return; }
+  const he = state.history.find(x => x.id === s.dataset.h);
+  if(he) exportEntries([he], fmt);
+});
+
+/* ---------- LIBRARY ---------- */
+let libShown = 30;
+function fmtDate(ts){ try{ return new Date(ts).toLocaleString("en-MY", {day:"numeric", month:"short", year:"numeric", hour:"numeric", minute:"2-digit"}); }catch(e){ return new Date(ts).toISOString().slice(0,16).replace("T"," "); } }
+function filteredHistory(){
+  const q = $("libQ").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const type = $("libType").value, cl = $("libClient").value, star = $("libStar").checked, days = Number($("libWhen").value);
+  const since = days ? (days === 1 ? new Date().setHours(0,0,0,0) : Date.now() - days*864e5) : 0;
+  return state.history.filter(he => {
+    if(type && he.type !== type) return false;
+    if(cl && (he.client || "(No client)") !== cl) return false;
+    if(star && !he.star) return false;
+    if(since && he.ts < since) return false;
+    if(q.length){
+      const hay = [he.client, he.type, he.meta, he.input, ...(he.items || []).map(i => [i.label, i.text, i.jawi, i.note].join(" "))].join(" ").toLowerCase();
+      return q.every(w => hay.includes(w));
+    }
+    return true;
+  });
+}
+function hlQ(text){
+  const q = $("libQ").value.trim().split(/\s+/).filter(Boolean).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const s = esc(text);
+  if(!q.length) return s;
+  try{ return s.replace(new RegExp("(" + q.map(w => esc(w)).join("|") + ")", "gi"), '<mark class="q">$1</mark>'); }catch(e){ return s; }
+}
+function renderLibClients(){
+  const sel = $("libClient"), v = sel.value;
+  const names = [...new Set(state.history.map(he => he.client || "(No client)"))].sort();
+  sel.innerHTML = '<option value="">All clients</option>' + names.map(n => `<option>${esc(n)}</option>`).join("");
+  sel.value = names.includes(v) ? v : "";
+}
+function renderLibrary(reset){
+  if(reset){ libShown = 30; renderLibClients(); }
+  const list = filteredHistory();
+  $("libCount").textContent = state.history.length ? `${list.length} of ${state.history.length}` : "";
+  if(!state.history.length){ $("libList").innerHTML = '<div class="card empty">Nothing yet. Everything she writes in Transcreate, Variants, Check or Brief lands here automatically.</div>'; $("libMore").classList.add("hidden"); return; }
+  if(!list.length){ $("libList").innerHTML = '<div class="card empty">No matches. Try fewer words or clear the filters.</div>'; $("libMore").classList.add("hidden"); return; }
+  $("libList").innerHTML = list.slice(0, libShown).map(he => {
+    const items = (he.items || []).slice(0, he.type === "Variants" ? 15 : 12);
+    return `<div class="card entry" data-id="${esc(he.id)}">
+      <div class="head"><button class="star ${he.star ? "on" : ""}" data-act="star" type="button" aria-label="Star">${he.star ? "★" : "☆"}</button><span class="chip">${esc(he.type)}</span>${he.client ? `<span class="chip ok">${esc(he.client)}</span>` : ""}<span class="date">${esc(fmtDate(he.ts))}</span></div>
+      ${he.meta ? `<div class="meta">${hlQ(he.meta)}</div>` : ""}
+      ${he.input ? `<div class="src">${hlQ(he.input.slice(0, 400))}</div>` : ""}
+      ${items.map((it, i) => `<div class="item">${it.label ? `<div class="il">${hlQ(it.label)}</div>` : ""}<div class="it">${hlQ(it.text || "")}</div>${it.jawi ? `<div class="jawi" dir="rtl" lang="ms-Arab">${esc(it.jawi)}</div>` : ""}<div class="row" style="margin-top:6px"><button class="small" data-act="copy" data-i="${i}" type="button">Copy</button>${it.jawi ? `<button class="small" data-act="copyj" data-i="${i}" type="button">Copy Jawi</button>` : ""}</div></div>`).join("")}
+      <div class="dlrow">${dlSelect(he.id)}${he.type === "Transcreate" || he.type === "Check" || he.type === "Brief" ? `<button class="small" data-act="reuse" type="button">Use again</button>` : ""}<button class="small danger" data-act="del" type="button">Delete</button></div>
+    </div>`;
+  }).join("");
+  $("libMore").classList.toggle("hidden", list.length <= libShown);
+}
+let libT;
+$("libQ").addEventListener("input", () => { clearTimeout(libT); libT = setTimeout(() => { libShown = 30; renderLibrary(); }, 200); });
+["libType","libClient","libStar","libWhen"].forEach(id => $(id).addEventListener("change", () => { libShown = 30; renderLibrary(); }));
+$("libMore").addEventListener("click", () => { libShown += 30; renderLibrary(); });
+$("libList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if(!b) return;
+  const card = b.closest(".entry"); const he = state.history.find(x => x.id === card.dataset.id); if(!he) return;
+  const act = b.dataset.act;
+  if(act === "copy") copyText(he.items[Number(b.dataset.i)].text || "");
+  if(act === "copyj") copyText(he.items[Number(b.dataset.i)].jawi || "");
+  if(act === "star"){ he.star = !he.star; b.classList.toggle("on", he.star); b.textContent = he.star ? "★" : "☆"; await updateHistory(he); }
+  if(act === "reuse"){
+    const tab = {Transcreate:"transcreate", Check:"check", Brief:"brief"}[he.type];
+    const box = {Transcreate:"tcSrc", Check:"cSrc", Brief:"bSrc"}[he.type];
+    $(box).value = he.input || ""; $(box).dispatchEvent(new Event("input"));
+    if(he.clientId && state.clients[he.clientId]){ state.activeId = he.clientId; persistLocal(); renderClientSelect(); fillClientForm(); syncFormalityToClient(); }
+    showTab(tab); toast("Loaded. Tweak and run again.");
+  }
+  if(act === "del"){
+    if(b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Tap again"; setTimeout(() => { b.dataset.confirm = ""; b.textContent = "Delete"; }, 3000); return; }
+    deleteHistory(he.id); renderLibrary(); toast("Deleted");
+  }
+});
+
+/* ---------- EXPORT ---------- */
+function initDownloads(){}
+function fileBase(entries){
+  const d = new Date(); const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const one = entries.length === 1 ? entries[0] : null;
+  const parts = ["MejaCopyHannah", one ? one.type : "Collection", one && one.client ? one.client : "", ymd];
+  return parts.filter(Boolean).join("_").replace(/[^\p{L}\p{N}_\- ]+/gu, "").replace(/\s+/g, "-").slice(0, 120);
+}
+function entryTitle(he){ return [he.type, he.client || "", fmtDate(he.ts)].filter(Boolean).join(" · "); }
+async function saveFile(filename, data){
+  try{
+    const blob = data instanceof Blob ? data : new Blob([data instanceof ArrayBuffer || ArrayBuffer.isView(data) ? data : String(data)]);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = filename; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast("Downloaded");
+  }catch(e){ toast("Couldn't download. Try again."); }
+}
+async function exportEntries(entries, fmt){
+  toast("Preparing file…");
+  try{
+    const base = fileBase(entries);
+    if(fmt === "txt") return saveFile(base + ".txt", buildTxt(entries));
+    if(fmt === "docx") return saveFile(base + ".docx", await buildDocx(entries));
+    if(fmt === "pptx") return saveFile(base + ".pptx", await buildPptx(entries));
+    if(fmt === "xlsx") return saveFile(base + ".xlsx", await buildXlsx(entries));
+    if(fmt === "pdf") return saveFile(base + ".pdf", await buildPdf(entries));
+  }catch(e){ console.error(e); toast("Couldn't build that file. Try another format."); }
+}
+function buildTxt(entries){
+  return entries.map(he => {
+    let t = `${entryTitle(he)}\n${he.meta ? he.meta + "\n" : ""}\nSOURCE:\n${he.input || ""}\n`;
+    (he.items || []).forEach(it => { t += `\n${it.label ? "[" + it.label + "]\n" : ""}${it.text || ""}${it.jawi ? "\n" + it.jawi : ""}${it.note ? "\n(" + it.note + ")" : ""}\n`; });
+    return t;
+  }).join("\n" + "=".repeat(40) + "\n\n");
+}
+async function buildDocx(entries){
+  const D = await loadLib("lib/docx.umd.js", "docx");
+  const {Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle} = D;
+  const runs = (text, o = {}) => String(text || "").split("\n").map((l, i) => new TextRun(Object.assign({text:l, break: i ? 1 : 0, font:"Calibri"}, o)));
+  const rose = "C24D69", muted = "8C6D72";
+  const kids = [
+    new Paragraph({children:[new TextRun({text:"Meja Copy Hannah", bold:true, size:36, color:rose, font:"Georgia"})], spacing:{after:80}}),
+    new Paragraph({children:[new TextRun({text:entries.length === 1 ? entryTitle(entries[0]) : `${entries.length} pieces of copy · exported ${fmtDate(Date.now())}`, color:muted, size:20})], spacing:{after:240}})
+  ];
+  entries.forEach((he, n) => {
+    if(entries.length > 1) kids.push(new Paragraph({heading:HeadingLevel.HEADING_2, children:[new TextRun({text:entryTitle(he), color:rose})], spacing:{before:n ? 360 : 0, after:80}}));
+    if(he.meta) kids.push(new Paragraph({children:[new TextRun({text:he.meta, italics:true, color:muted, size:20})], spacing:{after:120}}));
+    if(he.input){
+      kids.push(new Paragraph({children:[new TextRun({text:"Source", bold:true, size:18, color:muted})]}));
+      kids.push(new Paragraph({children:runs(he.input, {size:20, color:"555555"}), spacing:{after:200}, border:{left:{style:BorderStyle.SINGLE, size:12, color:"F2A5B4", space:8}}}));
+    }
+    (he.items || []).forEach(it => {
+      if(it.label) kids.push(new Paragraph({children:[new TextRun({text:it.label, bold:true, color:rose, size:20})], spacing:{before:160}}));
+      kids.push(new Paragraph({children:runs(it.text, {size:24})}));
+      if(it.jawi) kids.push(new Paragraph({bidirectional:true, alignment:AlignmentType.RIGHT, children:runs(it.jawi, {size:32, rightToLeft:true, font:"Traditional Arabic"}), spacing:{before:80}}));
+      if(it.note) kids.push(new Paragraph({children:runs(it.note, {italics:true, size:18, color:muted})}));
+    });
+  });
+  const doc = new Document({creator:"Meja Copy Hannah", title:"Meja Copy Hannah", sections:[{properties:{}, children:kids}]});
+  return Packer.toBlob(doc);
+}
+async function buildPptx(entries){
+  const P = await loadLib("lib/pptxgen.bundle.js", "PptxGenJS");
+  const pptx = new P(); pptx.layout = "LAYOUT_16x9"; pptx.title = "Meja Copy Hannah";
+  const BG = "FFF7F4", ROSE = "C24D69", INK = "4A2E35", MUTED = "8C6D72";
+  const deco = s => {
+    s.background = {color:BG};
+    s.addShape(pptx.ShapeType.ellipse, {x:9.1, y:-0.35, w:1.2, h:1.2, fill:{color:"F8D9C8", transparency:40}, line:{type:"none"}});
+    s.addShape(pptx.ShapeType.ellipse, {x:9.55, y:0.45, w:0.5, h:0.5, fill:{color:"F2A5B4", transparency:20}, line:{type:"none"}});
+  };
+  const t = pptx.addSlide(); deco(t);
+  t.addText("Meja Copy Hannah", {x:0.6, y:1.8, w:8.8, h:0.9, fontFace:"Georgia", fontSize:40, bold:true, color:ROSE});
+  t.addText(entries.length === 1 ? entryTitle(entries[0]) : `${entries.length} pieces of copy`, {x:0.6, y:2.7, w:8.8, h:0.5, fontSize:18, color:MUTED});
+  entries.forEach(he => {
+    const items = he.items || [];
+    const head = s => { deco(s); s.addText(entryTitle(he), {x:0.5, y:0.25, w:8.5, h:0.35, fontSize:11, color:MUTED}); };
+    if(he.type === "Variants"){
+      for(let i = 0; i < items.length; i += 6){
+        const s = pptx.addSlide(); head(s);
+        s.addText(he.meta || "Variants", {x:0.5, y:0.6, w:8.5, h:0.45, fontSize:16, bold:true, color:ROSE});
+        s.addText(items.slice(i, i+6).map(it => ({text:it.text, options:{bullet:true, breakLine:true}})), {x:0.6, y:1.2, w:8.8, h:4, fontSize:18, color:INK, valign:"top", fit:"shrink", paraSpaceAfter:8});
+      }
+      return;
+    }
+    items.forEach(it => {
+      const s = pptx.addSlide(); head(s);
+      s.addText(it.label || he.type, {x:0.5, y:0.6, w:8.5, h:0.45, fontSize:16, bold:true, color:ROSE});
+      const hasJ = !!it.jawi;
+      s.addText(it.text || "", {x:0.6, y:1.2, w:8.8, h:hasJ ? 2.0 : 3.4, fontSize:22, color:INK, valign:"top", fit:"shrink"});
+      if(hasJ) s.addText(it.jawi, {x:0.6, y:3.3, w:8.8, h:1.6, fontSize:24, color:INK, align:"right", rtlMode:true, valign:"top", fontFace:"Arial", fit:"shrink"});
+      if(it.note) s.addText(it.note, {x:0.6, y:5.0, w:8.8, h:0.45, fontSize:11, italic:true, color:MUTED});
+    });
+  });
+  return pptx.write({outputType:"blob"});
+}
+async function buildXlsx(entries){
+  const X = await loadLib("lib/xlsx.mini.min.js", "XLSX");
+  const rows = [];
+  entries.forEach(he => (he.items && he.items.length ? he.items : [{}]).forEach((it, i) => rows.push({
+    "Date": fmtDate(he.ts), "Type": he.type, "Client": he.client || "", "Settings": he.meta || "",
+    "Source": i === 0 ? (he.input || "") : "", "Label": it.label || "", "Copy (Rumi)": it.text || "", "Jawi": it.jawi || "",
+    "Characters": it.text ? len(it.text) : "", "Note": it.note || "", "Status": "", "Feedback": ""
+  })));
+  const ws = X.utils.json_to_sheet(rows);
+  ws["!cols"] = [18,12,18,26,40,18,50,40,10,30,12,30].map(w => ({wch:w}));
+  const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, "Copy deck");
+  return X.write(wb, {bookType:"xlsx", type:"array"});
+}
+async function buildPdf(entries){
+  const [, J] = await Promise.all([loadLib("lib/html2canvas.min.js", "html2canvas"), loadLib("lib/jspdf.umd.min.js", "jspdf")]);
+  const box = document.createElement("div");
+  box.style.cssText = "position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#4a2e35;font-family:Quicksand,system-ui,sans-serif;font-size:15px;line-height:1.55";
+  const blocks = [`<div style="padding:44px 56px 10px"><div style="font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;color:#c24d69">✿ Meja Copy Hannah</div><div style="color:#8c6d72;font-size:13px">${esc(entries.length === 1 ? entryTitle(entries[0]) : entries.length + " pieces of copy · exported " + fmtDate(Date.now()))}</div></div>`];
+  entries.forEach(he => {
+    let b = `<div style="padding:14px 56px 4px">`;
+    if(entries.length > 1) b += `<div style="font-family:Fraunces,Georgia,serif;font-size:19px;color:#c24d69;border-top:1px solid #f2dcd9;padding-top:12px">${esc(entryTitle(he))}</div>`;
+    if(he.meta) b += `<div style="color:#8c6d72;font-style:italic;font-size:13px">${esc(he.meta)}</div>`;
+    if(he.input) b += `<div style="margin:8px 0 4px;border-left:3px solid #f2a5b4;padding-left:10px;color:#6b555a;font-size:13px;white-space:pre-wrap">${esc(he.input.slice(0, 3000))}</div>`;
+    b += `</div>`;
+    blocks.push(b);
+    (he.items || []).forEach(it => {
+      blocks.push(`<div style="padding:6px 56px">${it.label ? `<div style="font-weight:700;color:#c24d69;font-size:13px">${esc(it.label)}</div>` : ""}<div style="white-space:pre-wrap;font-size:16px">${esc(it.text || "")}</div>${it.jawi ? `<div dir="rtl" style="text-align:right;font-family:'Noto Naskh Arabic',serif;font-size:21px;line-height:2;white-space:pre-wrap">${esc(it.jawi)}</div>` : ""}${it.note ? `<div style="color:#8c6d72;font-size:12px;font-style:italic">${esc(it.note)}</div>` : ""}</div>`);
+    });
+  });
+  box.innerHTML = blocks.map(b => `<div class="pb">${b}</div>`).join("") + '<div style="height:30px"></div>';
+  document.body.appendChild(box);
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const pdf = new J.jsPDF({unit:"pt", format:"a4"});
+    const PW = pdf.internal.pageSize.getWidth(), PH = pdf.internal.pageSize.getHeight(), M = 24;
+    let y = M, first = true;
+    for(const el of box.querySelectorAll(".pb")){
+      const cv = await window.html2canvas(el, {scale:2, backgroundColor:"#ffffff", logging:false});
+      const scale = PW / cv.width; let h = cv.height * scale; let srcY = 0;
+      while(h > 0){
+        const room = PH - M - y;
+        if(room < 40 || (h <= PH - 2*M && h > room)){ pdf.addPage(); y = M; continue; }
+        const take = Math.min(h, room);
+        const slice = document.createElement("canvas"); slice.width = cv.width; slice.height = Math.round(take / scale);
+        slice.getContext("2d").drawImage(cv, 0, srcY, cv.width, slice.height, 0, 0, cv.width, slice.height);
+        pdf.addImage(slice.toDataURL("image/jpeg", 0.92), "JPEG", 0, y, PW, take);
+        y += take; srcY += slice.height; h -= take; first = false;
+      }
+    }
+    return pdf.output("blob");
+  }finally{ box.remove(); }
+}
+
+/* ---------- TRENDS & SLANG BANK ---------- */
+state.trends = LS.get("mc_trends", null);
+state.bank = LS.get("mc_bank", {id:"w-bank", items:[], pinned:[], updated:0});
+if(!Array.isArray(state.bank.items)) state.bank.items = [];
+if(!Array.isArray(state.bank.pinned)) state.bank.pinned = [];
+async function saveBank(){
+  state.bank.updated = Date.now(); state.bank.id = "w-bank";
+  LS.set("mc_bank", state.bank);
+  markDirty();
+  await cloudWrite(state.bank);
+}
+function safeUrl(u){ try{ const x = new URL(String(u)); return x.protocol === "https:" || x.protocol === "http:" ? x.href : ""; }catch(e){ return ""; } }
+const RISK = {low:["ok","Safe to use"], medium:["warn","Use with care"], high:["bad","Sensitive"]};
+function trendItems(){ return (state.trends && Array.isArray(state.trends.items)) ? state.trends.items.filter(t => t && t.topic) : []; }
+function tid(t, i){ return String(t.id || ("t" + i + "-" + String(t.topic).slice(0, 20))); }
+function renderTrends(){
+  const tr = state.trends;
+  if(!tr || !trendItems().length){
+    $("trWeek").textContent = "No trends yet";
+    $("trUpdated").textContent = "";
+    $("trSummary").textContent = "Trends arrive every Monday. Her slang bank below works already.";
+    $("trList").innerHTML = ""; $("trDates").innerHTML = '<div class="empty">Nothing yet.</div>'; $("trSlang").innerHTML = '<div class="empty">Nothing yet.</div>';
+  } else {
+    $("trWeek").textContent = "Week of " + (tr.weekOf || "");
+    $("trUpdated").textContent = tr.updated ? "Updated " + fmtDate(Date.parse(tr.updated) || tr.updated) : "";
+    $("trSummary").textContent = tr.summary || "";
+    const showRisky = $("trShowRisky").checked;
+    const items = trendItems().map((t,i) => ({t, id:tid(t,i)})).filter(x => showRisky || x.t.risk !== "high");
+    const hidden = trendItems().filter(t => t.risk === "high").length;
+    $("trList").innerHTML = items.map(({t, id}) => {
+      const r = RISK[t.risk] || RISK.medium; const pinned = state.bank.pinned.includes(id);
+      const srcs = (Array.isArray(t.sources) ? t.sources : []).map(s => { const u = safeUrl(s && s.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(s.title || "Source")}</a>` : ""; }).join("");
+      return `<div class="card tcard"><div class="top"><input type="checkbox" data-pin="${esc(id)}" ${pinned ? "checked" : ""} ${t.risk === "high" ? "disabled" : ""} aria-label="Use in copy"><div style="flex:1">
+        <div class="ttl">${esc(t.topic)}</div>
+        <div style="margin-top:4px"><span class="chip">${esc(t.category || "Trend")}</span> <span class="chip ${r[0]}">${r[1]}</span></div>
+        ${t.why ? `<div class="meta"><b>What's happening:</b> ${esc(t.why)}</div>` : ""}
+        ${t.angle ? `<div class="meta"><b>Copy angle:</b> ${esc(t.angle)}</div>` : ""}
+        ${t.caution ? `<div class="meta"><b>Careful:</b> ${esc(t.caution)}</div>` : ""}
+        ${srcs ? `<div class="meta src">${srcs}</div>` : ""}
+      </div></div></div>`;
+    }).join("") + (!showRisky && hidden ? `<p class="status">${hidden} sensitive topic${hidden > 1 ? "s" : ""} hidden. They're never used in copy.</p>` : "");
+    const dates = (Array.isArray(tr.dates) ? tr.dates : []).filter(d => d && d.label);
+    $("trDates").innerHTML = dates.length ? dates.map(d => `<div class="dateRow"><div class="d">${esc(d.date || "")}</div><div>${esc(d.label)}${d.note ? `<div class="meta" style="margin-top:2px">${esc(d.note)}</div>` : ""}</div></div>`).join("") : '<div class="empty">Nothing listed.</div>';
+    const slang = (Array.isArray(tr.slang) ? tr.slang : []).filter(s => s && s.term);
+    $("trSlang").innerHTML = slang.length ? slang.map((s,i) => {
+      const have = state.bank.items.some(b => b.term.toLowerCase() === String(s.term).toLowerCase());
+      return `<div class="slangRow"><div class="t"><b>${esc(s.term)}</b> <span class="chip">${esc(s.audience || "")}</span><div class="meta" style="margin-top:2px">${esc(s.meaning || "")}${s.example ? ` <i>e.g. "${esc(s.example)}"</i>` : ""}</div>${s.caution ? `<div class="meta" style="margin-top:2px"><b>Careful:</b> ${esc(s.caution)}</div>` : ""}</div><button class="small" data-addslang="${i}" type="button" ${have ? "disabled" : ""}>${have ? "In bank" : "Add"}</button></div>`;
+    }).join("") : '<div class="empty">Nothing listed this week.</div>';
+  }
+  renderBank(); updateTrendInfo();
+}
+function renderBank(){
+  $("bankCount").textContent = state.bank.items.length;
+  $("bankList").innerHTML = state.bank.items.length ? state.bank.items.map((b,i) => `<div class="slangRow"><div class="t"><b>${esc(b.term)}</b> <span class="chip">${esc(b.audience || "")}</span>${b.meaning ? `<div class="meta" style="margin-top:2px">${esc(b.meaning)}</div>` : ""}</div><button class="small danger" data-delslang="${i}" type="button">Remove</button></div>`).join("") : '<div class="empty">Empty. Add words she hears and likes, with notes on who says them.</div>';
+}
+function updateTrendInfo(){
+  const pinned = trendItems().filter((t,i) => state.bank.pinned.includes(tid(t,i)) && t.risk !== "high").length;
+  const n = pinned || trendItems().filter(t => t.risk === "low").length;
+  $("tcTrendInfo").textContent = `(${pinned ? n + " ticked" : n + " safe"} trend${n === 1 ? "" : "s"}, ${state.bank.items.length} word${state.bank.items.length === 1 ? "" : "s"})`;
+}
+$("trShowRisky").addEventListener("change", renderTrends);
+$("trList").addEventListener("change", async e => {
+  const cb = e.target.closest("[data-pin]"); if(!cb) return;
+  const id = cb.dataset.pin;
+  state.bank.pinned = state.bank.pinned.filter(x => x !== id);
+  if(cb.checked) state.bank.pinned.push(id);
+  updateTrendInfo(); await saveBank();
+});
+$("trSlang").addEventListener("click", async e => {
+  const b = e.target.closest("[data-addslang]"); if(!b) return;
+  const s = state.trends.slang[Number(b.dataset.addslang)];
+  state.bank.items.push({term:String(s.term), audience:String(s.audience || "Everyone"), meaning:[s.meaning, s.caution].filter(Boolean).map(String).join(" Careful: ")});
+  await saveBank(); renderTrends(); toast("Added to her bank");
+});
+$("bkAdd").addEventListener("click", async () => {
+  const term = $("bkTerm").value.trim(); if(!term){ toast("Type a word first"); return; }
+  if(state.bank.items.some(b => b.term.toLowerCase() === term.toLowerCase())){ toast("Already in the bank"); return; }
+  state.bank.items.push({term, audience:$("bkAud").value, meaning:$("bkMean").value.trim()});
+  $("bkTerm").value = ""; $("bkMean").value = "";
+  await saveBank(); renderTrends(); toast("Added");
+});
+$("bankList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-delslang]"); if(!b) return;
+  state.bank.items.splice(Number(b.dataset.delslang), 1); await saveBank(); renderTrends();
+});
+function trendBlock(){
+  const all = trendItems().map((t,i) => ({t, id:tid(t,i)})).filter(x => x.t.risk !== "high");
+  let use = all.filter(x => state.bank.pinned.includes(x.id)).map(x => x.t);
+  if(!use.length) use = all.filter(x => x.t.risk === "low").map(x => x.t).slice(0, 6);
+  const dates = (state.trends && Array.isArray(state.trends.dates) ? state.trends.dates : []).filter(d => d && d.label).slice(0, 8);
+  const bank = state.bank.items;
+  if(!use.length && !dates.length && !bank.length) return "";
+  return `TREND CONTEXT (Malaysia${state.trends && state.trends.weekOf ? ", week of " + state.trends.weekOf : ""}). Make the copy feel current, but only reference a trend or date if it fits the brief, the client and the register naturally. Use at most one trend reference per option, and it is fine to use none. Never force it, never mock any group, and never touch race, religion or royalty.
+${use.length ? "Trends she approved:\n" + use.map(t => `- ${t.topic}: ${t.why || ""}${t.angle ? " Angle: " + t.angle : ""}${t.caution ? " Caution: " + t.caution : ""}`).join("\n") : ""}
+${dates.length ? "Upcoming dates:\n" + dates.map(d => `- ${d.date || ""} ${d.label}${d.note ? " (" + d.note + ")" : ""}`).join("\n") : ""}
+${bank.length ? "Her slang bank. Use these words only when the register is Santai, Bahasa pasar or Gen Z and the audience matches. Prefer them over slang you invent yourself:\n" + bank.map(b => `- ${b.term} [${b.audience}]: ${b.meaning || ""}`).join("\n") : ""}`;
+}
+async function initTrends(){
+  renderTrends();
+  if(!CONN.url || !CONN.pass) return;
+  try{
+    const d = await workerFetch("/trends", {method:"GET"});
+    if(d && Array.isArray(d.items) && d.items.length){ state.trends = d; LS.set("mc_trends", d); renderTrends(); }
+  }catch(e){}
+}
+$("tcTrend").checked = LS.get("mc_trendaware", false);
+$("vTrend").checked = LS.get("mc_trendaware", false);
+["tcTrend","vTrend"].forEach(id => $(id).addEventListener("change", () => { const v = $(id).checked; $("tcTrend").checked = v; $("vTrend").checked = v; LS.set("mc_trendaware", v); }));
+
+const taRun = runner("taGo", "taStop", "taStatus");
+$("taGo").addEventListener("click", async () => {
+  const src = $("taSrc").value.trim();
+  if(!src){ toast("Add the product or message first"); return; }
+  const tb = trendBlock();
+  if(!tb){ toast("No trends or slang yet"); return; }
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+${tb}
+
+TASK: Suggest 5 topical copy angles for the product or message below, each built on a different trend, date or slang word above. Only use what genuinely fits. Write each hook in natural Malaysian BM.
+PRODUCT / MESSAGE: """${src.slice(0, 4000)}"""
+
+Reply with only JSON: {"ideas":[{"trend":"which trend or date it uses","hook":"the BM headline or caption","why":"one sentence on why it works","risk":"low|medium","watch":"anything to check, or empty"}]}`;
+  const res = await taRun(prompt);
+  if(!res) return;
+  const ideas = (Array.isArray(res.ideas) ? res.ideas : []).filter(i => i && i.hook);
+  $("taOut").innerHTML = ideas.map((i,n) => `<div class="opt"><span class="lab">${esc(i.trend || "Angle")}</span><div class="bm">${highlight(String(i.hook), active())}</div>${i.why ? `<div class="meta"><b>Why:</b> ${esc(i.why)}</div>` : ""}${i.watch ? `<div class="meta"><b>Check:</b> ${esc(i.watch)}</div>` : ""}<div class="row"><button class="small" data-tacopy="${n}" type="button">Copy</button><button class="small" data-tacheck="${n}" type="button">Check this</button></div></div>`).join("") || '<div class="empty">No angles came back. Try again.</div>';
+  $("taOut").onclick = e => {
+    const b = e.target.closest("button"); if(!b) return;
+    const i = ideas[Number(b.dataset.tacopy ?? b.dataset.tacheck)]; if(!i) return;
+    if(b.dataset.tacopy != null) copyText(String(i.hook));
+    else { $("cSrc").value = String(i.hook); scanCheck(); showTab("check"); }
+  };
+  if(ideas.length){ const he = addHistory({type:"Trend angles", input:src, meta:state.trends && state.trends.weekOf ? "Week of " + state.trends.weekOf : "", items: ideas.map(i => ({label:String(i.trend || ""), text:String(i.hook), note:String(i.why || "")}))}); prependDl("taOut", he); }
+});
+
+/* ---------- SYNC (end-to-end encrypted with her sync password) ---------- */
+var SYNC = LS.get("mc_sync", null);          // {dk: base64 raw key, rev, last} on an unlocked device
+var syncTimer = null, syncBusy = false, syncApplying = false, syncAgain = false, syncLastPull = 0;
+const PBKDF2_ITER = 310000;
+const te = new TextEncoder(), td = new TextDecoder();
+const b64 = u8 => { let s = ""; const c = 0x8000; for(let i = 0; i < u8.length; i += c) s += String.fromCharCode.apply(null, u8.subarray(i, i + c)); return btoa(s); };
+const unb64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+const rand = n => crypto.getRandomValues(new Uint8Array(n));
+const RC_ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function newRecoveryCode(){
+  const r = rand(24); let s = "";
+  for(let i = 0; i < 24; i++) s += RC_ALPHA[r[i] % 32];
+  return s.match(/.{4}/g).join("-");
+}
+const normCode = c => String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+async function kekFrom(secret, salt){
+  const base = await crypto.subtle.importKey("raw", te.encode(secret), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:PBKDF2_ITER, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+}
+async function wrapDk(dkRaw, secret){
+  const salt = rand(16), iv = rand(12);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, await kekFrom(secret, salt), dkRaw));
+  return {salt:b64(salt), iv:b64(iv), wrap:b64(ct)};
+}
+async function unwrapDk(salt, iv, wrap, secret){
+  try{ return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(iv)}, await kekFrom(secret, unb64(salt)), unb64(wrap))); }
+  catch(e){ return null; }
+}
+const dkKey = raw => crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt","decrypt"]);
+async function gz(u8, mode){
+  if(typeof CompressionStream === "undefined") return null;
+  const s = new Blob([u8]).stream().pipeThrough(mode === "c" ? new CompressionStream("gzip") : new DecompressionStream("gzip"));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+async function encryptBundle(dkRaw, obj){
+  let bytes = te.encode(JSON.stringify(obj)), z = 0;
+  const c = await gz(bytes, "c"); if(c){ bytes = c; z = 1; }
+  const iv = rand(12);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, await dkKey(dkRaw), bytes));
+  return {iv:b64(iv), ct:b64(ct), z};
+}
+async function decryptBundle(dkRaw, data){
+  let bytes = new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(data.iv)}, await dkKey(dkRaw), unb64(data.ct)));
+  if(data.z){ const d = await gz(bytes, "d"); if(!d) throw {code:"no_gzip"}; bytes = d; }
+  return JSON.parse(td.decode(bytes));
+}
+
+/* what gets synced */
+function localBundle(){
+  return {v:1, ts:Date.now(), clients:state.clients, deleted:state.deleted, styles:state.styles, history:state.history, bank:state.bank};
+}
+function mergeBundle(r){
+  if(!r || typeof r !== "object") return false;
+  let changed = false;
+  const del = new Set([...(state.deleted || []), ...(Array.isArray(r.deleted) ? r.deleted : [])]);
+  if(del.size !== state.deleted.length){ state.deleted = [...del]; changed = true; }
+  // clients
+  const rc = r.clients && typeof r.clients === "object" ? r.clients : {};
+  for(const id in rc){
+    const c = rc[id]; if(!c || typeof c !== "object" || c.id !== id) continue;
+    if(del.has(id)) continue;
+    if(!state.clients[id] || (c.updated || 0) > (state.clients[id].updated || 0)){ state.clients[id] = plain(c); changed = true; }
+  }
+  for(const id of Object.keys(state.clients)) if(del.has(id)){ delete state.clients[id]; changed = true; }
+  // history
+  const hm = {}; (state.history || []).forEach(x => hm[x.id] = x);
+  (Array.isArray(r.history) ? r.history : []).forEach(x => {
+    if(!x || typeof x.id !== "string" || del.has(x.id)) return;
+    if(!hm[x.id] || (x.updated || 0) > (hm[x.id].updated || 0)){ hm[x.id] = plain(x); changed = true; }
+  });
+  for(const id of Object.keys(hm)) if(del.has(id)){ delete hm[id]; changed = true; }
+  state.history = Object.values(hm).sort((a,b) => b.ts - a.ts).slice(0, HISTORY_CAP);
+  // styles (by name)
+  const sm = {}; (state.styles || []).forEach(s => sm[s.name.toLowerCase()] = s);
+  (Array.isArray(r.styles) ? r.styles : []).forEach(s => {
+    if(!s || typeof s.name !== "string") return;
+    const k = s.name.toLowerCase(); if(del.has("s:" + k)) return;
+    if(!sm[k] || (s.updated || 0) > (sm[k].updated || 0)){ sm[k] = plain(s); changed = true; }
+  });
+  for(const k of Object.keys(sm)) if(del.has("s:" + k)){ delete sm[k]; changed = true; }
+  state.styles = Object.values(sm);
+  // slang bank
+  if(r.bank && Array.isArray(r.bank.items) && (r.bank.updated || 0) > (state.bank.updated || 0)){
+    state.bank = plain(r.bank); if(!Array.isArray(state.bank.pinned)) state.bank.pinned = []; changed = true;
+  }
+  return changed;
+}
+function applyMerged(){
+  syncApplying = true;
+  try{
+    persistLocal(); persistHistory(); persistStyles(); LS.set("mc_bank", state.bank);
+    renderClientSelect(); fillClientForm(); renderPresets(); renderTrends(); updateLock();
+    if($("library").classList.contains("active")) renderLibrary(true);
+  }finally{ syncApplying = false; }
+}
+
+/* server calls */
+async function syncGet(){ return workerFetch("/sync", {method:"GET", cache:"no-store"}); }
+async function syncPut(baseRev, vault){
+  let res;
+  try{
+    res = await fetch(CONN.url.replace(/\/+$/, "") + "/sync", {method:"PUT", headers:{"Content-Type":"application/json", "X-Passcode":CONN.pass}, body:JSON.stringify({baseRev, vault})});
+  }catch(e){ throw {code:"network"}; }
+  let data = null; try{ data = await res.json(); }catch(e){}
+  if(res.status === 409) return {conflict:true, current:data && data.current};
+  if(!res.ok || !data || data.error) throw {code:(data && data.error && data.error.code) || "upstream_error"};
+  return data;
+}
+function setSyncLocal(o){ SYNC = o; LS.set("mc_sync", o); }
+function syncOn(){ return !!(SYNC && SYNC.dk); }
+
+/* the main loop: pull, merge, push */
+async function syncNow(quiet){
+  if(!syncOn() || sampleState !== "ok") return;
+  if(syncBusy){ syncAgain = true; return; }
+  syncBusy = true; renderSyncStatus("Syncing…");
+  try{
+    const dk = unb64(SYNC.dk);
+    for(let attempt = 0; attempt < 3; attempt++){
+      const cur = await syncGet();
+      if(cur.exists === false){ setSyncLocal(null); renderSyncCard(); renderSyncStatus(); toast("Sync was reset on another device. Turn it on again here."); return; }
+      let meta = cur.meta;
+      if(cur.data){
+        let remote;
+        try{ remote = await decryptBundle(dk, cur.data); }
+        catch(e){ setSyncLocal(null); renderSyncCard(); renderSyncStatus(); toast("The synced copy was replaced. Unlock sync again with the password."); return; }
+        if(mergeBundle(remote)) applyMerged();
+      }
+      const data = await encryptBundle(dk, localBundle());
+      const out = await syncPut(cur.rev || 0, {meta, data});
+      if(out.conflict) continue;
+      setSyncLocal(Object.assign({}, SYNC, {rev:out.rev, last:Date.now()}));
+      syncLastPull = Date.now();
+      renderSyncStatus(); if(!quiet) toast("Synced ✓");
+      return;
+    }
+    renderSyncStatus("Sync busy, will retry");
+  }catch(e){
+    renderSyncStatus(e && e.code === "network" ? "Offline, will sync later" : "Sync failed: " + errCopy(e));
+  }finally{
+    syncBusy = false;
+    if(syncAgain){ syncAgain = false; setTimeout(() => syncNow(true), 500); }
+  }
+}
+function markDirty(){
+  if(syncApplying || !syncOn()) return;
+  clearTimeout(syncTimer); syncTimer = setTimeout(() => syncNow(true), 4000);
+}
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && syncOn() && Date.now() - syncLastPull > 60000) syncNow(true); });
+window.addEventListener("online", () => syncOn() && syncNow(true));
+
+/* ---------- SYNC UI ---------- */
+function renderSyncStatus(msg){
+  const pill = $("syncPill");
+  if(syncOn()){
+    pill.className = "pill cloud";
+    pill.textContent = msg || (SYNC.last ? "Synced " + new Date(SYNC.last).toLocaleTimeString("en-MY", {hour:"numeric", minute:"2-digit"}) : "Sync on");
+  } else { pill.className = "pill"; pill.textContent = "Saved on this device"; }
+  const s = $("syStatus"); if(s) s.textContent = syncOn() ? (msg || (SYNC.last ? "On. Last synced " + fmtDate(SYNC.last) + "." : "On.")) : "Off on this device.";
+}
+function syShow(id){ ["syOff","syCreate","syUnlock","syForgot","syRecovery","syOn","syChange"].forEach(x => $(x).classList.toggle("hidden", x !== id)); }
+function renderSyncCard(){ syShow(syncOn() ? "syOn" : "syOff"); $("syMsg").textContent = ""; }
+function syMsg(t){ $("syMsg").textContent = t || ""; }
+function checkNewPw(a, b){
+  if(a.length < 8) return "Use at least 8 characters.";
+  if(a !== b) return "The two passwords don't match.";
+  return "";
+}
+let pendingCode = "";
+function showRecovery(code, why){
+  pendingCode = code;
+  $("syCode").textContent = code;
+  $("syCodeWhy").textContent = why;
+  $("sySaved").checked = false; $("syDone").disabled = true;
+  syShow("syRecovery");
+}
+$("sySaved").addEventListener("change", () => $("syDone").disabled = !$("sySaved").checked);
+$("syCopyCode").addEventListener("click", () => copyText(pendingCode));
+$("syDlCode").addEventListener("click", () => saveFile("MejaCopyHannah-recovery-code.txt", `Meja Copy Hannah: sync recovery code\n\n${pendingCode}\n\nKeep this somewhere safe (password manager, notes app, or printed).\nUse it on the Connection page if you forget your sync password.\nCreated ${new Date().toString()}\n`));
+$("syDone").addEventListener("click", () => { pendingCode = ""; renderSyncCard(); renderSyncStatus(); syncNow(); });
+
+$("syStart").addEventListener("click", async () => {
+  if(sampleState !== "ok"){ syMsg("Connect to the server first (above)."); return; }
+  syMsg("Checking…");
+  try{
+    const cur = await syncGet();
+    syMsg("");
+    if(cur.exists === false){ syShow("syCreate"); $("syNew1").focus(); }
+    else { syShow("syUnlock"); $("syPw").focus(); }
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syCreateBtn").addEventListener("click", async () => {
+  const a = $("syNew1").value, b = $("syNew2").value; const bad = checkNewPw(a, b); if(bad){ syMsg(bad); return; }
+  syMsg("Setting up… this takes a few seconds");
+  try{
+    const dk = rand(32), code = newRecoveryCode();
+    const p = await wrapDk(dk, a), r = await wrapDk(dk, normCode(code));
+    const meta = {saltP:p.salt, ivP:p.iv, wrapP:p.wrap, saltR:r.salt, ivR:r.iv, wrapR:r.wrap, iter:PBKDF2_ITER};
+    const data = await encryptBundle(dk, localBundle());
+    const out = await syncPut(0, {meta, data});
+    if(out.conflict){ syMsg("Sync was just set up on another device. Tap Turn on sync again and unlock instead."); syShow("syOff"); return; }
+    setSyncLocal({dk:b64(dk), rev:out.rev, last:Date.now()});
+    $("syNew1").value = ""; $("syNew2").value = ""; syMsg("");
+    showRecovery(code, "Sync is on. Save this recovery code now. It's the only way back in if you forget your sync password and have no other device unlocked.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syUnlockBtn").addEventListener("click", async () => {
+  const pw = $("syPw").value; if(!pw){ syMsg("Type your sync password."); return; }
+  syMsg("Unlocking…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syShow("syCreate"); syMsg("No synced copy yet. Create a sync password."); return; }
+    const dk = await unwrapDk(cur.meta.saltP, cur.meta.ivP, cur.meta.wrapP, pw);
+    if(!dk){ syMsg("That password didn't work. Try again, or tap Forgot password."); return; }
+    setSyncLocal({dk:b64(dk), rev:cur.rev, last:0});
+    $("syPw").value = ""; syMsg(""); renderSyncCard(); renderSyncStatus();
+    await syncNow();
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syForgotLink").addEventListener("click", () => { syShow("syForgot"); syMsg(""); $("syRc").focus(); });
+$("syBack1").addEventListener("click", () => { syShow("syUnlock"); syMsg(""); });
+$("syBack2").addEventListener("click", () => { renderSyncCard(); });
+$("syBack3").addEventListener("click", () => { renderSyncCard(); });
+$("syResetBtn").addEventListener("click", async () => {
+  const code = normCode($("syRc").value);
+  const a = $("syRp1").value, b = $("syRp2").value; const bad = checkNewPw(a, b); if(bad){ syMsg(bad); return; }
+  if(code.length < 20){ syMsg("Type the full recovery code."); return; }
+  syMsg("Checking the recovery code…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syMsg("There's no synced copy to recover."); return; }
+    const dk = await unwrapDk(cur.meta.saltR, cur.meta.ivR, cur.meta.wrapR, code);
+    if(!dk){ syMsg("That recovery code didn't work. Check for typos."); return; }
+    const p = await wrapDk(dk, a);
+    const meta = Object.assign({}, cur.meta, {saltP:p.salt, ivP:p.iv, wrapP:p.wrap});
+    const out = await syncPut(cur.rev || 0, {meta, data:cur.data});
+    if(out.conflict){ syMsg("Something changed at the same moment. Tap Reset password again."); return; }
+    setSyncLocal({dk:b64(dk), rev:out.rev, last:0});
+    $("syRc").value = ""; $("syRp1").value = ""; $("syRp2").value = "";
+    renderSyncCard(); renderSyncStatus(); toast("New sync password set ✓");
+    await syncNow(true);
+    syMsg("Your recovery code still works. Make a new one under Sync if you think someone else saw it.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syChangeShow").addEventListener("click", () => { syShow("syChange"); syMsg(""); $("syCp1").focus(); });
+$("syChangeBtn").addEventListener("click", async () => {
+  const a = $("syCp1").value, b = $("syCp2").value; const bad = checkNewPw(a, b); if(bad){ syMsg(bad); return; }
+  syMsg("Saving…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syMsg("No synced copy found."); return; }
+    const dk = unb64(SYNC.dk);
+    const p = await wrapDk(dk, a);
+    const meta = Object.assign({}, cur.meta, {saltP:p.salt, ivP:p.iv, wrapP:p.wrap});
+    const out = await syncPut(cur.rev || 0, {meta, data:cur.data});
+    if(out.conflict){ syMsg("Something changed at the same moment. Try again."); return; }
+    setSyncLocal(Object.assign({}, SYNC, {rev:out.rev}));
+    $("syCp1").value = ""; $("syCp2").value = "";
+    renderSyncCard(); toast("Sync password changed ✓"); syMsg("Use the new password on any new device.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syNewCode").addEventListener("click", async () => {
+  syMsg("Making a new recovery code…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syMsg("No synced copy found."); return; }
+    const dk = unb64(SYNC.dk), code = newRecoveryCode();
+    const r = await wrapDk(dk, normCode(code));
+    const meta = Object.assign({}, cur.meta, {saltR:r.salt, ivR:r.iv, wrapR:r.wrap});
+    const out = await syncPut(cur.rev || 0, {meta, data:cur.data});
+    if(out.conflict){ syMsg("Something changed at the same moment. Try again."); return; }
+    setSyncLocal(Object.assign({}, SYNC, {rev:out.rev})); syMsg("");
+    showRecovery(code, "Your old recovery code no longer works. Save this new one now.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("sySyncNow").addEventListener("click", () => syncNow());
+$("syOffBtn").addEventListener("click", () => {
+  setSyncLocal(null); renderSyncCard(); renderSyncStatus();
+  toast("Sync off on this device. Her data here is kept.");
+});
+$("syWipe").addEventListener("click", async () => {
+  const b = $("syWipe");
+  if(b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Tap again to delete the synced copy"; setTimeout(() => { b.dataset.confirm = ""; b.textContent = "Start sync over"; }, 4000); return; }
+  b.dataset.confirm = ""; b.textContent = "Start sync over";
+  try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); renderSyncCard(); renderSyncStatus(); syMsg("The synced copy is deleted. Data on each device is kept. Turn sync on again to start fresh."); }
+  catch(e){ syMsg(errCopy(e)); }
+});
+$("syWipe2").addEventListener("click", async () => {
+  const b = $("syWipe2");
+  if(b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Tap again to confirm"; setTimeout(() => { b.dataset.confirm = ""; b.textContent = "Start sync over from this device"; }, 4000); return; }
+  b.dataset.confirm = ""; b.textContent = "Start sync over from this device";
+  try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); syShow("syCreate"); syMsg("Done. Create a new sync password. Her other devices will need it too."); }
+  catch(e){ syMsg(errCopy(e)); }
+});
+
+
+/* ---------- INSTALL (PWA) ---------- */
+let deferredInstall = null;
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+function renderInstall(){
+  const ua = navigator.userAgent || "";
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const safariMac = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg/.test(ua) && !ios;
+  if(isStandalone()){ $("installBtn").classList.add("hidden"); $("installStatus").textContent = "Installed ✓ You're using the app."; $("installHow").innerHTML = ""; return; }
+  $("installBtn").classList.toggle("hidden", !deferredInstall);
+  $("installStatus").textContent = "";
+  let how = "";
+  if(ios) how = "<b>iPhone or iPad:</b> open this page in <b>Safari</b>, tap the <b>Share</b> button, then <b>Add to Home Screen</b>.";
+  else if(safariMac) how = "<b>Mac (Safari):</b> in the menu bar choose <b>File</b>, then <b>Add to Dock</b>.";
+  else if(!deferredInstall) how = "<b>Laptop (Chrome or Edge):</b> click the install icon at the right end of the address bar, or the browser menu, then <b>Install Meja Copy Hannah</b>.<br><b>Android:</b> browser menu (⋮), then <b>Install app</b> or <b>Add to Home screen</b>.";
+  $("installHow").innerHTML = how;
+}
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; renderInstall(); });
+window.addEventListener("appinstalled", () => { deferredInstall = null; renderInstall(); toast("Installed ✓"); });
+$("installBtn").addEventListener("click", async () => {
+  if(!deferredInstall) return;
+  deferredInstall.prompt();
+  try{ await deferredInstall.userChoice; }catch(e){}
+  deferredInstall = null; renderInstall();
+});
+renderInstall();
+if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "127.0.0.1" || location.hostname === "localhost")){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+
+/* ---------- FILE UPLOAD ---------- */
+const MAX_CHARS = 60000;
+const libCache = {};
+function loadLib(src, globalName){
+  if(window[globalName]) return Promise.resolve(window[globalName]);
+  if(libCache[src]) return libCache[src];
+  libCache[src] = new Promise((res, rej) => {
+    const s = document.createElement("script"); s.src = src; s.async = true;
+    s.onload = () => window[globalName] ? res(window[globalName]) : rej(new Error("lib"));
+    s.onerror = () => { delete libCache[src]; rej(new Error("lib")); };
+    document.head.appendChild(s);
+  });
+  return libCache[src];
+}
+async function readDocx(file){
+  const mammoth = await loadLib("lib/mammoth.browser.min.js", "mammoth");
+  const r = await mammoth.extractRawText({arrayBuffer: await file.arrayBuffer()});
+  return r.value.replace(/\n{3,}/g, "\n\n").trim();
+}
+async function getPdfjs(){
+  const lib = await loadLib("lib/pdf.min.js", "pdfjsLib");
+  lib.GlobalWorkerOptions.workerSrc = "lib/pdf.worker.min.js";
+  return lib;
+}
+async function readPdf(file, onStatus){
+  const lib = await getPdfjs();
+  const pdf = await lib.getDocument({data: new Uint8Array(await file.arrayBuffer())}).promise;
+  const pages = [];
+  for(let i = 1; i <= pdf.numPages; i++){
+    onStatus && onStatus(`Reading page ${i} of ${pdf.numPages}…`);
+    const page = await pdf.getPage(i);
+    const tc = await page.getTextContent();
+    let line = "", out = [];
+    for(const it of tc.items){ line += it.str; if(it.hasEOL){ out.push(line); line = ""; } }
+    if(line) out.push(line);
+    pages.push(out.join("\n").trim());
+  }
+  return {text: pages.filter(Boolean).join("\n\n").trim(), pdf};
+}
+async function pdfToImages(pdf, max){
+  const blobs = [];
+  for(let i = 1; i <= Math.min(pdf.numPages, max); i++){
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({scale: 1.6});
+    const cv = document.createElement("canvas"); cv.width = vp.width; cv.height = vp.height;
+    await page.render({canvasContext: cv.getContext("2d"), viewport: vp}).promise;
+    blobs.push(await new Promise(r => cv.toBlob(r, "image/jpeg", 0.85)));
+  }
+  return blobs.filter(Boolean);
+}
+async function readPptx(file){
+  const JSZip = await loadLib("lib/jszip.min.js", "JSZip");
+  const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const slides = Object.keys(zip.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n))
+    .sort((a,b) => Number(a.match(/(\d+)\.xml$/)[1]) - Number(b.match(/(\d+)\.xml$/)[1]));
+  const out = [];
+  for(let i = 0; i < slides.length; i++){
+    const xml = await zip.file(slides[i]).async("string");
+    const doc = new DOMParser().parseFromString(xml, "application/xml");
+    const paras = [...doc.getElementsByTagNameNS("*", "p")].map(p => [...p.getElementsByTagNameNS("*", "t")].map(t => t.textContent).join("")).filter(s => s.trim());
+    if(paras.length) out.push(`[Slide ${i+1}]\n` + paras.join("\n"));
+  }
+  return out.join("\n\n");
+}
+async function readImagesWithAI(blobs, onStatus){
+  if(sampleState !== "ok") throw {code:"not_connected"};
+  let lim = null; try{ lim = await sampleFn.limits(); }catch(e){}
+  if(!lim || !lim.images) throw {code:"images_unavailable"};
+  const list = blobs.slice(0, lim.images.maxCount);
+  onStatus && onStatus("Reading the image…");
+  const {text} = await sampleFn("Transcribe ALL the text in these images exactly as written, in reading order, keeping line breaks and the original language (English, Malay or Jawi). If it is an ad or key visual, also add one line at the end starting 'Visual:' that briefly describes the layout. Reply with only the transcription.", {images: list, cache: false});
+  return text.trim();
+}
+async function extractFile(file, onStatus){
+  const name = file.name || "file", ext = (name.split(".").pop() || "").toLowerCase();
+  if(file.type.startsWith("image/")) return readImagesWithAI([file], onStatus);
+  if(["txt","md","csv"].includes(ext) || file.type.startsWith("text/")) return (await file.text()).trim();
+  if(ext === "docx") return readDocx(file);
+  if(ext === "pptx") return readPptx(file);
+  if(ext === "pdf"){
+    const {text, pdf} = await readPdf(file, onStatus);
+    if(text.replace(/\s/g, "").length >= 30) return text;
+    onStatus && onStatus("Looks scanned. Reading pages as images…");
+    let max = 4; try{ const l = await sampleFn.limits(); if(l?.images?.maxCount) max = Math.min(l.images.maxCount, 8); }catch(e){}
+    return readImagesWithAI(await pdfToImages(pdf, max), onStatus);
+  }
+  if(ext === "doc" || ext === "ppt") throw {code:"old_format"};
+  throw {code:"unsupported"};
+}
+function uploadErr(e){
+  switch(e && e.code){
+    case "old_format": return "Old .doc/.ppt files can't be read. Save it as .docx, .pptx or PDF first.";
+    case "unsupported": return "That file type isn't supported. Use Word, PDF, PowerPoint, text or an image.";
+    case "no_sample": case "images_unavailable": return isConfidential() ? "Reading images needs Gemini, which 🔒 Confidential skips. Turn it off for this, or paste the text." : "Image reading isn't available right now. Word, PDF and PowerPoint still work.";
+    case "image_rejected": return "That image couldn't be read. Try a smaller PNG or JPG.";
+    default: return e && e.code ? errCopy(e) : "Couldn't read that file. If it's password-protected, remove the password first.";
+  }
+}
+let upTarget = null;
+const fileIn = $("fileIn");
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-up]"); if(!b) return;
+  upTarget = b.dataset.up; fileIn.value = ""; fileIn.click();
+});
+fileIn.addEventListener("change", () => { if(upTarget && fileIn.files.length) handleFiles([...fileIn.files], upTarget); });
+document.querySelectorAll("[data-up]").forEach(b => {
+  const ta = $(b.dataset.up); if(!ta) return;
+  ta.addEventListener("dragover", e => { e.preventDefault(); ta.classList.add("drag"); });
+  ta.addEventListener("dragleave", () => ta.classList.remove("drag"));
+  ta.addEventListener("drop", e => {
+    if(!e.dataTransfer || !e.dataTransfer.files.length) return;
+    e.preventDefault(); ta.classList.remove("drag"); handleFiles([...e.dataTransfer.files], b.dataset.up);
+  });
+});
+async function handleFiles(files, targetId){
+  const ta = $(targetId), stat = $("up_" + targetId);
+  const btn = document.querySelector(`[data-up="${targetId}"]`);
+  btn.disabled = true;
+  let added = 0, lastErr = "";
+  for(const f of files){
+    try{
+      stat.textContent = `Reading ${f.name}…`;
+      let text = await extractFile(f, s => stat.textContent = s);
+      if(!text){ lastErr = `No text found in ${f.name}.`; continue; }
+      let cut = false;
+      if(text.length > MAX_CHARS){ text = text.slice(0, MAX_CHARS); cut = true; }
+      const sep = ta.value.trim() ? `\n\n--- ${f.name} ---\n` : (files.length > 1 ? `--- ${f.name} ---\n` : "");
+      ta.value = (ta.value.trim() ? ta.value.trimEnd() : "") + sep + text;
+      ta.dispatchEvent(new Event("input"));
+      added++;
+      if(cut) lastErr = `${f.name} was long, so only the first part was added.`;
+    }catch(e){ lastErr = uploadErr(e); }
+  }
+  btn.disabled = false;
+  stat.textContent = lastErr || (added ? `Added ${added} file${added > 1 ? "s" : ""}. Check the text, then carry on.` : "Word, PDF, PowerPoint, text or image");
+  if(added) ta.scrollTop = ta.scrollHeight;
+}
+
+/* ---------- boot ---------- */
+renderClientSelect();
+fillClientForm();
+renderPresets();
+syncFormalityToClient();
+updateDialectUI();
+applySimple();
+updateMoreSummary();
+initDownloads();
+initTrends();
+updateLock();
+renderSyncCard(); renderSyncStatus();
+if(syncOn()) setTimeout(() => syncNow(true), 800);
+showTab(location.hash.slice(1) || "transcreate");
+initSample();
+initCloud();
+})();
+</script>
+</body>
+</html>
