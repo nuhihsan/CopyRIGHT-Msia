@@ -81,10 +81,34 @@ async function checkPass(env, req) {
 
 function withTimeout(ms) { const c = new AbortController(); const t = setTimeout(() => c.abort(), ms); return { signal: c.signal, done: () => clearTimeout(t) }; }
 
+// Abort if nothing arrives for `ms`. Each chunk of a streamed answer resets the clock.
+function idleTimeout(ms) {
+  const c = new AbortController(); let t = setTimeout(() => c.abort(), ms);
+  return { signal: c.signal, bump: () => { clearTimeout(t); t = setTimeout(() => c.abort(), ms); }, done: () => clearTimeout(t) };
+}
+// Read a server-sent-events body and call onData with each parsed "data:" JSON object.
+async function readSSE(body, onData, bump) {
+  const reader = body.getReader(); const dec = new TextDecoder(); let buf = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    if (bump) bump();
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+      if (!line.startsWith("data:")) continue;
+      const data = line.slice(5).trim();
+      if (!data || data === "[DONE]") continue;
+      try { onData(JSON.parse(data)); } catch {}
+    }
+  }
+}
+
 class ProviderError extends Error { constructor(code, msg) { super(msg); this.code = code; } }
 
 /* ---------------- Providers ---------------- */
-async function callGemini(env, { prompt, images, wantJson }) {
+async function callGemini(env, { prompt, images, wantJson, onEvent }) {
   if (!env.GEMINI_API_KEY) throw new ProviderError("not_configured", "No Gemini key");
   const parts = [{ text: prompt }];
   for (const im of images) parts.push({ inline_data: { mime_type: im.mime, data: im.data } });
@@ -93,8 +117,11 @@ async function callGemini(env, { prompt, images, wantJson }) {
   // Gemini "thinks" before answering, which can take a minute on long prompts. Copywriting doesn't need much of it.
   const level = String(cfg(env, "GEMINI_THINKING") || "").trim().toLowerCase();
   if (level && level !== "off" && level !== "default") body.generationConfig.thinkingConfig = { thinkingLevel: level };
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cfg(env, "GEMINI_MODEL"))}:generateContent`;
-  const t = withTimeout(PROVIDER_TIMEOUT_MS);
+  // When streaming, ask for short thought summaries too, so the app can show "thinking" instead of a frozen bar.
+  if (onEvent && body.generationConfig.thinkingConfig) body.generationConfig.thinkingConfig.includeThoughts = true;
+  const base = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cfg(env, "GEMINI_MODEL"))}`;
+  const url = onEvent ? `${base}:streamGenerateContent?alt=sse` : `${base}:generateContent`;
+  const t = idleTimeout(PROVIDER_TIMEOUT_MS);
   try {
     const send = () => fetch(url, { method: "POST", signal: t.signal, headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY }, body: JSON.stringify(body) });
     let r = await send();
@@ -105,6 +132,20 @@ async function callGemini(env, { prompt, images, wantJson }) {
       else throw new ProviderError("upstream_error", `Gemini 400: ${msg.slice(0, 300)}`);
     }
     if (!r.ok) throw new ProviderError(r.status === 429 ? "rate_limited" : "upstream_error", `Gemini ${r.status}: ${(await r.text()).slice(0, 300)}`);
+    if (onEvent) {
+      let text = "", finish = "";
+      await readSSE(r.body, d => {
+        const c = d.candidates && d.candidates[0]; if (!c) return;
+        if (c.finishReason) finish = c.finishReason;
+        const parts = c.content && Array.isArray(c.content.parts) ? c.content.parts : [];
+        for (const p of parts) {
+          if (p.thought) { onEvent({ t: "think" }); continue; }
+          if (p.text) { text += p.text; onEvent({ t: "delta", n: text.length }); }
+        }
+      }, t.bump);
+      if (!text.trim()) throw new ProviderError(finish === "SAFETY" ? "refused" : "empty", "Gemini returned no text");
+      return text;
+    }
     const d = await r.json();
     const cand = d.candidates && d.candidates[0];
     const text = cand && cand.content && Array.isArray(cand.content.parts) ? cand.content.parts.map(p => p.text || "").join("") : "";
@@ -113,7 +154,7 @@ async function callGemini(env, { prompt, images, wantJson }) {
   } finally { t.done(); }
 }
 
-async function callOpenAICompatible(url, key, model, { prompt, images, wantJson }, label) {
+async function callOpenAICompatible(url, key, model, { prompt, images, wantJson, onEvent }, label) {
   if (!key) throw new ProviderError("not_configured", `No ${label} key`);
   const content = images.length
     ? [{ type: "text", text: prompt }, ...images.map(im => ({ type: "image_url", image_url: { url: `data:${im.mime};base64,${im.data}` } }))]
@@ -121,10 +162,22 @@ async function callOpenAICompatible(url, key, model, { prompt, images, wantJson 
   const body = { model, messages: [{ role: "user", content }], temperature: 0.8 };
   if (/gpt-oss/i.test(model)) body.reasoning_effort = "low"; // faster answers from Groq's reasoning model
   if (wantJson && label !== "SEA-LION") body.response_format = { type: "json_object" };
-  const t = withTimeout(PROVIDER_TIMEOUT_MS);
+  if (onEvent) body.stream = true;
+  const t = idleTimeout(PROVIDER_TIMEOUT_MS);
   try {
     const r = await fetch(url, { method: "POST", signal: t.signal, headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` }, body: JSON.stringify(body) });
     if (!r.ok) throw new ProviderError(r.status === 429 ? "rate_limited" : "upstream_error", `${label} ${r.status}: ${(await r.text()).slice(0, 300)}`);
+    if (onEvent) {
+      let text = "";
+      await readSSE(r.body, d => {
+        const delta = d.choices && d.choices[0] && d.choices[0].delta; if (!delta) return;
+        if (delta.reasoning || delta.reasoning_content) onEvent({ t: "think" });
+        if (delta.content) { text += delta.content; onEvent({ t: "delta", n: text.length }); }
+      }, t.bump);
+      text = text.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+      if (!text) throw new ProviderError("empty", `${label} returned no text`);
+      return text;
+    }
     const d = await r.json();
     const text = d.choices && d.choices[0] && d.choices[0].message ? String(d.choices[0].message.content || "") : "";
     if (!text.trim()) throw new ProviderError("empty", `${label} returned no text`);
@@ -132,8 +185,18 @@ async function callOpenAICompatible(url, key, model, { prompt, images, wantJson 
   } finally { t.done(); }
 }
 
-async function callWorkersAI(env, { prompt }) {
+async function callWorkersAI(env, { prompt, onEvent }) {
   if (!env.AI) throw new ProviderError("not_configured", "No Workers AI binding");
+  if (onEvent) {
+    const stream = await env.AI.run(cfg(env, "WORKERSAI_MODEL"), { messages: [{ role: "user", content: prompt }], max_tokens: 4096, stream: true });
+    let text = "";
+    await readSSE(stream, d => {
+      const piece = d.response != null ? d.response : (d.choices && d.choices[0] && d.choices[0].delta && d.choices[0].delta.content) || "";
+      if (piece) { text += piece; onEvent({ t: "delta", n: text.length }); }
+    });
+    if (!text.trim()) throw new ProviderError("empty", "Workers AI returned no text");
+    return text;
+  }
   const out = await env.AI.run(cfg(env, "WORKERSAI_MODEL"), { messages: [{ role: "user", content: prompt }], max_tokens: 4096 });
   const text = out && (out.response || (out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content)) || "";
   if (!String(text).trim()) throw new ProviderError("empty", "Workers AI returned no text");
@@ -161,8 +224,10 @@ async function runChain(env, args, opts) {
   if (!chain.length) throw new ProviderError(opts.needImages ? "images_unavailable" : "not_configured", "No AI available for this request");
   const tried = [];
   let last = null, sawRateLimit = false, configured = 0;
+  const emit = args.onEvent || (() => {});
   for (const p of chain) {
     try {
+      emit({ t: "start", provider: NAMES[p] });
       const text = await CALLERS[p](env, args);
       return { text, provider: NAMES[p], tried };
     } catch (e) {
@@ -170,6 +235,7 @@ async function runChain(env, args, opts) {
       if (code !== "not_configured") configured++;
       if (code === "rate_limited") sawRateLimit = true;
       tried.push({ provider: NAMES[p], code });
+      if (code !== "not_configured") emit({ t: "fail", provider: NAMES[p], code });
       last = e;
       console.log(`[meja] ${p} failed: ${code} ${e && e.message ? e.message.slice(0, 200) : ""}`);
     }
@@ -197,6 +263,45 @@ async function handleAI(env, req) {
     const status = code === "rate_limited" ? 429 : code === "images_unavailable" ? 422 : code === "not_configured" ? 503 : 502;
     return err(env, req, code, "The AI couldn't answer this time.", status);
   }
+}
+
+/* ---------------- /ai/stream: same as /ai, but reports progress as it goes ----------------
+   Sends one JSON object per line:
+   {"t":"start","provider":"Gemini"}  an AI has been asked
+   {"t":"think"}                      it is thinking before writing
+   {"t":"delta","n":1234}             characters written so far
+   {"t":"fail","provider":"Gemini","code":"rate_limited"}  that AI failed, trying the next
+   {"t":"done","text":"...","provider":"Gemini","fallbacks":[...]}  or  {"t":"error","code":"..."} */
+async function handleAIStream(env, req, ctx) {
+  let body;
+  try { body = await req.json(); } catch { return err(env, req, "invalid_request", "Body must be JSON", 400); }
+  const prompt = typeof body.prompt === "string" ? body.prompt : "";
+  if (!prompt.trim()) return err(env, req, "invalid_request", "Missing prompt", 400);
+  if (prompt.length > MAX_PROMPT_CHARS) return err(env, req, "prompt_too_large", "Prompt too long", 413);
+  const images = (Array.isArray(body.images) ? body.images : []).slice(0, MAX_IMAGES)
+    .filter(im => im && typeof im.data === "string" && /^image\/(png|jpeg|webp|gif)$/.test(String(im.mime)))
+    .map(im => ({ mime: String(im.mime), data: im.data }));
+  const opts = { confidential: !!body.confidential, needImages: images.length > 0 };
+  const { readable, writable } = new TransformStream();
+  const w = writable.getWriter(); const enc = new TextEncoder();
+  let lastThink = 0, lastDelta = 0, closed = false;
+  const send = o => { if (closed) return; w.write(enc.encode(JSON.stringify(o) + "\n")).catch(() => { closed = true; }); };
+  const onEvent = ev => {
+    const now = Date.now();
+    if (ev.t === "think") { if (now - lastThink < 1500) return; lastThink = now; }
+    if (ev.t === "delta") { if (now - lastDelta < 250) return; lastDelta = now; }
+    send(ev);
+  };
+  const work = (async () => {
+    try {
+      const out = await runChain(env, { prompt, images, wantJson: !!body.json, onEvent }, opts);
+      send({ t: "done", text: out.text, provider: out.provider, fallbacks: out.tried });
+    } catch (e) {
+      send({ t: "error", code: e instanceof ProviderError ? e.code : "upstream_error" });
+    } finally { closed = true; try { await w.close(); } catch {} }
+  })();
+  if (ctx && ctx.waitUntil) ctx.waitUntil(work);
+  return new Response(readable, { headers: { "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-cache", ...corsHeaders(env, req) } });
 }
 
 /* ---------------- Trends ---------------- */
@@ -319,6 +424,7 @@ export default {
     if (pass) return err(env, req, "bad_passcode", "Wrong passcode", 401);
 
     if (url.pathname === "/ai" && req.method === "POST") return handleAI(env, req);
+    if (url.pathname === "/ai/stream" && req.method === "POST") return handleAIStream(env, req, ctx);
     if (url.pathname === "/check" && req.method === "GET") {
       return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!kvOf(env), sync: !!kvOf(env), geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
     }

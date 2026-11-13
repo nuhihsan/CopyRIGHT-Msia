@@ -212,6 +212,14 @@ details.guide>summary::-webkit-details-marker{display:none}
 details.guide>summary::after{content:"+";float:right;color:var(--accent);font-family:Quicksand,sans-serif}
 details.guide[open]>summary::after{content:"–"}
 details.guide[open]>summary{margin-bottom:6px}
+.prog{margin-top:12px}
+.prog .pbar{height:10px;border-radius:999px;background:#f6e3e3;overflow:hidden;position:relative}
+.prog .pbar i{display:block;height:100%;width:2%;border-radius:999px;background:linear-gradient(90deg,#f2a5b4,var(--accent));transition:width .6s ease;position:relative;overflow:hidden}
+.prog .pbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);animation:pshine 1.4s infinite}
+@keyframes pshine{to{transform:translateX(100%)}}
+.prog .pline{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px}
+.prog .plab{font-weight:600;color:var(--accent)}
+.prog .pnote{font-size:12.5px;color:#9a6a2f;margin-top:3px}
 .brand{white-space:nowrap}
 @media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
 
@@ -1178,13 +1186,49 @@ async function workerFetch(path, opts = {}){
   if(!res.ok || !data || data.error) throw {code:(data && data.error && data.error.code) || (res.status === 401 ? "bad_passcode" : "upstream_error")};
   return data;
 }
+/* Streams the answer so the app can show real progress. Returns null if the server is an older version without /ai/stream. */
+let STREAM_OK = true;
+async function streamAI(payload, signal, onProgress){
+  let res;
+  try{
+    res = await fetch(CONN.url.replace(/\/+$/, "") + "/ai/stream", {method:"POST", signal, body:payload, headers:{"Content-Type":"application/json", "X-Passcode":CONN.pass}});
+  }catch(e){ if(e && e.name === "AbortError") throw {code:"cancelled"}; throw {code:"network"}; }
+  if(res.status === 404){ STREAM_OK = false; return null; }
+  if(!res.ok || !res.body){ let d = null; try{ d = await res.json(); }catch(e){} throw {code:(d && d.error && d.error.code) || (res.status === 401 ? "bad_passcode" : "upstream_error")}; }
+  const reader = res.body.getReader(), dec = new TextDecoder(); let buf = "", final = null;
+  try{
+    for(;;){
+      const {value, done} = await reader.read();
+      if(done) break;
+      buf += dec.decode(value, {stream:true});
+      let i;
+      while((i = buf.indexOf("\n")) >= 0){
+        const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+        if(!line) continue;
+        let ev; try{ ev = JSON.parse(line); }catch(e){ continue; }
+        if(ev.t === "done") final = ev;
+        else if(ev.t === "error") throw {code: ev.code || "upstream_error"};
+        else try{ onProgress(ev); }catch(e){}
+      }
+    }
+  }catch(e){
+    if(e && e.name === "AbortError") throw {code:"cancelled"};
+    if(e && e.code) throw e;
+    throw {code:"network"};
+  }
+  if(!final) throw {code:"network"};
+  return final;
+}
 function makeSample(){
   async function call(prompt, opts, wantJson){
     opts = opts || {};
     const text = typeof prompt === "string" ? prompt : (Array.isArray(prompt) ? prompt.map(m => m.content).join("\n\n") : "");
     const list = opts.images ? (opts.images instanceof FileList ? [...opts.images] : [].concat(opts.images)) : [];
     const images = await Promise.all(list.map(blobToImage));
-    const data = await workerFetch("/ai", {method:"POST", signal:opts.signal, body:JSON.stringify({prompt:text, json:!!wantJson, confidential:isConfidential(), images})});
+    const payload = JSON.stringify({prompt:text, json:!!wantJson, confidential:isConfidential(), images});
+    let data = null;
+    if(opts.onProgress && STREAM_OK) data = await streamAI(payload, opts.signal, opts.onProgress);
+    if(!data) data = await workerFetch("/ai", {method:"POST", signal:opts.signal, body:payload});
     lastProvider = data.provider || ""; lastFallbacks = data.fallbacks || [];
     if(opts.onText) try{ opts.onText({text:data.text, delta:data.text}); }catch(e){}
     return String(data.text || "");
@@ -1220,6 +1264,40 @@ function errCopy(e){
     default: return "Something went wrong. Try again.";
   }
 }
+/* Rough size of the answer each tool writes, so the bar can show how far along it is. */
+function estimateOut(goId){
+  const len = id => { const el = $(id); return el ? el.value.trim().length : 0; };
+  switch(goId){
+    case "tcGo": { const n = Number($("tcCount").value) || 3, L = Math.max(40, len("tcSrc"));
+      const jawi = (($("tcScript") || {}).value || "rumi") !== "rumi" ? 1.2 : 0, dia = (typeof dialectName === "function" && dialectName()) ? 1.2 : 0;
+      return 300 + L * 1.2 + n * (L * (2.4 + jawi + dia) + 280); }
+    case "vGo": return 250 + (Number($("vCount").value) || 10) * 150;
+    case "bGo": return 1300 + Math.min(1500, len("bSrc") * 0.25);
+    case "cGo": return 700 + Math.min(4000, len("cSrc") * 1.4);
+    case "lcGo": return 1000;
+    default: return 1600;
+  }
+}
+/* The progress bar shown under the button while the AI works. */
+function progressUI(status){
+  const row = status.closest(".row") || status.parentElement;
+  let box = row.nextElementSibling && row.nextElementSibling.classList.contains("prog") ? row.nextElementSibling : null;
+  if(!box){
+    box = document.createElement("div"); box.className = "prog";
+    box.innerHTML = '<div class="pbar"><i></i></div><div class="pline"><span class="plab"></span><span class="psec"></span></div><div class="pnote"></div>';
+    row.after(box);
+  }
+  box.classList.remove("hidden"); status.textContent = "";
+  return {
+    set(pct, label, note, secs){
+      box.querySelector("i").style.width = Math.max(2, Math.min(100, pct)).toFixed(1) + "%";
+      box.querySelector(".plab").textContent = label;
+      box.querySelector(".psec").textContent = secs ? secs + "s" : "";
+      const n = box.querySelector(".pnote"); n.textContent = note || ""; n.style.display = note ? "" : "none";
+    },
+    hide(){ box.classList.add("hidden"); }
+  };
+}
 function runner(goId, stopId, statusId){
   let ctl = null, timer = null;
   const go = $(goId), stop = $(stopId), status = $(statusId);
@@ -1229,13 +1307,33 @@ function runner(goId, stopId, statusId){
     ctl = new AbortController();
     go.disabled = true; stop.classList.remove("hidden");
     const t0 = Date.now();
-    const tick = () => { status.textContent = "Writing… " + Math.round((Date.now()-t0)/1000) + "s"; };
-    tick(); timer = setInterval(tick, 1000);
+    const expect = Math.max(300, (opts.expect || estimateOut(goId)) | 0);
+    const P = progressUI(status);
+    let stage = "send", who = "", chars = 0, note = "", shown = 3;
+    const render = () => {
+      const secs = Math.round((Date.now() - t0) / 1000);
+      let target, label;
+      if(stage === "send"){ target = 6; label = who ? `Asking ${who}…` : "Sending…"; }
+      else if(stage === "think"){ target = Math.min(18, 8 + secs * 0.4); label = `${who || "The AI"} is thinking…`; }
+      else { const f = Math.min(1, chars / expect); target = 18 + f * 77; label = f >= 1 ? "Almost done…" : `Writing… ${Math.round(target)}%`; }
+      shown = Math.max(shown, target);
+      P.set(shown, label, note, secs);
+    };
+    const onProgress = ev => {
+      if(ev.t === "start"){ who = ev.provider || ""; stage = "send"; chars = 0; shown = Math.min(shown, 6); }
+      else if(ev.t === "fail"){ note = `${ev.provider} ${ev.code === "rate_limited" ? "is busy" : ev.code === "timeout" ? "was too slow" : "didn't answer"}, switching to a backup…`; shown = 3; }
+      else if(ev.t === "think"){ if(stage === "send") stage = "think"; }
+      else if(ev.t === "delta"){ stage = "write"; chars = ev.n || chars; if(note && /switching/.test(note)) note = ""; }
+      render();
+    };
+    render(); timer = setInterval(render, 1000);
     try{
-      const res = await sampleFn.json(prompt, { signal: ctl.signal });
+      const res = await sampleFn.json(prompt, { signal: ctl.signal, onProgress });
+      P.set(100, "Done", "", Math.round((Date.now() - t0) / 1000)); setTimeout(() => P.hide(), 700);
       status.innerHTML = lastProvider ? `Written by <span class="provChip">${esc(lastProvider)}</span>${lastFallbacks.length ? ' <span class="status">(backup)</span>' : ""}` : "";
       return res;
     }catch(e){
+      P.hide();
       status.textContent = errCopy(e);
       return null;
     }finally{
