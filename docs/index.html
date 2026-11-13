@@ -557,7 +557,7 @@ nav button b{font-weight:inherit}
   <!-- TRENDS -->
   <section id="trends">
     <h2>Trends</h2>
-    <p class="sub">What Malaysia is talking about, refreshed every Monday. Tick the ones worth using, keep her own slang bank, and switch on <b>Trend-aware</b> in Transcreate.</p>
+    <p class="sub">What Malaysia is talking about, refreshed every Monday. Tick the ones worth using, keep your own slang bank, and switch on <b>Trend-aware</b> in Transcreate.</p>
     <div class="card">
       <div class="row" style="margin-top:0;justify-content:space-between"><b id="trWeek">Loading trends…</b><span class="status" id="trUpdated"></span></div>
       <p class="meta" id="trSummary"></p>
@@ -565,7 +565,7 @@ nav button b{font-weight:inherit}
     </div>
     <div id="trList"></div>
     <div class="card"><h3>Coming up</h3><div id="trDates"></div></div>
-    <div class="card"><h3>Trending words</h3><p class="status" style="margin-top:-6px">Tap Add to put a word in her bank. Only words in the bank are used in copy.</p><div id="trSlang"></div></div>
+    <div class="card"><h3>Trending words</h3><p class="status" style="margin-top:-6px">Tap Add to put a word in your bank. Only words in the bank are used in copy.</p><div id="trSlang"></div></div>
     <div class="card">
       <h3>My slang bank <span class="chip" id="bankCount">0</span></h3>
       <div class="grid">
@@ -608,28 +608,28 @@ nav button b{font-weight:inherit}
     </div>
     <div class="card" id="installCard">
       <h3>📱 Install as an app</h3>
-      <p class="meta" style="margin-top:0">Puts Meja Copy on her home screen or laptop dock. It opens full screen in its own window, like a normal app, and starts even with a weak connection.</p>
+      <p class="meta" style="margin-top:0">Puts Meja Copy on your home screen or laptop dock. It opens full screen in its own window, like a normal app, and starts even with a weak connection.</p>
       <div class="row" style="margin-top:4px"><button class="primary hidden" id="installBtn" type="button">Install app</button><span class="status" id="installStatus"></span></div>
       <div class="meta" id="installHow"></div>
     </div>
     <div class="card" id="syncCard">
       <h3>🔄 Sync between devices</h3>
-      <p class="meta" style="margin-top:0">Keeps her clients, rules, styles, slang bank and history the same on her laptop and phone. Everything is locked with her own sync password before it leaves the device, so nobody else can read it, including whoever runs the server.</p>
+      <p class="meta" style="margin-top:0">Keeps your clients, rules, styles, slang bank and history the same on your laptop and phone. Everything is locked with your own sync password before it leaves the device, so nobody else can read it, including whoever runs the server.</p>
       <p class="status" id="syStatus"></p>
       <div id="syOff"><button class="primary" id="syStart" type="button">Turn on sync</button></div>
       <div id="syCreate" class="hidden">
-        <p class="meta">First device. Create a sync password she'll remember. She'll type it once on each new device.</p>
+        <p class="meta">First device. Create a sync password you'll remember. You'll type it once on each new device.</p>
         <input id="syNew1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)">
         <input id="syNew2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
         <div class="row"><button class="primary" id="syCreateBtn" type="button">Create and turn on</button><button class="ghost" id="syBack2" type="button">Cancel</button></div>
       </div>
       <div id="syUnlock" class="hidden">
-        <p class="meta">Sync is already set up on another device. Type the sync password to bring her data here.</p>
+        <p class="meta">Sync is already set up on another device. Type the sync password to bring your data here.</p>
         <input id="syPw" type="password" autocomplete="current-password" placeholder="Sync password">
         <div class="row"><button class="primary" id="syUnlockBtn" type="button">Unlock</button><button class="small" id="syForgotLink" type="button">Forgot password?</button></div>
       </div>
       <div id="syForgot" class="hidden">
-        <p class="meta"><b>Forgot the sync password?</b> Use the recovery code she saved when sync was set up. If any of her devices still has sync on, she can also change the password there (Sync &gt; Change password) without the old one.</p>
+        <p class="meta"><b>Forgot the sync password?</b> Use the recovery code you saved when sync was set up. If any of your devices still has sync on, you can also change the password there (Sync &gt; Change password) without the old one.</p>
         <input id="syRc" type="text" autocomplete="off" autocapitalize="characters" placeholder="Recovery code, e.g. ABCD-EFGH-…">
         <input id="syRp1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)" style="margin-top:8px">
         <input id="syRp2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
@@ -655,7 +655,7 @@ nav button b{font-weight:inherit}
         </div>
       </div>
       <div id="syChange" class="hidden">
-        <p class="meta">Change the sync password. The old one isn't needed because this device is already unlocked. Her other devices stay synced.</p>
+        <p class="meta">Change the sync password. The old one isn't needed because this device is already unlocked. Your other devices stay synced.</p>
         <input id="syCp1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)">
         <input id="syCp2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
         <div class="row"><button class="primary" id="syChangeBtn" type="button">Save new password</button><button class="ghost" id="syBack3" type="button">Cancel</button></div>
@@ -676,7 +676,7 @@ nav button b{font-weight:inherit}
   <!-- LIBRARY -->
   <section id="library">
     <h2>My copy</h2>
-    <p class="sub">Everything she has written here is saved automatically. Search it, star the good ones, and download as Word, PDF, PowerPoint or Excel.</p>
+    <p class="sub">Everything you write here is saved automatically. Search it, star the good ones, and download as Word, PDF, PowerPoint or Excel.</p>
     <div class="card">
       <input id="libQ" type="text" placeholder="Search words, client, campaign…">
       <div class="grid">
@@ -1809,7 +1809,7 @@ function renderLibrary(reset){
   if(reset){ libShown = 30; renderLibClients(); }
   const list = filteredHistory();
   $("libCount").textContent = state.history.length ? `${list.length} of ${state.history.length}` : "";
-  if(!state.history.length){ $("libList").innerHTML = '<div class="card empty">Nothing yet. Everything she writes in Transcreate, Variants, Check or Brief lands here automatically.</div>'; $("libMore").classList.add("hidden"); return; }
+  if(!state.history.length){ $("libList").innerHTML = '<div class="card empty">Nothing yet. Everything you write in Transcreate, Variants, Check or Brief lands here automatically.</div>'; $("libMore").classList.add("hidden"); return; }
   if(!list.length){ $("libList").innerHTML = '<div class="card empty">No matches. Try fewer words or clear the filters.</div>'; $("libMore").classList.add("hidden"); return; }
   $("libList").innerHTML = list.slice(0, libShown).map(he => {
     const items = (he.items || []).slice(0, he.type === "Variants" ? 15 : 12);
@@ -2017,7 +2017,7 @@ function renderTrends(){
   if(!tr || !trendItems().length){
     $("trWeek").textContent = "No trends yet";
     $("trUpdated").textContent = "";
-    $("trSummary").textContent = "Trends arrive every Monday. Her slang bank below works already.";
+    $("trSummary").textContent = "Trends arrive every Monday. Your slang bank below works already.";
     $("trList").innerHTML = ""; $("trDates").innerHTML = '<div class="empty">Nothing yet.</div>'; $("trSlang").innerHTML = '<div class="empty">Nothing yet.</div>';
   } else {
     $("trWeek").textContent = "Week of " + (tr.weekOf || "");
@@ -2050,7 +2050,7 @@ function renderTrends(){
 }
 function renderBank(){
   $("bankCount").textContent = state.bank.items.length;
-  $("bankList").innerHTML = state.bank.items.length ? state.bank.items.map((b,i) => `<div class="slangRow"><div class="t"><b>${esc(b.term)}</b> <span class="chip">${esc(b.audience || "")}</span>${b.meaning ? `<div class="meta" style="margin-top:2px">${esc(b.meaning)}</div>` : ""}</div><button class="small danger" data-delslang="${i}" type="button">Remove</button></div>`).join("") : '<div class="empty">Empty. Add words she hears and likes, with notes on who says them.</div>';
+  $("bankList").innerHTML = state.bank.items.length ? state.bank.items.map((b,i) => `<div class="slangRow"><div class="t"><b>${esc(b.term)}</b> <span class="chip">${esc(b.audience || "")}</span>${b.meaning ? `<div class="meta" style="margin-top:2px">${esc(b.meaning)}</div>` : ""}</div><button class="small danger" data-delslang="${i}" type="button">Remove</button></div>`).join("") : '<div class="empty">Empty. Add words you hear and like, with notes on who says them.</div>';
 }
 function updateTrendInfo(){
   const pinned = trendItems().filter((t,i) => state.bank.pinned.includes(tid(t,i)) && t.risk !== "high").length;
@@ -2069,7 +2069,7 @@ $("trSlang").addEventListener("click", async e => {
   const b = e.target.closest("[data-addslang]"); if(!b) return;
   const s = state.trends.slang[Number(b.dataset.addslang)];
   state.bank.items.push({term:String(s.term), audience:String(s.audience || "Everyone"), meaning:[s.meaning, s.caution].filter(Boolean).map(String).join(" Careful: ")});
-  await saveBank(); renderTrends(); toast("Added to her bank");
+  await saveBank(); renderTrends(); toast("Added to your bank");
 });
 $("bkAdd").addEventListener("click", async () => {
   const term = $("bkTerm").value.trim(); if(!term){ toast("Type a word first"); return; }
@@ -2409,7 +2409,7 @@ $("syNewCode").addEventListener("click", async () => {
 $("sySyncNow").addEventListener("click", () => syncNow());
 $("syOffBtn").addEventListener("click", () => {
   setSyncLocal(null); renderSyncCard(); renderSyncStatus();
-  toast("Sync off on this device. Her data here is kept.");
+  toast("Sync off on this device. Your data here is kept.");
 });
 $("syWipe").addEventListener("click", async () => {
   const b = $("syWipe");
@@ -2422,7 +2422,7 @@ $("syWipe2").addEventListener("click", async () => {
   const b = $("syWipe2");
   if(b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Tap again to confirm"; setTimeout(() => { b.dataset.confirm = ""; b.textContent = "Start sync over from this device"; }, 4000); return; }
   b.dataset.confirm = ""; b.textContent = "Start sync over from this device";
-  try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); syShow("syCreate"); syMsg("Done. Create a new sync password. Her other devices will need it too."); }
+  try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); syShow("syCreate"); syMsg("Done. Create a new sync password. Your other devices will need it too."); }
   catch(e){ syMsg(errCopy(e)); }
 });
 
