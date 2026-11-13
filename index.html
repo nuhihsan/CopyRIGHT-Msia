@@ -196,7 +196,7 @@ nav button em{display:none;font-style:normal}
 nav button b{font-weight:inherit}
 .paneHint{display:none}
 #tcOut,#vOut,#bOut,#cOut,#taOut{scroll-margin-top:150px}
-@media (max-width:700px){
+@media (max-width:1099px){
   header{backdrop-filter:none;background:rgba(255,247,244,.97);padding-top:env(safe-area-inset-top)}
   nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,251,249,.97);border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(194,77,105,.08);
       padding:6px 2px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(7,1fr);gap:0;overflow:visible}
@@ -213,6 +213,8 @@ nav button b{font-weight:inherit}
 }
 @media (min-width:701px) and (max-width:1099px){
   .wrap{max-width:980px;padding:0 24px}
+  nav{padding-left:max(2px, calc(50% - 360px));padding-right:max(2px, calc(50% - 360px))}
+  nav button{font-size:12px}
 }
 @media (min-width:1100px){
   header{backdrop-filter:none;background:rgba(255,247,244,.96)}
