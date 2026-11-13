@@ -203,6 +203,15 @@ footer .pill{margin-right:8px}
 .rcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:700;letter-spacing:.06em;background:#fff6f3;border:1px dashed #e9aab8;border-radius:12px;padding:12px;text-align:center;word-break:break-all;color:var(--ink);margin-top:8px}
 .provChip{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:999px;background:#eef3ea;color:#3f7a4f;margin-left:6px}
 
+.helpBtn{font-weight:700;font-family:inherit;color:var(--accent)}
+.guide h3{margin:0 0 8px}
+.guide ol{margin:6px 0 4px;padding-left:22px}.guide ol li{margin:4px 0}
+.guide dl{margin:6px 0 0}.guide dt{font-weight:700;color:var(--accent);margin-top:10px}.guide dd{margin:2px 0 0}
+details.guide>summary{cursor:pointer;font-family:Fraunces,Georgia,serif;font-weight:600;font-size:18px;list-style:none;padding:2px 0}
+details.guide>summary::-webkit-details-marker{display:none}
+details.guide>summary::after{content:"+";float:right;color:var(--accent);font-family:Quicksand,sans-serif}
+details.guide[open]>summary::after{content:"–"}
+details.guide[open]>summary{margin-bottom:6px}
 .brand{white-space:nowrap}
 @media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
 
@@ -252,9 +261,9 @@ nav button b{font-weight:inherit}
   #tcOut .opt:first-of-type,#bOut>.card:first-child,#cOut>.card:first-child{margin-top:0}
   .paneHint{display:block}
   #tcOut:empty::before,#vOut:empty::before,#bOut:empty::before,#cOut:empty::before{content:"✿  Results will appear here";display:flex;align-items:center;justify-content:center;min-height:320px;border:2px dashed #efd5d5;border-radius:20px;color:var(--muted);font-weight:600;background:rgba(255,253,251,.6)}
-  #tone.active,#trends.active,#connection.active{display:block;columns:2 440px;column-gap:22px}
-  #tone>h2,#tone>.sub,#trends>h2,#trends>.sub,#connection>h2,#connection>.sub{column-span:all}
-  #tone .card,#trends .card,#connection .card{break-inside:avoid;display:inline-block;width:100%}
+  #tone.active,#trends.active,#connection.active,#help.active{display:block;columns:2 440px;column-gap:22px}
+  #tone>h2,#tone>.sub,#trends>h2,#trends>.sub,#connection>h2,#connection>.sub,#help>h2,#help>.sub{column-span:all}
+  #tone .card,#trends .card,#connection .card,#help .card{break-inside:avoid;display:inline-block;width:100%}
   #trList{display:contents}
   #libList{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:0 18px;align-items:start}
   #library>.card:first-of-type{max-width:none}
@@ -272,6 +281,7 @@ nav button b{font-weight:inherit}
       <button class="lockBtn" id="lockBtn" type="button" aria-pressed="false" title="Confidential mode: skips free Gemini so client briefs stay private">🔓</button>
       <label class="switch" title="Simple mode hides extra settings"><input type="checkbox" id="simpleMode"><span class="track"><span class="knob"></span></span><span id="modeLabel">Simple</span></label>
       <button class="gearBtn" id="gearBtn" type="button" aria-label="Connection settings" title="Connection settings">⚙</button>
+      <button class="gearBtn helpBtn" id="helpBtn" type="button" aria-label="How to use" title="How to use">?</button>
       </div>
     </div>
     <div class="clientbar">
@@ -688,6 +698,120 @@ nav button b{font-weight:inherit}
     <div class="row"><button class="ghost hidden" id="libMore" type="button">Show more</button></div>
   </section>
 
+  <section id="help">
+    <h2>How to use Meja Copy</h2>
+    <p class="sub">Tap any heading to open it. Come back here anytime with the <b>?</b> button at the top.</p>
+
+    <div class="card guide">
+      <h3>⚡ Quick start (2 minutes)</h3>
+      <ol>
+        <li>Tap <b>Write</b> at the bottom.</li>
+        <li>Paste English copy, or tap <b>📎 Upload file</b> to read a Word, PDF, PowerPoint or photo.</li>
+        <li>Slide <b>Formality</b> to how casual it should sound, pick <b>Just 1</b>, <b>3</b> or <b>5</b> versions.</li>
+        <li>Tap <b>Transcreate</b>. Copy the version you like with its copy button.</li>
+      </ol>
+      <p class="meta">Everything you make is saved automatically under <b>Saved</b>.</p>
+    </div>
+
+    <div class="card guide">
+      <h3>🔝 The top bar</h3>
+      <dl>
+        <dt>🔓 / 🔒 Lock</dt><dd>Confidential mode. Close it (🔒) before pasting real client briefs. The app then skips free Gemini, which may use what you send to improve Google's AI. Reading images is paused while it's closed.</dd>
+        <dt>Simple switch</dt><dd>On: hides the extra settings so screens stay short. Off (Full): opens <b>More options</b> on every screen.</dd>
+        <dt>⚙ Gear</dt><dd>Connection, install as an app, sync between phone and laptop, refresh trends.</dd>
+        <dt>? Guide</dt><dd>This page.</dd>
+        <dt>Client + Edit</dt><dd>Pick which client you're writing for. Every tool then follows that client's tone, preferred words and banned words. <b>Edit</b> opens their profile.</dd>
+      </dl>
+    </div>
+
+    <details class="card guide" open>
+      <summary>✏️ Write (Transcreate)</summary>
+      <p>Turns English copy into natural Malaysian BM, not a word-for-word translation.</p>
+      <dl>
+        <dt>Formality slider</dt><dd>Baku (very formal) → Formal → Neutral → Santai → Bahasa pasar (street casual).</dd>
+        <dt>How many versions</dt><dd><b>Just 1</b> for a quick answer, <b>3</b> or <b>5</b> to compare options.</dd>
+        <dt>✿ Trend-aware</dt><dd>Lets the AI use this week's safe trends and words from your slang bank.</dd>
+        <dt>More options</dt><dd><b>Format</b> (caption, headline, billboard, script…), <b>Audience</b>, <b>Flavour</b> (Gen Z, rojak, festive, corporate), <b>Dialect</b> (Kelantan, Utara, Sabah and others), <b>Script</b> (Rumi, Jawi or both), plus your own style notes.</dd>
+        <dt>My saved styles</dt><dd>Set the options once, tap <b>Save current</b>, and reuse that setup later in one tap.</dd>
+        <dt>Stop</dt><dd>Cancels if it's taking too long.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>🧩 Variants</summary>
+      <p>Many short options for one message, all within the character limit.</p>
+      <dl>
+        <dt>Key message</dt><dd>What you want to say, in BM or English.</dd>
+        <dt>Type</dt><dd>Headline, button text, caption, tagline, push notification or email subject.</dd>
+        <dt>Platform limit</dt><dd>Sets the max characters for Meta, Google Ads, SMS and so on. Each result shows its length.</dd>
+        <dt>How many</dt><dd>5, 10 or 15 options.</dd>
+        <dt>More options</dt><dd>Tone, trend-aware, and words that must appear.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>💗 Clients (Client tone)</summary>
+      <p>Each client's rules, so you stop getting the same corrections twice.</p>
+      <dl>
+        <dt>Client profile</dt><dd>Tone, default formality, how to address the audience (anda, awak, korang…), preferred terms (<i>avoid => use</i>, one per line), banned words, approved past copy and mandatories. Tap <b>Save client</b>.</dd>
+        <dt>🔒 Always confidential</dt><dd>Tick for clients whose work must never go to free Gemini.</dd>
+        <dt>Learn from a correction</dt><dd>Paste your draft and the version the client or CD corrected, tap <b>Find the rules</b>. The app suggests rules (like "use <i>anda</i>, not <i>awak</i>"). Keep the ones that are right and they're applied from then on.</dd>
+        <dt>Learned rules</dt><dd>All rules for this client. Add or delete any.</dd>
+        <dt>Backup</dt><dd>Copy all clients as text, or restore them on another device. Sync does this automatically.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>📋 Brief</summary>
+      <p>Paste or upload a client brief and tap <b>Decode</b>. You get the objective, audience, key message, mandatories, deliverables, deadlines, watch-outs, and questions to ask before starting.</p>
+    </details>
+
+    <details class="card guide">
+      <summary>✨ Trends</summary>
+      <dl>
+        <dt>Trend board</dt><dd>What Malaysians are talking about this week, refreshed every Monday from Malaysian news and Google Trends. Each item says whether it's safe for brands. Sensitive topics stay hidden unless you tick the box.</dd>
+        <dt>Coming up</dt><dd>Dates and festive moments to plan for.</dd>
+        <dt>Trending words</dt><dd>Current slang with meaning. Tap to add one to your bank.</dd>
+        <dt>My slang bank</dt><dd>Your own list of words, who says them and how to use them. Trend-aware writing uses it.</dd>
+        <dt>Trend angles</dt><dd>Tick a trend or two, tap <b>Find angles</b>, and get campaign ideas linking it to the selected client.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>✅ Check</summary>
+      <p>Paste your finished BM copy and tap <b>Check</b> before sending it. It flags client tone and banned words, BM spelling and grammar (DBP), cultural and religious sensitivity, and risky ad claims. Under <b>More options</b> you can switch any of these checks off.</p>
+      <p class="meta">A first check only. It doesn't replace your CD, legal or client approval.</p>
+    </details>
+
+    <details class="card guide">
+      <summary>🔖 Saved (My copy)</summary>
+      <dl>
+        <dt>Search</dt><dd>Type any word to find past work. Filter by type, client, date or starred ★.</dd>
+        <dt>★ Star</dt><dd>Mark favourites so they're easy to find.</dd>
+        <dt>Download</dt><dd>Save what's shown as Word, PDF, PowerPoint, an Excel copy deck or plain text. Each entry also has its own download.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>⚙ Settings (gear)</summary>
+      <dl>
+        <dt>Connection</dt><dd>Server link and passcode. Set once per device. <b>Connected ✓</b> means it's working.</dd>
+        <dt>Install as an app</dt><dd>iPhone: Safari → Share → <b>Add to Home Screen</b>. Android or laptop: browser menu → <b>Install app</b>.</dd>
+        <dt>Sync between devices</dt><dd>Turn on with a sync password so phone and laptop share clients, rules and history. Save the <b>recovery code</b> it gives you: it's the only way back if the password is forgotten.</dd>
+        <dt>Refresh trends now</dt><dd>Updates the trend board without waiting for Monday.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>❓ Problems</summary>
+      <dl>
+        <dt>"Connect the app first"</dt><dd>Tap ⚙, check the server link and passcode, tap <b>Save and test</b>.</dd>
+        <dt>It's slow or busy</dt><dd>The free AI has daily limits. The app switches to a backup on its own; if all are busy, try again in a minute.</dd>
+        <dt>Looks old after an update</dt><dd>Close the app fully and open it again.</dd>
+        <dt>Results sound off</dt><dd>Pick the right client at the top, and add rules for them under Clients. The more rules, the closer the drafts.</dd>
+      </dl>
+    </details>
+  </section>
   <footer>
     <span id="syncPill" class="pill">Loading…</span>
     Explanations in
@@ -722,7 +846,7 @@ async function copyText(text){
 }
 
 /* ---------- tabs ---------- */
-const TABS = ["transcreate","variants","tone","brief","trends","check","library","connection"];
+const TABS = ["transcreate","variants","tone","brief","trends","check","library","connection","help"];
 function showTab(name){
   if(!TABS.includes(name)) name = "transcreate";
   document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === name));
@@ -1026,6 +1150,7 @@ $("lockBtn").addEventListener("click", () => {
   toast(isConfidential() ? "🔒 Confidential: free Gemini is skipped" : "🔓 Confidential off: Gemini may be used");
 });
 $("gearBtn").addEventListener("click", () => showTab("connection"));
+$("helpBtn").addEventListener("click", () => showTab("help"));
 function parseLooseJson(text){
   const s = String(text || "").trim();
   try{ return JSON.parse(s); }catch(e){}
