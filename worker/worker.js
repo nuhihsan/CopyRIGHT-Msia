@@ -20,6 +20,7 @@
  *   GROQ_MODEL         default "openai/gpt-oss-120b"
  *   OPENAI_MODEL       default "gpt-5.4-mini"
  *   WORKERSAI_MODEL    default "@cf/aisingapore/gemma-sea-lion-v4-27b-it" (needs an AI binding named AI)
+ *   GEMINI_THINKING    default "low" (how long Gemini thinks before answering: low, medium, high, or off)
  *
  * Bindings:
  *   KV namespace named STORE (or TRENDS)   stores her encrypted sync data and the weekly trend board
@@ -35,10 +36,11 @@ const DEFAULTS = {
   GROQ_MODEL: "openai/gpt-oss-120b",
   OPENAI_MODEL: "gpt-5.4-mini",
   WORKERSAI_MODEL: "@cf/aisingapore/gemma-sea-lion-v4-27b-it",
+  GEMINI_THINKING: "low",
 };
 const NAMES = { gemini: "Gemini", sealion: "SEA-LION", groq: "Groq", openai: "OpenAI", workersai: "SEA-LION (Cloudflare)" };
 const IMAGE_CAPABLE = new Set(["gemini", "openai"]);
-const PROVIDER_TIMEOUT_MS = 90000;
+const PROVIDER_TIMEOUT_MS = 45000; // give up on one AI after 45s and try the next
 const MAX_PROMPT_CHARS = 200000;
 const MAX_IMAGES = 6;
 const MAX_SYNC_BYTES = 20 * 1024 * 1024;
@@ -88,10 +90,20 @@ async function callGemini(env, { prompt, images, wantJson }) {
   for (const im of images) parts.push({ inline_data: { mime_type: im.mime, data: im.data } });
   const body = { contents: [{ role: "user", parts }], generationConfig: { temperature: 0.8 } };
   if (wantJson) body.generationConfig.responseMimeType = "application/json";
+  // Gemini "thinks" before answering, which can take a minute on long prompts. Copywriting doesn't need much of it.
+  const level = String(cfg(env, "GEMINI_THINKING") || "").trim().toLowerCase();
+  if (level && level !== "off" && level !== "default") body.generationConfig.thinkingConfig = { thinkingLevel: level };
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cfg(env, "GEMINI_MODEL"))}:generateContent`;
   const t = withTimeout(PROVIDER_TIMEOUT_MS);
   try {
-    const r = await fetch(url, { method: "POST", signal: t.signal, headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY }, body: JSON.stringify(body) });
+    const send = () => fetch(url, { method: "POST", signal: t.signal, headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY }, body: JSON.stringify(body) });
+    let r = await send();
+    if (r.status === 400 && body.generationConfig.thinkingConfig) {
+      // This model doesn't accept the thinking setting: try once more without it.
+      const msg = await r.text();
+      if (/thinking/i.test(msg)) { delete body.generationConfig.thinkingConfig; r = await send(); }
+      else throw new ProviderError("upstream_error", `Gemini 400: ${msg.slice(0, 300)}`);
+    }
     if (!r.ok) throw new ProviderError(r.status === 429 ? "rate_limited" : "upstream_error", `Gemini ${r.status}: ${(await r.text()).slice(0, 300)}`);
     const d = await r.json();
     const cand = d.candidates && d.candidates[0];
@@ -107,6 +119,7 @@ async function callOpenAICompatible(url, key, model, { prompt, images, wantJson 
     ? [{ type: "text", text: prompt }, ...images.map(im => ({ type: "image_url", image_url: { url: `data:${im.mime};base64,${im.data}` } }))]
     : prompt;
   const body = { model, messages: [{ role: "user", content }], temperature: 0.8 };
+  if (/gpt-oss/i.test(model)) body.reasoning_effort = "low"; // faster answers from Groq's reasoning model
   if (wantJson && label !== "SEA-LION") body.response_format = { type: "json_object" };
   const t = withTimeout(PROVIDER_TIMEOUT_MS);
   try {
