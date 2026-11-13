@@ -71,7 +71,16 @@ https://nuhihsan.github.io/CopyRIGHT-Msia/?w=https://meja-copy.YOURNAME.workers.
 
 She opens it, taps **⚙**, types the passcode and taps **Save and test**. It should say **Connected ✓** and list the three AIs. Tell her the passcode in person or by phone, not in the same message as the link.
 
-## Step 5: Turn on sync (2 minutes, on her laptop first)
+## Step 5: Install it like an app (optional, 1 minute per device)
+
+Under **⚙**, the **Install as an app** card shows the right steps for each device:
+- **Laptop (Chrome or Edge):** click **Install app**, or the install icon in the address bar. It then opens in its own window from the Start menu or Dock.
+- **Android:** browser menu (⋮), then **Install app**.
+- **iPhone:** open the link in **Safari**, tap **Share**, then **Add to Home Screen**.
+
+On a laptop it shows a side menu with her input on the left and results on the right. On a phone it uses a bottom tab bar.
+
+## Step 6: Turn on sync (2 minutes, on her laptop first)
 
 1. On her laptop, under **⚙**, tap **Turn on sync** and create a **sync password**. This is hers alone, separate from the passcode. You don't need to know it.
 2. The app shows a **recovery code** once. She should copy it into a password manager or notes app, or download it, then tick "I've saved it".

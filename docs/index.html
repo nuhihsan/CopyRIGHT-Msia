@@ -2,8 +2,16 @@
 <html lang="ms">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Meja Copy Hannah</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#fff7f4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meja Copy">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -197,6 +205,59 @@ footer .pill{margin-right:8px}
 
 .brand{white-space:nowrap}
 @media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
+
+/* ===== responsive: phone bottom bar, tablet top tabs, laptop side menu ===== */
+nav button{display:inline-flex;align-items:center;gap:6px}
+nav button svg{width:16px;height:16px;flex:0 0 16px}
+nav button em{display:none;font-style:normal}
+nav button b{font-weight:inherit}
+.paneHint{display:none}
+#tcOut,#vOut,#bOut,#cOut,#taOut{scroll-margin-top:150px}
+@media (max-width:700px){
+  header{backdrop-filter:none;background:rgba(255,247,244,.97);padding-top:env(safe-area-inset-top)}
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,251,249,.97);border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(194,77,105,.08);
+      padding:6px 2px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(7,1fr);gap:0;overflow:visible}
+  nav button{flex-direction:column;gap:3px;border:none!important;background:none!important;box-shadow:none!important;border-radius:12px;padding:4px 0;font-size:10.5px;color:var(--muted);min-width:0}
+  nav button b{display:none}
+  nav button em{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  nav button svg{width:23px;height:23px;flex-basis:auto}
+  nav button.active{color:var(--accent)!important}
+  nav button.active svg{fill:var(--accent-soft)}
+  main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  #toast{bottom:calc(86px + env(safe-area-inset-bottom))}
+  .clientbar{padding-bottom:10px}
+  textarea,input[type=text],input[type=number],input[type=password],select{font-size:16px}
+}
+@media (min-width:701px) and (max-width:1099px){
+  .wrap{max-width:980px;padding:0 24px}
+}
+@media (min-width:1100px){
+  header{backdrop-filter:none;background:rgba(255,247,244,.96)}
+  .wrap{max-width:1320px;padding:0 28px}
+  header .wrap{display:flex;align-items:center;gap:22px;min-height:70px}
+  header .top{flex:1;padding:0}
+  header .clientbar{width:400px;padding:0}
+  header .vine{right:430px}
+  nav{position:fixed;top:92px;left:max(28px, calc(50% - 660px + 28px));width:206px;display:flex;flex-direction:column;gap:3px;overflow:visible;padding:0}
+  nav button{width:100%;justify-content:flex-start;gap:11px;padding:10px 14px;border-radius:12px;border:none;background:transparent;font-size:14.5px;box-shadow:none}
+  nav button svg{width:19px;height:19px;flex-basis:19px}
+  nav button:hover:not(.active){background:#fbecea}
+  main.wrap{padding-left:264px;padding-top:22px}
+  #transcreate.active,#variants.active,#brief.active,#check.active{display:grid;grid-template-columns:minmax(380px,480px) minmax(0,1fr);column-gap:26px;align-items:start}
+  #transcreate>h2,#variants>h2,#brief>h2,#check>h2,#transcreate>.sub,#variants>.sub,#brief>.sub,#check>.sub,#transcreate>.banner{grid-column:1/-1}
+  #transcreate>.card,#variants>.card,#brief>.card,#check>.card{grid-column:1;position:sticky;top:92px;max-height:calc(100vh - 110px);overflow:auto;margin-bottom:0}
+  #tcOut,#vOut,#bOut,#cOut{grid-column:2;min-width:0}
+  #tcOut .opt:first-of-type,#bOut>.card:first-child,#cOut>.card:first-child{margin-top:0}
+  .paneHint{display:block}
+  #tcOut:empty::before,#vOut:empty::before,#bOut:empty::before,#cOut:empty::before{content:"✿  Results will appear here";display:flex;align-items:center;justify-content:center;min-height:320px;border:2px dashed #efd5d5;border-radius:20px;color:var(--muted);font-weight:600;background:rgba(255,253,251,.6)}
+  #tone.active,#trends.active,#connection.active{display:block;columns:2 440px;column-gap:22px}
+  #tone>h2,#tone>.sub,#trends>h2,#trends>.sub,#connection>h2,#connection>.sub{column-span:all}
+  #tone .card,#trends .card,#connection .card{break-inside:avoid;display:inline-block;width:100%}
+  #trList{display:contents}
+  #libList{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:0 18px;align-items:start}
+  #library>.card:first-of-type{max-width:none}
+  footer{margin-top:24px}
+}
 </style>
 </head>
 <body>
@@ -217,13 +278,13 @@ footer .pill{margin-right:8px}
       <button class="ghost" id="editClientBtn" type="button">Edit</button>
     </div>
     <nav id="tabs">
-      <button data-tab="transcreate" class="active">Transcreate</button>
-      <button data-tab="variants">Variants</button>
-      <button data-tab="tone">Client tone</button>
-      <button data-tab="brief">Brief</button>
-      <button data-tab="trends">Trends</button>
-      <button data-tab="check">Check copy</button>
-      <button data-tab="library">My copy</button>
+      <button data-tab="transcreate" class="active" title="Transcreate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg><b>Transcreate</b><em>Write</em></button>
+      <button data-tab="variants" title="Variants"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg><b>Variants</b><em>Variants</em></button>
+      <button data-tab="tone" title="Client tone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><b>Client tone</b><em>Clients</em></button>
+      <button data-tab="brief" title="Brief"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 3h6v3H9zM9 12h6M9 16h4"/></svg><b>Brief</b><em>Brief</em></button>
+      <button data-tab="trends" title="Trends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg><b>Trends</b><em>Trends</em></button>
+      <button data-tab="check" title="Check copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><b>Check copy</b><em>Check</em></button>
+      <button data-tab="library" title="My copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><b>My copy</b><em>Saved</em></button>
     </nav>
   </div>
 </header>
@@ -532,6 +593,12 @@ footer .pill{margin-right:8px}
         <span class="status" id="cnStatus"></span>
       </div>
       <div id="cnInfo" class="meta"></div>
+    </div>
+    <div class="card" id="installCard">
+      <h3>📱 Install as an app</h3>
+      <p class="meta" style="margin-top:0">Puts Meja Copy on her home screen or laptop dock. It opens full screen in its own window, like a normal app, and starts even with a weak connection.</p>
+      <div class="row" style="margin-top:4px"><button class="primary hidden" id="installBtn" type="button">Install app</button><span class="status" id="installStatus"></span></div>
+      <div class="meta" id="installHow"></div>
     </div>
     <div class="card" id="syncCard">
       <h3>🔄 Sync between devices</h3>
@@ -1570,6 +1637,7 @@ const DL_OPTS = '<option value="docx">Word (.docx)</option><option value="pdf">P
 function dlSelect(id, label){ return `<select class="dlSel" data-h="${esc(id)}"><option value="">${label || "Download as…"}</option>${DL_OPTS}</select>`; }
 function prependDl(containerId, he){
   $(containerId).insertAdjacentHTML("afterbegin", `<div class="dlrow">${dlSelect(he.id)}<span class="status">Saved to My copy</span></div>`);
+  if(window.innerWidth < 1100){ try{ $(containerId).scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){} }
 }
 document.addEventListener("change", e => {
   const s = e.target.closest(".dlSel"); if(!s || !s.value) return;
@@ -2230,6 +2298,36 @@ $("syWipe2").addEventListener("click", async () => {
   try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); syShow("syCreate"); syMsg("Done. Create a new sync password. Her other devices will need it too."); }
   catch(e){ syMsg(errCopy(e)); }
 });
+
+
+/* ---------- INSTALL (PWA) ---------- */
+let deferredInstall = null;
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+function renderInstall(){
+  const ua = navigator.userAgent || "";
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const safariMac = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg/.test(ua) && !ios;
+  if(isStandalone()){ $("installBtn").classList.add("hidden"); $("installStatus").textContent = "Installed ✓ You're using the app."; $("installHow").innerHTML = ""; return; }
+  $("installBtn").classList.toggle("hidden", !deferredInstall);
+  $("installStatus").textContent = "";
+  let how = "";
+  if(ios) how = "<b>iPhone or iPad:</b> open this page in <b>Safari</b>, tap the <b>Share</b> button, then <b>Add to Home Screen</b>.";
+  else if(safariMac) how = "<b>Mac (Safari):</b> in the menu bar choose <b>File</b>, then <b>Add to Dock</b>.";
+  else if(!deferredInstall) how = "<b>Laptop (Chrome or Edge):</b> click the install icon at the right end of the address bar, or the browser menu, then <b>Install Meja Copy Hannah</b>.<br><b>Android:</b> browser menu (⋮), then <b>Install app</b> or <b>Add to Home screen</b>.";
+  $("installHow").innerHTML = how;
+}
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; renderInstall(); });
+window.addEventListener("appinstalled", () => { deferredInstall = null; renderInstall(); toast("Installed ✓"); });
+$("installBtn").addEventListener("click", async () => {
+  if(!deferredInstall) return;
+  deferredInstall.prompt();
+  try{ await deferredInstall.userChoice; }catch(e){}
+  deferredInstall = null; renderInstall();
+});
+renderInstall();
+if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "127.0.0.1" || location.hostname === "localhost")){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
 
 /* ---------- FILE UPLOAD ---------- */
 const MAX_CHARS = 60000;
