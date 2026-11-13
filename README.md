@@ -12,22 +12,33 @@
 - **My copy:** an automatic history of everything written, with search, filters and stars.
 - **Uploads:** reads Word, PDF, PowerPoint, text files and images.
 - **Downloads:** exports to Word, PDF, PowerPoint, an Excel copy deck, or text.
+- **Trends:** a weekly board of what Malaysia is talking about, with risk labels, upcoming dates and a personal slang bank. A "Trend-aware" switch lets copy draw on them.
 - **Simple mode:** hides the advanced settings until they're needed.
 
-## How to use it
+## Two versions
 
-The app is built as a Claude artifact. The writing tools, image reading, online saving and downloads all use Claude's artifact runtime, so open it from Claude (claude.ai or the Claude app) while signed in.
+| | Claude version | Free version |
+|---|---|---|
+| Where | `index.html` at the repo root, published as a Claude artifact | `docs/`, served by GitHub Pages |
+| AI | Claude, on the viewer's own Claude account | Gemini, then SEA-LION, then Groq, on the owner's free keys |
+| Middleman | None needed | `worker/worker.js` on Cloudflare Workers (free) |
+| Saving | The viewer's Claude account, or the browser | The browser, plus the Backup button |
+| Trends | Weekly Claude scheduled task | The Worker's weekly cron |
+| Privacy switch | Not needed | 🔒 Confidential mode skips free Gemini |
 
-Opened outside Claude (for example locally or on GitHub Pages), the page still loads. Client profiles, saved styles, term checks, file reading for Word, PDF and PowerPoint, and history all work, with everything saved in that browser. The AI tools and downloads won't work there.
+**Setting up the free version:** follow [SETUP.md](SETUP.md). It takes about 30 minutes and needs no credit card.
 
 ## Files
 
-- `index.html`: the whole app (HTML, CSS and JavaScript in one file)
-- `lib/`: third-party libraries the app loads when they're needed
+- `index.html`, `lib/`: the Claude version
+- `docs/index.html`, `docs/lib/`: the free version (GitHub Pages)
+- `worker/worker.js`: the Cloudflare Worker for the free version
+- `worker/wrangler.toml`: only needed if you deploy the Worker from the command line
+- `SETUP.md`: step-by-step setup for the free version
 
 ## Notes
 
-- Follow your agency's rules on AI tools. Don't paste confidential client material unless the agency allows it.
+- Follow your agency's rules on AI tools. Don't paste confidential client material unless the agency allows it. In the free version, use 🔒 Confidential mode for client work.
 - Dialect and Jawi output are first drafts. Have a native speaker or proofreader check them before client use.
 - Sensitivity and claims checks are a first pass, not legal or client approval.
 

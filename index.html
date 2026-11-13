@@ -175,6 +175,19 @@ details.more[open] > summary{margin-bottom:4px}
 .star.on{color:#e0a43a}
 mark.q{background:#fff0b8;color:inherit}
 footer .pill{margin-right:8px}
+
+.trendtog{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:600;color:var(--accent);cursor:pointer}
+.trendtog input{accent-color:var(--accent);width:17px;height:17px}
+.tcard .top{display:flex;gap:8px;align-items:flex-start}
+.tcard .top input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:0 0 18px}
+.tcard .ttl{font-weight:700;font-size:16px}
+.tcard .src a{font-size:12.5px;color:var(--accent);margin-right:10px}
+.dateRow{display:flex;gap:10px;padding:6px 0;border-top:1px solid var(--line)}
+.dateRow:first-child{border-top:none}
+.dateRow .d{flex:0 0 88px;font-weight:700;color:var(--accent);font-size:13.5px}
+.slangRow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.slangRow:first-child{border-top:none}
+.slangRow .t{flex:1}
 </style>
 </head>
 <body>
@@ -195,6 +208,7 @@ footer .pill{margin-right:8px}
       <button data-tab="variants">Variants</button>
       <button data-tab="tone">Client tone</button>
       <button data-tab="brief">Brief</button>
+      <button data-tab="trends">Trends</button>
       <button data-tab="check">Check copy</button>
       <button data-tab="library">My copy</button>
     </nav>
@@ -219,6 +233,7 @@ footer .pill{margin-right:8px}
       <label class="f" for="tcCount">How many versions</label>
       <div class="seg" id="tcCountSeg"><button type="button" data-n="1">Just 1</button><button type="button" data-n="3" class="on">3</button><button type="button" data-n="5">5</button></div>
       <input type="hidden" id="tcCount" value="3">
+      <label class="trendtog"><input type="checkbox" id="tcTrend"> ✿ Trend-aware <span class="status" id="tcTrendInfo"></span></label>
       <details class="more" id="tcMore">
         <summary>More options <span class="status" id="tcMoreSum"></span></summary>
         <label class="f" for="tcPreset">My saved styles</label>
@@ -318,6 +333,7 @@ footer .pill{margin-right:8px}
         <summary>More options</summary>
         <label class="f" for="vTone">Tone</label>
         <select id="vTone" class="toneSel"></select>
+        <label class="trendtog"><input type="checkbox" id="vTrend"> ✿ Trend-aware</label>
         <label class="f" for="vMust">Must include (optional)</label>
         <input id="vMust" type="text" placeholder="Brand name, promo code, date…">
       </details>
@@ -451,6 +467,43 @@ footer .pill{margin-right:8px}
     <div id="cOut"></div>
   </section>
 
+  <!-- TRENDS -->
+  <section id="trends">
+    <h2>Trends</h2>
+    <p class="sub">What Malaysia is talking about, refreshed every Monday. Tick the ones worth using, keep her own slang bank, and switch on <b>Trend-aware</b> in Transcreate.</p>
+    <div class="card">
+      <div class="row" style="margin-top:0;justify-content:space-between"><b id="trWeek">Loading trends…</b><span class="status" id="trUpdated"></span></div>
+      <p class="meta" id="trSummary"></p>
+      <div class="checks"><label><input type="checkbox" id="trShowRisky"> Show sensitive topics (politics, disasters, crime)</label></div>
+    </div>
+    <div id="trList"></div>
+    <div class="card"><h3>Coming up</h3><div id="trDates"></div></div>
+    <div class="card"><h3>Trending words</h3><p class="status" style="margin-top:-6px">Tap Add to put a word in her bank. Only words in the bank are used in copy.</p><div id="trSlang"></div></div>
+    <div class="card">
+      <h3>My slang bank <span class="chip" id="bankCount">0</span></h3>
+      <div class="grid">
+        <div><label class="f" for="bkTerm">Word or phrase</label><input id="bkTerm" type="text" placeholder="e.g. padu"></div>
+        <div><label class="f" for="bkAud">Who says it</label>
+          <select id="bkAud"><option>Everyone</option><option>Gen Z</option><option>Young adults</option><option>Online / TikTok</option><option>Northern (Utara)</option><option>East Coast</option><option>Sabah / Sarawak</option></select></div>
+      </div>
+      <label class="f" for="bkMean">Meaning and how to use it</label>
+      <input id="bkMean" type="text" placeholder="e.g. Awesome, solid. Fine for food and lifestyle. Not for banks.">
+      <div class="row"><button class="small" id="bkAdd" type="button">Add to bank</button></div>
+      <div id="bankList" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>Trend angles</h3>
+      <p class="status" style="margin-top:-6px">Paste a product or key message. Get topical hooks built on this week's trends.</p>
+      <textarea id="taSrc" class="short" placeholder="e.g. New iced coffee range, launching December"></textarea>
+      <div class="row">
+        <button class="primary" id="taGo" type="button">Find angles</button>
+        <button class="ghost hidden" id="taStop" type="button">Stop</button>
+        <span class="status" id="taStatus"></span>
+      </div>
+      <div id="taOut"></div>
+    </div>
+  </section>
+
   <!-- LIBRARY -->
   <section id="library">
     <h2>My copy</h2>
@@ -459,7 +512,7 @@ footer .pill{margin-right:8px}
       <input id="libQ" type="text" placeholder="Search words, client, campaign…">
       <div class="grid">
         <div><label class="f" for="libType">Type</label>
-          <select id="libType"><option value="">All</option><option>Transcreate</option><option>Variants</option><option>Check</option><option>Brief</option></select></div>
+          <select id="libType"><option value="">All</option><option>Transcreate</option><option>Variants</option><option>Check</option><option>Brief</option><option>Trend angles</option></select></div>
         <div><label class="f" for="libClient">Client</label><select id="libClient"></select></div>
         <div><label class="f" for="libWhen">When</label>
           <select id="libWhen"><option value="">Any time</option><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></div>
@@ -510,7 +563,7 @@ async function copyText(text){
 }
 
 /* ---------- tabs ---------- */
-const TABS = ["transcreate","variants","tone","brief","check","library"];
+const TABS = ["transcreate","variants","tone","brief","trends","check","library"];
 function showTab(name){
   if(!TABS.includes(name)) name = "transcreate";
   document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === name));
@@ -566,8 +619,10 @@ async function initCloud(){
     const snap = await Promise.race([col.get(), sleep(10000).then(() => { throw {code:"timeout"}; })]);
     store.col = col;
     const cloud = {};
-    const cloudH = {};
-    snap.docs.forEach(d => { const v = d.exists ? d.data() : null; if(!v || typeof v.id !== "string") return; if(v.id.startsWith("c-")) cloud[v.id] = v; else if(v.id.startsWith("h-")) cloudH[v.id] = v; });
+    const cloudH = {}; let cloudBank = null;
+    snap.docs.forEach(d => { const v = d.exists ? d.data() : null; if(!v || typeof v.id !== "string") return; if(v.id.startsWith("c-")) cloud[v.id] = v; else if(v.id.startsWith("h-")) cloudH[v.id] = v; else if(v.id === "w-bank") cloudBank = v; });
+    if(cloudBank && (cloudBank.updated||0) > (state.bank.updated||0)){ state.bank = plain(cloudBank); if(!Array.isArray(state.bank.items)) state.bank.items = []; if(!Array.isArray(state.bank.pinned)) state.bank.pinned = []; LS.set("mc_bank", state.bank); renderTrends(); }
+    else if(state.bank.updated && (!cloudBank || (state.bank.updated||0) > (cloudBank.updated||0))) setTimeout(() => cloudWrite(state.bank), 1200);
     const localH = {}; (state.history || []).forEach(x => localH[x.id] = x);
     const pushH = [];
     for(const id in localH){ if(!cloudH[id] || (localH[id].updated||0) > (cloudH[id].updated||0)) pushH.push(localH[id]); }
@@ -703,7 +758,7 @@ $("ruleAddBtn").addEventListener("click", async () => {
 });
 
 /* backup */
-$("bkCopy").addEventListener("click", () => copyText(JSON.stringify({mejaCopy:1, clients: sortedClients(), styles: state.styles})));
+$("bkCopy").addEventListener("click", () => copyText(JSON.stringify({mejaCopy:1, clients: sortedClients(), styles: state.styles, bank: state.bank})));
 $("bkShow").addEventListener("click", () => $("bkBox").classList.toggle("hidden"));
 $("bkImport").addEventListener("click", async () => {
   try{
@@ -727,6 +782,10 @@ $("bkImport").addEventListener("click", async () => {
       n++;
     }
     if(styles.length){ persistStyles(); renderPresets(); }
+    if(data && data.bank && Array.isArray(data.bank.items)){
+      for(const b of data.bank.items){ if(b && b.term && !state.bank.items.some(x => x.term.toLowerCase() === String(b.term).toLowerCase())){ state.bank.items.push({term:String(b.term), audience:String(b.audience||"Everyone"), meaning:String(b.meaning||"")}); n++; } }
+      await saveBank(); renderTrends();
+    }
     renderClientSelect(); fillClientForm(); $("bkText").value = ""; $("bkBox").classList.add("hidden");
     toast(n ? `Imported ${n} item${n>1?"s":""}` : "Nothing to import in that text");
   }catch(e){ toast("That doesn't look like a backup"); }
@@ -980,6 +1039,7 @@ Format: ${$("tcFormat").value}
 Audience: ${$("tcAudience").value}
 STYLE SETTINGS:
 ${styleBlock()}
+${$("tcTrend").checked ? trendBlock() : ""}
 Extra context: ${$("tcContext").value.trim() || "none"}
 ${n === 1 ? "Give exactly 1 option: your single best version." : `Give exactly ${n} distinct options, each a different creative angle (for example closest in meaning, punchier, more emotional, more playful).`} Keep line breaks where the format needs them.
 
@@ -1055,6 +1115,7 @@ Key message: """${src.slice(0, 4000)}"""
 Register: ${toneOf("vTone")}
 ${limit ? `HARD LIMIT: each option must be ${limit} characters or fewer, counting spaces and punctuation. Count carefully. Shorter is fine.` : "No character limit."}
 Must include: ${$("vMust").value.trim() || "nothing specific"}
+${$("vTrend").checked ? trendBlock() : ""}
 Cover a spread of angles (benefit, urgency, emotion, curiosity, wordplay, straightforward) and avoid near-duplicates.
 
 Reply with only JSON: {"variants":[{"text":"the BM line","angle":"1-3 word angle"}]}`;
@@ -1290,6 +1351,7 @@ function styleSummary(){
   if(dialectName()) parts.push(dialectName());
   parts.push({rumi:"Rumi", both:"Rumi + Jawi", jawi:"Jawi"}[$("tcScript").value]);
   parts.push($("tcFormat").value);
+  if($("tcTrend").checked) parts.push("Trend-aware");
   return parts.join(" · ");
 }
 function updateMoreSummary(){
@@ -1564,6 +1626,144 @@ async function buildPdf(entries){
   }finally{ box.remove(); }
 }
 
+/* ---------- TRENDS & SLANG BANK ---------- */
+state.trends = LS.get("mc_trends", null);
+state.bank = LS.get("mc_bank", {id:"w-bank", items:[], pinned:[], updated:0});
+if(!Array.isArray(state.bank.items)) state.bank.items = [];
+if(!Array.isArray(state.bank.pinned)) state.bank.pinned = [];
+async function saveBank(){
+  state.bank.updated = Date.now(); state.bank.id = "w-bank";
+  LS.set("mc_bank", state.bank);
+  await cloudWrite(state.bank);
+}
+function safeUrl(u){ try{ const x = new URL(String(u)); return x.protocol === "https:" || x.protocol === "http:" ? x.href : ""; }catch(e){ return ""; } }
+const RISK = {low:["ok","Safe to use"], medium:["warn","Use with care"], high:["bad","Sensitive"]};
+function trendItems(){ return (state.trends && Array.isArray(state.trends.items)) ? state.trends.items.filter(t => t && t.topic) : []; }
+function tid(t, i){ return String(t.id || ("t" + i + "-" + String(t.topic).slice(0, 20))); }
+function renderTrends(){
+  const tr = state.trends;
+  if(!tr || !trendItems().length){
+    $("trWeek").textContent = "No trends yet";
+    $("trUpdated").textContent = "";
+    $("trSummary").textContent = "Trends arrive every Monday. Her slang bank below works already.";
+    $("trList").innerHTML = ""; $("trDates").innerHTML = '<div class="empty">Nothing yet.</div>'; $("trSlang").innerHTML = '<div class="empty">Nothing yet.</div>';
+  } else {
+    $("trWeek").textContent = "Week of " + (tr.weekOf || "");
+    $("trUpdated").textContent = tr.updated ? "Updated " + fmtDate(Date.parse(tr.updated) || tr.updated) : "";
+    $("trSummary").textContent = tr.summary || "";
+    const showRisky = $("trShowRisky").checked;
+    const items = trendItems().map((t,i) => ({t, id:tid(t,i)})).filter(x => showRisky || x.t.risk !== "high");
+    const hidden = trendItems().filter(t => t.risk === "high").length;
+    $("trList").innerHTML = items.map(({t, id}) => {
+      const r = RISK[t.risk] || RISK.medium; const pinned = state.bank.pinned.includes(id);
+      const srcs = (Array.isArray(t.sources) ? t.sources : []).map(s => { const u = safeUrl(s && s.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(s.title || "Source")}</a>` : ""; }).join("");
+      return `<div class="card tcard"><div class="top"><input type="checkbox" data-pin="${esc(id)}" ${pinned ? "checked" : ""} ${t.risk === "high" ? "disabled" : ""} aria-label="Use in copy"><div style="flex:1">
+        <div class="ttl">${esc(t.topic)}</div>
+        <div style="margin-top:4px"><span class="chip">${esc(t.category || "Trend")}</span> <span class="chip ${r[0]}">${r[1]}</span></div>
+        ${t.why ? `<div class="meta"><b>What's happening:</b> ${esc(t.why)}</div>` : ""}
+        ${t.angle ? `<div class="meta"><b>Copy angle:</b> ${esc(t.angle)}</div>` : ""}
+        ${t.caution ? `<div class="meta"><b>Careful:</b> ${esc(t.caution)}</div>` : ""}
+        ${srcs ? `<div class="meta src">${srcs}</div>` : ""}
+      </div></div></div>`;
+    }).join("") + (!showRisky && hidden ? `<p class="status">${hidden} sensitive topic${hidden > 1 ? "s" : ""} hidden. They're never used in copy.</p>` : "");
+    const dates = (Array.isArray(tr.dates) ? tr.dates : []).filter(d => d && d.label);
+    $("trDates").innerHTML = dates.length ? dates.map(d => `<div class="dateRow"><div class="d">${esc(d.date || "")}</div><div>${esc(d.label)}${d.note ? `<div class="meta" style="margin-top:2px">${esc(d.note)}</div>` : ""}</div></div>`).join("") : '<div class="empty">Nothing listed.</div>';
+    const slang = (Array.isArray(tr.slang) ? tr.slang : []).filter(s => s && s.term);
+    $("trSlang").innerHTML = slang.length ? slang.map((s,i) => {
+      const have = state.bank.items.some(b => b.term.toLowerCase() === String(s.term).toLowerCase());
+      return `<div class="slangRow"><div class="t"><b>${esc(s.term)}</b> <span class="chip">${esc(s.audience || "")}</span><div class="meta" style="margin-top:2px">${esc(s.meaning || "")}${s.example ? ` <i>e.g. "${esc(s.example)}"</i>` : ""}</div>${s.caution ? `<div class="meta" style="margin-top:2px"><b>Careful:</b> ${esc(s.caution)}</div>` : ""}</div><button class="small" data-addslang="${i}" type="button" ${have ? "disabled" : ""}>${have ? "In bank" : "Add"}</button></div>`;
+    }).join("") : '<div class="empty">Nothing listed this week.</div>';
+  }
+  renderBank(); updateTrendInfo();
+}
+function renderBank(){
+  $("bankCount").textContent = state.bank.items.length;
+  $("bankList").innerHTML = state.bank.items.length ? state.bank.items.map((b,i) => `<div class="slangRow"><div class="t"><b>${esc(b.term)}</b> <span class="chip">${esc(b.audience || "")}</span>${b.meaning ? `<div class="meta" style="margin-top:2px">${esc(b.meaning)}</div>` : ""}</div><button class="small danger" data-delslang="${i}" type="button">Remove</button></div>`).join("") : '<div class="empty">Empty. Add words she hears and likes, with notes on who says them.</div>';
+}
+function updateTrendInfo(){
+  const pinned = trendItems().filter((t,i) => state.bank.pinned.includes(tid(t,i)) && t.risk !== "high").length;
+  const n = pinned || trendItems().filter(t => t.risk === "low").length;
+  $("tcTrendInfo").textContent = `(${pinned ? n + " ticked" : n + " safe"} trend${n === 1 ? "" : "s"}, ${state.bank.items.length} word${state.bank.items.length === 1 ? "" : "s"})`;
+}
+$("trShowRisky").addEventListener("change", renderTrends);
+$("trList").addEventListener("change", async e => {
+  const cb = e.target.closest("[data-pin]"); if(!cb) return;
+  const id = cb.dataset.pin;
+  state.bank.pinned = state.bank.pinned.filter(x => x !== id);
+  if(cb.checked) state.bank.pinned.push(id);
+  updateTrendInfo(); await saveBank();
+});
+$("trSlang").addEventListener("click", async e => {
+  const b = e.target.closest("[data-addslang]"); if(!b) return;
+  const s = state.trends.slang[Number(b.dataset.addslang)];
+  state.bank.items.push({term:String(s.term), audience:String(s.audience || "Everyone"), meaning:[s.meaning, s.caution].filter(Boolean).map(String).join(" Careful: ")});
+  await saveBank(); renderTrends(); toast("Added to her bank");
+});
+$("bkAdd").addEventListener("click", async () => {
+  const term = $("bkTerm").value.trim(); if(!term){ toast("Type a word first"); return; }
+  if(state.bank.items.some(b => b.term.toLowerCase() === term.toLowerCase())){ toast("Already in the bank"); return; }
+  state.bank.items.push({term, audience:$("bkAud").value, meaning:$("bkMean").value.trim()});
+  $("bkTerm").value = ""; $("bkMean").value = "";
+  await saveBank(); renderTrends(); toast("Added");
+});
+$("bankList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-delslang]"); if(!b) return;
+  state.bank.items.splice(Number(b.dataset.delslang), 1); await saveBank(); renderTrends();
+});
+function trendBlock(){
+  const all = trendItems().map((t,i) => ({t, id:tid(t,i)})).filter(x => x.t.risk !== "high");
+  let use = all.filter(x => state.bank.pinned.includes(x.id)).map(x => x.t);
+  if(!use.length) use = all.filter(x => x.t.risk === "low").map(x => x.t).slice(0, 6);
+  const dates = (state.trends && Array.isArray(state.trends.dates) ? state.trends.dates : []).filter(d => d && d.label).slice(0, 8);
+  const bank = state.bank.items;
+  if(!use.length && !dates.length && !bank.length) return "";
+  return `TREND CONTEXT (Malaysia${state.trends && state.trends.weekOf ? ", week of " + state.trends.weekOf : ""}). Make the copy feel current, but only reference a trend or date if it fits the brief, the client and the register naturally. Use at most one trend reference per option, and it is fine to use none. Never force it, never mock any group, and never touch race, religion or royalty.
+${use.length ? "Trends she approved:\n" + use.map(t => `- ${t.topic}: ${t.why || ""}${t.angle ? " Angle: " + t.angle : ""}${t.caution ? " Caution: " + t.caution : ""}`).join("\n") : ""}
+${dates.length ? "Upcoming dates:\n" + dates.map(d => `- ${d.date || ""} ${d.label}${d.note ? " (" + d.note + ")" : ""}`).join("\n") : ""}
+${bank.length ? "Her slang bank. Use these words only when the register is Santai, Bahasa pasar or Gen Z and the audience matches. Prefer them over slang you invent yourself:\n" + bank.map(b => `- ${b.term} [${b.audience}]: ${b.meaning || ""}`).join("\n") : ""}`;
+}
+async function initTrends(){
+  renderTrends();
+  if(!window.claude || typeof window.claude.use !== "function") return;
+  try{
+    const db = await claude.use("db"); if(!db) return;
+    const snap = await Promise.race([db.doc("trends/current").get(), sleep(10000).then(() => null)]);
+    if(snap && snap.exists){ state.trends = plain(snap.data()); LS.set("mc_trends", state.trends); renderTrends(); }
+  }catch(e){}
+}
+$("tcTrend").checked = LS.get("mc_trendaware", false);
+$("vTrend").checked = LS.get("mc_trendaware", false);
+["tcTrend","vTrend"].forEach(id => $(id).addEventListener("change", () => { const v = $(id).checked; $("tcTrend").checked = v; $("vTrend").checked = v; LS.set("mc_trendaware", v); }));
+
+const taRun = runner("taGo", "taStop", "taStatus");
+$("taGo").addEventListener("click", async () => {
+  const src = $("taSrc").value.trim();
+  if(!src){ toast("Add the product or message first"); return; }
+  const tb = trendBlock();
+  if(!tb){ toast("No trends or slang yet"); return; }
+  const prompt = `${baseRules()}
+
+${clientBlock()}
+
+${tb}
+
+TASK: Suggest 5 topical copy angles for the product or message below, each built on a different trend, date or slang word above. Only use what genuinely fits. Write each hook in natural Malaysian BM.
+PRODUCT / MESSAGE: """${src.slice(0, 4000)}"""
+
+Reply with only JSON: {"ideas":[{"trend":"which trend or date it uses","hook":"the BM headline or caption","why":"one sentence on why it works","risk":"low|medium","watch":"anything to check, or empty"}]}`;
+  const res = await taRun(prompt);
+  if(!res) return;
+  const ideas = (Array.isArray(res.ideas) ? res.ideas : []).filter(i => i && i.hook);
+  $("taOut").innerHTML = ideas.map((i,n) => `<div class="opt"><span class="lab">${esc(i.trend || "Angle")}</span><div class="bm">${highlight(String(i.hook), active())}</div>${i.why ? `<div class="meta"><b>Why:</b> ${esc(i.why)}</div>` : ""}${i.watch ? `<div class="meta"><b>Check:</b> ${esc(i.watch)}</div>` : ""}<div class="row"><button class="small" data-tacopy="${n}" type="button">Copy</button><button class="small" data-tacheck="${n}" type="button">Check this</button></div></div>`).join("") || '<div class="empty">No angles came back. Try again.</div>';
+  $("taOut").onclick = e => {
+    const b = e.target.closest("button"); if(!b) return;
+    const i = ideas[Number(b.dataset.tacopy ?? b.dataset.tacheck)]; if(!i) return;
+    if(b.dataset.tacopy != null) copyText(String(i.hook));
+    else { $("cSrc").value = String(i.hook); scanCheck(); showTab("check"); }
+  };
+  if(ideas.length){ const he = addHistory({type:"Trend angles", input:src, meta:state.trends && state.trends.weekOf ? "Week of " + state.trends.weekOf : "", items: ideas.map(i => ({label:String(i.trend || ""), text:String(i.hook), note:String(i.why || "")}))}); prependDl("taOut", he); }
+});
+
 /* ---------- FILE UPLOAD ---------- */
 const MAX_CHARS = 60000;
 const libCache = {};
@@ -1711,6 +1911,7 @@ updateDialectUI();
 applySimple();
 updateMoreSummary();
 initDownloads();
+initTrends();
 showTab(location.hash.slice(1) || "transcreate");
 initSample();
 initCloud();

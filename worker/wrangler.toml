@@ -1,0 +1,24 @@
+# Only needed if you deploy with the Wrangler command line.
+# If you use the Cloudflare dashboard (recommended in SETUP.md), you can ignore this file.
+name = "meja-copy"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://nuhihsan.github.io"
+PROVIDER_ORDER = "gemini,sealion,groq"
+GEMINI_PAID = "false"
+
+# Create a KV namespace called TRENDS in the dashboard, then paste its id here.
+# [[kv_namespaces]]
+# binding = "TRENDS"
+# id = "PASTE_KV_NAMESPACE_ID"
+
+[triggers]
+crons = ["39 23 * * 0"]   # Monday 7:39am Malaysia time
+
+# Secrets are NOT stored here. Add them with:
+#   npx wrangler secret put PASSCODE
+#   npx wrangler secret put GEMINI_API_KEY
+#   npx wrangler secret put SEALION_API_KEY
+#   npx wrangler secret put GROQ_API_KEY
