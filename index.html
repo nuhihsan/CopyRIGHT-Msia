@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meja Copy BM</title>
+<title>Meja Copy Hannah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -195,7 +195,7 @@ footer .pill{margin-right:8px}
   <svg class="vine" viewBox="0 0 230 70" aria-hidden="true"><path d="M230 8 C200 4 190 26 165 24 S130 6 110 18 S80 40 60 30" fill="none" stroke="#b7c9a3" stroke-width="1.5" stroke-linecap="round"/><g fill="#c9d9b6"><ellipse cx="196" cy="12" rx="7" ry="3" transform="rotate(-20 196 12)"/><ellipse cx="150" cy="17" rx="7" ry="3" transform="rotate(25 150 17)"/><ellipse cx="122" cy="13" rx="6" ry="2.6" transform="rotate(-30 122 13)"/><ellipse cx="80" cy="34" rx="6" ry="2.6" transform="rotate(20 80 34)"/></g><g transform="translate(165 24)"><g fill="#f5b8c3"><circle cx="0" cy="-4.5" r="4"/><circle cx="4.3" cy="-1.4" r="4"/><circle cx="2.6" cy="3.6" r="4"/><circle cx="-2.6" cy="3.6" r="4"/><circle cx="-4.3" cy="-1.4" r="4"/></g><circle r="2.3" fill="#f6c56f"/></g><g transform="translate(108 19) scale(.7)"><g fill="#f7cdb8"><circle cx="0" cy="-4.5" r="4"/><circle cx="4.3" cy="-1.4" r="4"/><circle cx="2.6" cy="3.6" r="4"/><circle cx="-2.6" cy="3.6" r="4"/><circle cx="-4.3" cy="-1.4" r="4"/></g><circle r="2.3" fill="#f6c56f"/></g><circle cx="60" cy="30" r="3" fill="#f2a5b4"/></svg>
   <div class="wrap">
     <div class="top">
-      <div class="brand">Meja Copy <span>BM</span></div>
+      <div class="brand">Meja Copy <span>Hannah</span></div>
       <label class="switch" title="Simple mode hides extra settings"><input type="checkbox" id="simpleMode"><span class="track"><span class="knob"></span></span><span id="modeLabel">Simple</span></label>
     </div>
     <div class="clientbar">
@@ -1480,7 +1480,7 @@ async function initDownloads(){
 function fileBase(entries){
   const d = new Date(); const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const one = entries.length === 1 ? entries[0] : null;
-  const parts = ["MejaCopy", one ? one.type : "Collection", one && one.client ? one.client : "", ymd];
+  const parts = ["MejaCopyHannah", one ? one.type : "Collection", one && one.client ? one.client : "", ymd];
   return parts.filter(Boolean).join("_").replace(/[^\p{L}\p{N}_\- ]+/gu, "").replace(/\s+/g, "-").slice(0, 120);
 }
 function entryTitle(he){ return [he.type, he.client || "", fmtDate(he.ts)].filter(Boolean).join(" · "); }
@@ -1519,7 +1519,7 @@ async function buildDocx(entries){
   const runs = (text, o = {}) => String(text || "").split("\n").map((l, i) => new TextRun(Object.assign({text:l, break: i ? 1 : 0, font:"Calibri"}, o)));
   const rose = "C24D69", muted = "8C6D72";
   const kids = [
-    new Paragraph({children:[new TextRun({text:"Meja Copy BM", bold:true, size:36, color:rose, font:"Georgia"})], spacing:{after:80}}),
+    new Paragraph({children:[new TextRun({text:"Meja Copy Hannah", bold:true, size:36, color:rose, font:"Georgia"})], spacing:{after:80}}),
     new Paragraph({children:[new TextRun({text:entries.length === 1 ? entryTitle(entries[0]) : `${entries.length} pieces of copy · exported ${fmtDate(Date.now())}`, color:muted, size:20})], spacing:{after:240}})
   ];
   entries.forEach((he, n) => {
@@ -1536,12 +1536,12 @@ async function buildDocx(entries){
       if(it.note) kids.push(new Paragraph({children:runs(it.note, {italics:true, size:18, color:muted})}));
     });
   });
-  const doc = new Document({creator:"Meja Copy BM", title:"Meja Copy BM", sections:[{properties:{}, children:kids}]});
+  const doc = new Document({creator:"Meja Copy Hannah", title:"Meja Copy Hannah", sections:[{properties:{}, children:kids}]});
   return Packer.toBlob(doc);
 }
 async function buildPptx(entries){
   const P = await loadLib("lib/pptxgen.bundle.js", "PptxGenJS");
-  const pptx = new P(); pptx.layout = "LAYOUT_16x9"; pptx.title = "Meja Copy BM";
+  const pptx = new P(); pptx.layout = "LAYOUT_16x9"; pptx.title = "Meja Copy Hannah";
   const BG = "FFF7F4", ROSE = "C24D69", INK = "4A2E35", MUTED = "8C6D72";
   const deco = s => {
     s.background = {color:BG};
@@ -1549,7 +1549,7 @@ async function buildPptx(entries){
     s.addShape(pptx.ShapeType.ellipse, {x:9.55, y:0.45, w:0.5, h:0.5, fill:{color:"F2A5B4", transparency:20}, line:{type:"none"}});
   };
   const t = pptx.addSlide(); deco(t);
-  t.addText("Meja Copy BM", {x:0.6, y:1.8, w:8.8, h:0.9, fontFace:"Georgia", fontSize:40, bold:true, color:ROSE});
+  t.addText("Meja Copy Hannah", {x:0.6, y:1.8, w:8.8, h:0.9, fontFace:"Georgia", fontSize:40, bold:true, color:ROSE});
   t.addText(entries.length === 1 ? entryTitle(entries[0]) : `${entries.length} pieces of copy`, {x:0.6, y:2.7, w:8.8, h:0.5, fontSize:18, color:MUTED});
   entries.forEach(he => {
     const items = he.items || [];
@@ -1590,7 +1590,7 @@ async function buildPdf(entries){
   const [, J] = await Promise.all([loadLib("lib/html2canvas.min.js", "html2canvas"), loadLib("lib/jspdf.umd.min.js", "jspdf")]);
   const box = document.createElement("div");
   box.style.cssText = "position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#4a2e35;font-family:Quicksand,system-ui,sans-serif;font-size:15px;line-height:1.55";
-  const blocks = [`<div style="padding:44px 56px 10px"><div style="font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;color:#c24d69">✿ Meja Copy BM</div><div style="color:#8c6d72;font-size:13px">${esc(entries.length === 1 ? entryTitle(entries[0]) : entries.length + " pieces of copy · exported " + fmtDate(Date.now()))}</div></div>`];
+  const blocks = [`<div style="padding:44px 56px 10px"><div style="font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;color:#c24d69">✿ Meja Copy Hannah</div><div style="color:#8c6d72;font-size:13px">${esc(entries.length === 1 ? entryTitle(entries[0]) : entries.length + " pieces of copy · exported " + fmtDate(Date.now()))}</div></div>`];
   entries.forEach(he => {
     let b = `<div style="padding:14px 56px 4px">`;
     if(entries.length > 1) b += `<div style="font-family:Fraunces,Georgia,serif;font-size:19px;color:#c24d69;border-top:1px solid #f2dcd9;padding-top:12px">${esc(entryTitle(he))}</div>`;

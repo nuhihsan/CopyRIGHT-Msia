@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meja Copy BM</title>
+<title>Meja Copy Hannah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -192,7 +192,11 @@ footer .pill{margin-right:8px}
 .topR{display:flex;align-items:center;gap:8px}
 .lockBtn,.gearBtn{border:1px solid var(--line);background:#fffdfb;border-radius:999px;width:34px;height:34px;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
 .lockBtn.on{background:var(--accent);border-color:var(--accent)}
+.rcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:700;letter-spacing:.06em;background:#fff6f3;border:1px dashed #e9aab8;border-radius:12px;padding:12px;text-align:center;word-break:break-all;color:var(--ink);margin-top:8px}
 .provChip{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:999px;background:#eef3ea;color:#3f7a4f;margin-left:6px}
+
+.brand{white-space:nowrap}
+@media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
 </style>
 </head>
 <body>
@@ -200,7 +204,7 @@ footer .pill{margin-right:8px}
   <svg class="vine" viewBox="0 0 230 70" aria-hidden="true"><path d="M230 8 C200 4 190 26 165 24 S130 6 110 18 S80 40 60 30" fill="none" stroke="#b7c9a3" stroke-width="1.5" stroke-linecap="round"/><g fill="#c9d9b6"><ellipse cx="196" cy="12" rx="7" ry="3" transform="rotate(-20 196 12)"/><ellipse cx="150" cy="17" rx="7" ry="3" transform="rotate(25 150 17)"/><ellipse cx="122" cy="13" rx="6" ry="2.6" transform="rotate(-30 122 13)"/><ellipse cx="80" cy="34" rx="6" ry="2.6" transform="rotate(20 80 34)"/></g><g transform="translate(165 24)"><g fill="#f5b8c3"><circle cx="0" cy="-4.5" r="4"/><circle cx="4.3" cy="-1.4" r="4"/><circle cx="2.6" cy="3.6" r="4"/><circle cx="-2.6" cy="3.6" r="4"/><circle cx="-4.3" cy="-1.4" r="4"/></g><circle r="2.3" fill="#f6c56f"/></g><g transform="translate(108 19) scale(.7)"><g fill="#f7cdb8"><circle cx="0" cy="-4.5" r="4"/><circle cx="4.3" cy="-1.4" r="4"/><circle cx="2.6" cy="3.6" r="4"/><circle cx="-2.6" cy="3.6" r="4"/><circle cx="-4.3" cy="-1.4" r="4"/></g><circle r="2.3" fill="#f6c56f"/></g><circle cx="60" cy="30" r="3" fill="#f2a5b4"/></svg>
   <div class="wrap">
     <div class="top">
-      <div class="brand">Meja Copy <span>BM</span></div>
+      <div class="brand">Meja Copy <span>Hannah</span></div>
       <div class="topR">
       <button class="lockBtn" id="lockBtn" type="button" aria-pressed="false" title="Confidential mode: skips free Gemini so client briefs stay private">🔓</button>
       <label class="switch" title="Simple mode hides extra settings"><input type="checkbox" id="simpleMode"><span class="track"><span class="knob"></span></span><span id="modeLabel">Simple</span></label>
@@ -529,6 +533,56 @@ footer .pill{margin-right:8px}
       </div>
       <div id="cnInfo" class="meta"></div>
     </div>
+    <div class="card" id="syncCard">
+      <h3>🔄 Sync between devices</h3>
+      <p class="meta" style="margin-top:0">Keeps her clients, rules, styles, slang bank and history the same on her laptop and phone. Everything is locked with her own sync password before it leaves the device, so nobody else can read it, including whoever runs the server.</p>
+      <p class="status" id="syStatus"></p>
+      <div id="syOff"><button class="primary" id="syStart" type="button">Turn on sync</button></div>
+      <div id="syCreate" class="hidden">
+        <p class="meta">First device. Create a sync password she'll remember. She'll type it once on each new device.</p>
+        <input id="syNew1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)">
+        <input id="syNew2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
+        <div class="row"><button class="primary" id="syCreateBtn" type="button">Create and turn on</button><button class="ghost" id="syBack2" type="button">Cancel</button></div>
+      </div>
+      <div id="syUnlock" class="hidden">
+        <p class="meta">Sync is already set up on another device. Type the sync password to bring her data here.</p>
+        <input id="syPw" type="password" autocomplete="current-password" placeholder="Sync password">
+        <div class="row"><button class="primary" id="syUnlockBtn" type="button">Unlock</button><button class="small" id="syForgotLink" type="button">Forgot password?</button></div>
+      </div>
+      <div id="syForgot" class="hidden">
+        <p class="meta"><b>Forgot the sync password?</b> Use the recovery code she saved when sync was set up. If any of her devices still has sync on, she can also change the password there (Sync &gt; Change password) without the old one.</p>
+        <input id="syRc" type="text" autocomplete="off" autocapitalize="characters" placeholder="Recovery code, e.g. ABCD-EFGH-…">
+        <input id="syRp1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)" style="margin-top:8px">
+        <input id="syRp2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
+        <div class="row"><button class="primary" id="syResetBtn" type="button">Reset password</button><button class="ghost" id="syBack1" type="button">Back</button></div>
+        <p class="meta" style="margin-top:14px">Lost the recovery code too, and no device has sync on? <button class="small danger" id="syWipe2" type="button">Start sync over from this device</button><br><span class="status">This deletes only the synced copy. Data already on each device stays.</span></p>
+      </div>
+      <div id="syRecovery" class="hidden">
+        <p class="meta" id="syCodeWhy"></p>
+        <div class="rcode" id="syCode"></div>
+        <div class="row"><button class="small" id="syCopyCode" type="button">Copy</button><button class="small" id="syDlCode" type="button">Download as a file</button></div>
+        <label class="trendtog" style="color:var(--ink)"><input type="checkbox" id="sySaved"> I've saved my recovery code somewhere safe</label>
+        <div class="row"><button class="primary" id="syDone" type="button" disabled>Done</button></div>
+      </div>
+      <div id="syOn" class="hidden">
+        <div class="row" style="margin-top:4px">
+          <button class="ghost" id="sySyncNow" type="button">Sync now</button>
+          <button class="small" id="syChangeShow" type="button">Change password</button>
+          <button class="small" id="syNewCode" type="button">New recovery code</button>
+        </div>
+        <div class="row">
+          <button class="small" id="syOffBtn" type="button">Turn off on this device</button>
+          <button class="small danger" id="syWipe" type="button">Start sync over</button>
+        </div>
+      </div>
+      <div id="syChange" class="hidden">
+        <p class="meta">Change the sync password. The old one isn't needed because this device is already unlocked. Her other devices stay synced.</p>
+        <input id="syCp1" type="password" autocomplete="new-password" placeholder="New sync password (8+ characters)">
+        <input id="syCp2" type="password" autocomplete="new-password" placeholder="Type it again" style="margin-top:8px">
+        <div class="row"><button class="primary" id="syChangeBtn" type="button">Save new password</button><button class="ghost" id="syBack3" type="button">Cancel</button></div>
+      </div>
+      <p class="status" id="syMsg" style="margin-top:10px"></p>
+    </div>
     <div class="card">
       <h3>🔒 Confidential mode</h3>
       <p class="meta" style="margin-top:0">When the lock at the top is closed, the app skips free Gemini and uses SEA-LION or Groq, which don't train on what you send. Use it for real client briefs. You can also tick "Always confidential" on a client's profile. Reading images needs Gemini, so it pauses while the lock is on.</p>
@@ -619,7 +673,7 @@ const state = {
   activeId: LS.get("mc_active", ""),
 };
 const store = { col: null };
-function persistLocal(){ LS.set("mc_clients", state.clients); LS.set("mc_deleted", state.deleted); LS.set("mc_active", state.activeId); }
+function persistLocal(){ LS.set("mc_clients", state.clients); LS.set("mc_deleted", state.deleted); LS.set("mc_active", state.activeId); markDirty(); }
 function setPill(mode){
   const p = $("syncPill");
   if(mode === "cloud"){ p.textContent = "Synced"; p.className = "pill cloud"; }
@@ -1004,7 +1058,7 @@ async function testConnection(){
     st.textContent = "Connected ✓";
     const ps = (d.providers || []).map(p => `${esc(p.name)} ${p.key ? "✓" : "<span style='color:var(--bad)'>no key</span>"}`).join(" → ");
     $("cnInfo").innerHTML = `<b>AI order:</b> ${ps || "none"}<br><b>Trend board:</b> ${d.trends ? "on" : "not set up"}${d.geminiPaid ? "<br><b>Gemini:</b> paid plan, so it stays private even in 🔒 mode" : ""}`;
-    sampleState = "ok"; showAiBanner(); initTrends();
+    sampleState = "ok"; showAiBanner(); initTrends(); if(syncOn()) syncNow(true);
   }catch(e){ st.textContent = errCopy(e); }
 }
 $("cnSave").addEventListener("click", () => {
@@ -1087,7 +1141,7 @@ $("tcDialectCustom").addEventListener("input", updateDialectUI);
 
 /* saved styles */
 state.styles = LS.get("mc_styles", []);
-function persistStyles(){ LS.set("mc_styles", state.styles); }
+function persistStyles(){ LS.set("mc_styles", state.styles); markDirty(); }
 function currentStyle(){
   return { formality: Number($("tcFormality").value), flavour: $("tcFlavour").value, dialect: $("tcDialect").value,
            dialectCustom: $("tcDialectCustom").value.trim(), script: $("tcScript").value, note: $("tcStyleNote").value.trim(),
@@ -1120,9 +1174,10 @@ $("psSaveShow").addEventListener("click", () => { $("psSaveRow").classList.toggl
 $("psSave").addEventListener("click", () => {
   const name = $("psName").value.trim();
   if(!name){ toast("Name the style first"); return; }
-  const s = Object.assign({name}, currentStyle());
+  const s = Object.assign({name, updated:Date.now()}, currentStyle());
   const at = state.styles.findIndex(x => x.name.toLowerCase() === name.toLowerCase());
   if(at >= 0) state.styles[at] = s; else state.styles.push(s);
+  state.deleted = state.deleted.filter(x => x !== "s:" + name.toLowerCase()); persistLocal();
   persistStyles(); renderPresets(at >= 0 ? at : state.styles.length - 1);
   $("psName").value = ""; $("psSaveRow").classList.add("hidden");
   toast(at >= 0 ? "Style updated" : "Style saved");
@@ -1132,7 +1187,7 @@ $("psDel").addEventListener("click", () => {
   const btn = $("psDel");
   if(btn.dataset.confirm !== "1"){ btn.dataset.confirm = "1"; btn.textContent = "Tap again"; setTimeout(() => { btn.dataset.confirm = ""; btn.textContent = "Delete"; }, 3000); return; }
   btn.dataset.confirm = ""; btn.textContent = "Delete";
-  state.styles.splice(Number(i), 1); persistStyles(); renderPresets(); toast("Style deleted");
+  const gone = state.styles.splice(Number(i), 1)[0]; if(gone) state.deleted.push("s:" + gone.name.toLowerCase()); persistLocal(); persistStyles(); renderPresets(); toast("Style deleted");
 });
 
 function styleBlock(){
@@ -1493,6 +1548,7 @@ state.history = LS.get("mc_history", []);
 function persistHistory(){
   try{ localStorage.setItem("mc_history", JSON.stringify(state.history)); }
   catch(e){ state.history = state.history.slice(0, Math.floor(state.history.length * 0.7)); try{ localStorage.setItem("mc_history", JSON.stringify(state.history)); }catch(e2){} }
+  markDirty();
 }
 function addHistory(entry){
   const c = active();
@@ -1601,7 +1657,7 @@ function initDownloads(){}
 function fileBase(entries){
   const d = new Date(); const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const one = entries.length === 1 ? entries[0] : null;
-  const parts = ["MejaCopy", one ? one.type : "Collection", one && one.client ? one.client : "", ymd];
+  const parts = ["MejaCopyHannah", one ? one.type : "Collection", one && one.client ? one.client : "", ymd];
   return parts.filter(Boolean).join("_").replace(/[^\p{L}\p{N}_\- ]+/gu, "").replace(/\s+/g, "-").slice(0, 120);
 }
 function entryTitle(he){ return [he.type, he.client || "", fmtDate(he.ts)].filter(Boolean).join(" · "); }
@@ -1639,7 +1695,7 @@ async function buildDocx(entries){
   const runs = (text, o = {}) => String(text || "").split("\n").map((l, i) => new TextRun(Object.assign({text:l, break: i ? 1 : 0, font:"Calibri"}, o)));
   const rose = "C24D69", muted = "8C6D72";
   const kids = [
-    new Paragraph({children:[new TextRun({text:"Meja Copy BM", bold:true, size:36, color:rose, font:"Georgia"})], spacing:{after:80}}),
+    new Paragraph({children:[new TextRun({text:"Meja Copy Hannah", bold:true, size:36, color:rose, font:"Georgia"})], spacing:{after:80}}),
     new Paragraph({children:[new TextRun({text:entries.length === 1 ? entryTitle(entries[0]) : `${entries.length} pieces of copy · exported ${fmtDate(Date.now())}`, color:muted, size:20})], spacing:{after:240}})
   ];
   entries.forEach((he, n) => {
@@ -1656,12 +1712,12 @@ async function buildDocx(entries){
       if(it.note) kids.push(new Paragraph({children:runs(it.note, {italics:true, size:18, color:muted})}));
     });
   });
-  const doc = new Document({creator:"Meja Copy BM", title:"Meja Copy BM", sections:[{properties:{}, children:kids}]});
+  const doc = new Document({creator:"Meja Copy Hannah", title:"Meja Copy Hannah", sections:[{properties:{}, children:kids}]});
   return Packer.toBlob(doc);
 }
 async function buildPptx(entries){
   const P = await loadLib("lib/pptxgen.bundle.js", "PptxGenJS");
-  const pptx = new P(); pptx.layout = "LAYOUT_16x9"; pptx.title = "Meja Copy BM";
+  const pptx = new P(); pptx.layout = "LAYOUT_16x9"; pptx.title = "Meja Copy Hannah";
   const BG = "FFF7F4", ROSE = "C24D69", INK = "4A2E35", MUTED = "8C6D72";
   const deco = s => {
     s.background = {color:BG};
@@ -1669,7 +1725,7 @@ async function buildPptx(entries){
     s.addShape(pptx.ShapeType.ellipse, {x:9.55, y:0.45, w:0.5, h:0.5, fill:{color:"F2A5B4", transparency:20}, line:{type:"none"}});
   };
   const t = pptx.addSlide(); deco(t);
-  t.addText("Meja Copy BM", {x:0.6, y:1.8, w:8.8, h:0.9, fontFace:"Georgia", fontSize:40, bold:true, color:ROSE});
+  t.addText("Meja Copy Hannah", {x:0.6, y:1.8, w:8.8, h:0.9, fontFace:"Georgia", fontSize:40, bold:true, color:ROSE});
   t.addText(entries.length === 1 ? entryTitle(entries[0]) : `${entries.length} pieces of copy`, {x:0.6, y:2.7, w:8.8, h:0.5, fontSize:18, color:MUTED});
   entries.forEach(he => {
     const items = he.items || [];
@@ -1710,7 +1766,7 @@ async function buildPdf(entries){
   const [, J] = await Promise.all([loadLib("lib/html2canvas.min.js", "html2canvas"), loadLib("lib/jspdf.umd.min.js", "jspdf")]);
   const box = document.createElement("div");
   box.style.cssText = "position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#4a2e35;font-family:Quicksand,system-ui,sans-serif;font-size:15px;line-height:1.55";
-  const blocks = [`<div style="padding:44px 56px 10px"><div style="font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;color:#c24d69">✿ Meja Copy BM</div><div style="color:#8c6d72;font-size:13px">${esc(entries.length === 1 ? entryTitle(entries[0]) : entries.length + " pieces of copy · exported " + fmtDate(Date.now()))}</div></div>`];
+  const blocks = [`<div style="padding:44px 56px 10px"><div style="font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;color:#c24d69">✿ Meja Copy Hannah</div><div style="color:#8c6d72;font-size:13px">${esc(entries.length === 1 ? entryTitle(entries[0]) : entries.length + " pieces of copy · exported " + fmtDate(Date.now()))}</div></div>`];
   entries.forEach(he => {
     let b = `<div style="padding:14px 56px 4px">`;
     if(entries.length > 1) b += `<div style="font-family:Fraunces,Georgia,serif;font-size:19px;color:#c24d69;border-top:1px solid #f2dcd9;padding-top:12px">${esc(entryTitle(he))}</div>`;
@@ -1754,6 +1810,7 @@ if(!Array.isArray(state.bank.pinned)) state.bank.pinned = [];
 async function saveBank(){
   state.bank.updated = Date.now(); state.bank.id = "w-bank";
   LS.set("mc_bank", state.bank);
+  markDirty();
   await cloudWrite(state.bank);
 }
 function safeUrl(u){ try{ const x = new URL(String(u)); return x.protocol === "https:" || x.protocol === "http:" ? x.href : ""; }catch(e){ return ""; } }
@@ -1881,6 +1938,297 @@ Reply with only JSON: {"ideas":[{"trend":"which trend or date it uses","hook":"t
     else { $("cSrc").value = String(i.hook); scanCheck(); showTab("check"); }
   };
   if(ideas.length){ const he = addHistory({type:"Trend angles", input:src, meta:state.trends && state.trends.weekOf ? "Week of " + state.trends.weekOf : "", items: ideas.map(i => ({label:String(i.trend || ""), text:String(i.hook), note:String(i.why || "")}))}); prependDl("taOut", he); }
+});
+
+/* ---------- SYNC (end-to-end encrypted with her sync password) ---------- */
+var SYNC = LS.get("mc_sync", null);          // {dk: base64 raw key, rev, last} on an unlocked device
+var syncTimer = null, syncBusy = false, syncApplying = false, syncAgain = false, syncLastPull = 0;
+const PBKDF2_ITER = 310000;
+const te = new TextEncoder(), td = new TextDecoder();
+const b64 = u8 => { let s = ""; const c = 0x8000; for(let i = 0; i < u8.length; i += c) s += String.fromCharCode.apply(null, u8.subarray(i, i + c)); return btoa(s); };
+const unb64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+const rand = n => crypto.getRandomValues(new Uint8Array(n));
+const RC_ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function newRecoveryCode(){
+  const r = rand(24); let s = "";
+  for(let i = 0; i < 24; i++) s += RC_ALPHA[r[i] % 32];
+  return s.match(/.{4}/g).join("-");
+}
+const normCode = c => String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+async function kekFrom(secret, salt){
+  const base = await crypto.subtle.importKey("raw", te.encode(secret), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:PBKDF2_ITER, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+}
+async function wrapDk(dkRaw, secret){
+  const salt = rand(16), iv = rand(12);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, await kekFrom(secret, salt), dkRaw));
+  return {salt:b64(salt), iv:b64(iv), wrap:b64(ct)};
+}
+async function unwrapDk(salt, iv, wrap, secret){
+  try{ return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(iv)}, await kekFrom(secret, unb64(salt)), unb64(wrap))); }
+  catch(e){ return null; }
+}
+const dkKey = raw => crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt","decrypt"]);
+async function gz(u8, mode){
+  if(typeof CompressionStream === "undefined") return null;
+  const s = new Blob([u8]).stream().pipeThrough(mode === "c" ? new CompressionStream("gzip") : new DecompressionStream("gzip"));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+async function encryptBundle(dkRaw, obj){
+  let bytes = te.encode(JSON.stringify(obj)), z = 0;
+  const c = await gz(bytes, "c"); if(c){ bytes = c; z = 1; }
+  const iv = rand(12);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, await dkKey(dkRaw), bytes));
+  return {iv:b64(iv), ct:b64(ct), z};
+}
+async function decryptBundle(dkRaw, data){
+  let bytes = new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(data.iv)}, await dkKey(dkRaw), unb64(data.ct)));
+  if(data.z){ const d = await gz(bytes, "d"); if(!d) throw {code:"no_gzip"}; bytes = d; }
+  return JSON.parse(td.decode(bytes));
+}
+
+/* what gets synced */
+function localBundle(){
+  return {v:1, ts:Date.now(), clients:state.clients, deleted:state.deleted, styles:state.styles, history:state.history, bank:state.bank};
+}
+function mergeBundle(r){
+  if(!r || typeof r !== "object") return false;
+  let changed = false;
+  const del = new Set([...(state.deleted || []), ...(Array.isArray(r.deleted) ? r.deleted : [])]);
+  if(del.size !== state.deleted.length){ state.deleted = [...del]; changed = true; }
+  // clients
+  const rc = r.clients && typeof r.clients === "object" ? r.clients : {};
+  for(const id in rc){
+    const c = rc[id]; if(!c || typeof c !== "object" || c.id !== id) continue;
+    if(del.has(id)) continue;
+    if(!state.clients[id] || (c.updated || 0) > (state.clients[id].updated || 0)){ state.clients[id] = plain(c); changed = true; }
+  }
+  for(const id of Object.keys(state.clients)) if(del.has(id)){ delete state.clients[id]; changed = true; }
+  // history
+  const hm = {}; (state.history || []).forEach(x => hm[x.id] = x);
+  (Array.isArray(r.history) ? r.history : []).forEach(x => {
+    if(!x || typeof x.id !== "string" || del.has(x.id)) return;
+    if(!hm[x.id] || (x.updated || 0) > (hm[x.id].updated || 0)){ hm[x.id] = plain(x); changed = true; }
+  });
+  for(const id of Object.keys(hm)) if(del.has(id)){ delete hm[id]; changed = true; }
+  state.history = Object.values(hm).sort((a,b) => b.ts - a.ts).slice(0, HISTORY_CAP);
+  // styles (by name)
+  const sm = {}; (state.styles || []).forEach(s => sm[s.name.toLowerCase()] = s);
+  (Array.isArray(r.styles) ? r.styles : []).forEach(s => {
+    if(!s || typeof s.name !== "string") return;
+    const k = s.name.toLowerCase(); if(del.has("s:" + k)) return;
+    if(!sm[k] || (s.updated || 0) > (sm[k].updated || 0)){ sm[k] = plain(s); changed = true; }
+  });
+  for(const k of Object.keys(sm)) if(del.has("s:" + k)){ delete sm[k]; changed = true; }
+  state.styles = Object.values(sm);
+  // slang bank
+  if(r.bank && Array.isArray(r.bank.items) && (r.bank.updated || 0) > (state.bank.updated || 0)){
+    state.bank = plain(r.bank); if(!Array.isArray(state.bank.pinned)) state.bank.pinned = []; changed = true;
+  }
+  return changed;
+}
+function applyMerged(){
+  syncApplying = true;
+  try{
+    persistLocal(); persistHistory(); persistStyles(); LS.set("mc_bank", state.bank);
+    renderClientSelect(); fillClientForm(); renderPresets(); renderTrends(); updateLock();
+    if($("library").classList.contains("active")) renderLibrary(true);
+  }finally{ syncApplying = false; }
+}
+
+/* server calls */
+async function syncGet(){ return workerFetch("/sync", {method:"GET", cache:"no-store"}); }
+async function syncPut(baseRev, vault){
+  let res;
+  try{
+    res = await fetch(CONN.url.replace(/\/+$/, "") + "/sync", {method:"PUT", headers:{"Content-Type":"application/json", "X-Passcode":CONN.pass}, body:JSON.stringify({baseRev, vault})});
+  }catch(e){ throw {code:"network"}; }
+  let data = null; try{ data = await res.json(); }catch(e){}
+  if(res.status === 409) return {conflict:true, current:data && data.current};
+  if(!res.ok || !data || data.error) throw {code:(data && data.error && data.error.code) || "upstream_error"};
+  return data;
+}
+function setSyncLocal(o){ SYNC = o; LS.set("mc_sync", o); }
+function syncOn(){ return !!(SYNC && SYNC.dk); }
+
+/* the main loop: pull, merge, push */
+async function syncNow(quiet){
+  if(!syncOn() || sampleState !== "ok") return;
+  if(syncBusy){ syncAgain = true; return; }
+  syncBusy = true; renderSyncStatus("Syncing…");
+  try{
+    const dk = unb64(SYNC.dk);
+    for(let attempt = 0; attempt < 3; attempt++){
+      const cur = await syncGet();
+      if(cur.exists === false){ setSyncLocal(null); renderSyncCard(); renderSyncStatus(); toast("Sync was reset on another device. Turn it on again here."); return; }
+      let meta = cur.meta;
+      if(cur.data){
+        let remote;
+        try{ remote = await decryptBundle(dk, cur.data); }
+        catch(e){ setSyncLocal(null); renderSyncCard(); renderSyncStatus(); toast("The synced copy was replaced. Unlock sync again with the password."); return; }
+        if(mergeBundle(remote)) applyMerged();
+      }
+      const data = await encryptBundle(dk, localBundle());
+      const out = await syncPut(cur.rev || 0, {meta, data});
+      if(out.conflict) continue;
+      setSyncLocal(Object.assign({}, SYNC, {rev:out.rev, last:Date.now()}));
+      syncLastPull = Date.now();
+      renderSyncStatus(); if(!quiet) toast("Synced ✓");
+      return;
+    }
+    renderSyncStatus("Sync busy, will retry");
+  }catch(e){
+    renderSyncStatus(e && e.code === "network" ? "Offline, will sync later" : "Sync failed: " + errCopy(e));
+  }finally{
+    syncBusy = false;
+    if(syncAgain){ syncAgain = false; setTimeout(() => syncNow(true), 500); }
+  }
+}
+function markDirty(){
+  if(syncApplying || !syncOn()) return;
+  clearTimeout(syncTimer); syncTimer = setTimeout(() => syncNow(true), 4000);
+}
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && syncOn() && Date.now() - syncLastPull > 60000) syncNow(true); });
+window.addEventListener("online", () => syncOn() && syncNow(true));
+
+/* ---------- SYNC UI ---------- */
+function renderSyncStatus(msg){
+  const pill = $("syncPill");
+  if(syncOn()){
+    pill.className = "pill cloud";
+    pill.textContent = msg || (SYNC.last ? "Synced " + new Date(SYNC.last).toLocaleTimeString("en-MY", {hour:"numeric", minute:"2-digit"}) : "Sync on");
+  } else { pill.className = "pill"; pill.textContent = "Saved on this device"; }
+  const s = $("syStatus"); if(s) s.textContent = syncOn() ? (msg || (SYNC.last ? "On. Last synced " + fmtDate(SYNC.last) + "." : "On.")) : "Off on this device.";
+}
+function syShow(id){ ["syOff","syCreate","syUnlock","syForgot","syRecovery","syOn","syChange"].forEach(x => $(x).classList.toggle("hidden", x !== id)); }
+function renderSyncCard(){ syShow(syncOn() ? "syOn" : "syOff"); $("syMsg").textContent = ""; }
+function syMsg(t){ $("syMsg").textContent = t || ""; }
+function checkNewPw(a, b){
+  if(a.length < 8) return "Use at least 8 characters.";
+  if(a !== b) return "The two passwords don't match.";
+  return "";
+}
+let pendingCode = "";
+function showRecovery(code, why){
+  pendingCode = code;
+  $("syCode").textContent = code;
+  $("syCodeWhy").textContent = why;
+  $("sySaved").checked = false; $("syDone").disabled = true;
+  syShow("syRecovery");
+}
+$("sySaved").addEventListener("change", () => $("syDone").disabled = !$("sySaved").checked);
+$("syCopyCode").addEventListener("click", () => copyText(pendingCode));
+$("syDlCode").addEventListener("click", () => saveFile("MejaCopyHannah-recovery-code.txt", `Meja Copy Hannah: sync recovery code\n\n${pendingCode}\n\nKeep this somewhere safe (password manager, notes app, or printed).\nUse it on the Connection page if you forget your sync password.\nCreated ${new Date().toString()}\n`));
+$("syDone").addEventListener("click", () => { pendingCode = ""; renderSyncCard(); renderSyncStatus(); syncNow(); });
+
+$("syStart").addEventListener("click", async () => {
+  if(sampleState !== "ok"){ syMsg("Connect to the server first (above)."); return; }
+  syMsg("Checking…");
+  try{
+    const cur = await syncGet();
+    syMsg("");
+    if(cur.exists === false){ syShow("syCreate"); $("syNew1").focus(); }
+    else { syShow("syUnlock"); $("syPw").focus(); }
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syCreateBtn").addEventListener("click", async () => {
+  const a = $("syNew1").value, b = $("syNew2").value; const bad = checkNewPw(a, b); if(bad){ syMsg(bad); return; }
+  syMsg("Setting up… this takes a few seconds");
+  try{
+    const dk = rand(32), code = newRecoveryCode();
+    const p = await wrapDk(dk, a), r = await wrapDk(dk, normCode(code));
+    const meta = {saltP:p.salt, ivP:p.iv, wrapP:p.wrap, saltR:r.salt, ivR:r.iv, wrapR:r.wrap, iter:PBKDF2_ITER};
+    const data = await encryptBundle(dk, localBundle());
+    const out = await syncPut(0, {meta, data});
+    if(out.conflict){ syMsg("Sync was just set up on another device. Tap Turn on sync again and unlock instead."); syShow("syOff"); return; }
+    setSyncLocal({dk:b64(dk), rev:out.rev, last:Date.now()});
+    $("syNew1").value = ""; $("syNew2").value = ""; syMsg("");
+    showRecovery(code, "Sync is on. Save this recovery code now. It's the only way back in if you forget your sync password and have no other device unlocked.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syUnlockBtn").addEventListener("click", async () => {
+  const pw = $("syPw").value; if(!pw){ syMsg("Type your sync password."); return; }
+  syMsg("Unlocking…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syShow("syCreate"); syMsg("No synced copy yet. Create a sync password."); return; }
+    const dk = await unwrapDk(cur.meta.saltP, cur.meta.ivP, cur.meta.wrapP, pw);
+    if(!dk){ syMsg("That password didn't work. Try again, or tap Forgot password."); return; }
+    setSyncLocal({dk:b64(dk), rev:cur.rev, last:0});
+    $("syPw").value = ""; syMsg(""); renderSyncCard(); renderSyncStatus();
+    await syncNow();
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syForgotLink").addEventListener("click", () => { syShow("syForgot"); syMsg(""); $("syRc").focus(); });
+$("syBack1").addEventListener("click", () => { syShow("syUnlock"); syMsg(""); });
+$("syBack2").addEventListener("click", () => { renderSyncCard(); });
+$("syBack3").addEventListener("click", () => { renderSyncCard(); });
+$("syResetBtn").addEventListener("click", async () => {
+  const code = normCode($("syRc").value);
+  const a = $("syRp1").value, b = $("syRp2").value; const bad = checkNewPw(a, b); if(bad){ syMsg(bad); return; }
+  if(code.length < 20){ syMsg("Type the full recovery code."); return; }
+  syMsg("Checking the recovery code…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syMsg("There's no synced copy to recover."); return; }
+    const dk = await unwrapDk(cur.meta.saltR, cur.meta.ivR, cur.meta.wrapR, code);
+    if(!dk){ syMsg("That recovery code didn't work. Check for typos."); return; }
+    const p = await wrapDk(dk, a);
+    const meta = Object.assign({}, cur.meta, {saltP:p.salt, ivP:p.iv, wrapP:p.wrap});
+    const out = await syncPut(cur.rev || 0, {meta, data:cur.data});
+    if(out.conflict){ syMsg("Something changed at the same moment. Tap Reset password again."); return; }
+    setSyncLocal({dk:b64(dk), rev:out.rev, last:0});
+    $("syRc").value = ""; $("syRp1").value = ""; $("syRp2").value = "";
+    renderSyncCard(); renderSyncStatus(); toast("New sync password set ✓");
+    await syncNow(true);
+    syMsg("Your recovery code still works. Make a new one under Sync if you think someone else saw it.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syChangeShow").addEventListener("click", () => { syShow("syChange"); syMsg(""); $("syCp1").focus(); });
+$("syChangeBtn").addEventListener("click", async () => {
+  const a = $("syCp1").value, b = $("syCp2").value; const bad = checkNewPw(a, b); if(bad){ syMsg(bad); return; }
+  syMsg("Saving…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syMsg("No synced copy found."); return; }
+    const dk = unb64(SYNC.dk);
+    const p = await wrapDk(dk, a);
+    const meta = Object.assign({}, cur.meta, {saltP:p.salt, ivP:p.iv, wrapP:p.wrap});
+    const out = await syncPut(cur.rev || 0, {meta, data:cur.data});
+    if(out.conflict){ syMsg("Something changed at the same moment. Try again."); return; }
+    setSyncLocal(Object.assign({}, SYNC, {rev:out.rev}));
+    $("syCp1").value = ""; $("syCp2").value = "";
+    renderSyncCard(); toast("Sync password changed ✓"); syMsg("Use the new password on any new device.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("syNewCode").addEventListener("click", async () => {
+  syMsg("Making a new recovery code…");
+  try{
+    const cur = await syncGet(); if(cur.exists === false){ syMsg("No synced copy found."); return; }
+    const dk = unb64(SYNC.dk), code = newRecoveryCode();
+    const r = await wrapDk(dk, normCode(code));
+    const meta = Object.assign({}, cur.meta, {saltR:r.salt, ivR:r.iv, wrapR:r.wrap});
+    const out = await syncPut(cur.rev || 0, {meta, data:cur.data});
+    if(out.conflict){ syMsg("Something changed at the same moment. Try again."); return; }
+    setSyncLocal(Object.assign({}, SYNC, {rev:out.rev})); syMsg("");
+    showRecovery(code, "Your old recovery code no longer works. Save this new one now.");
+  }catch(e){ syMsg(errCopy(e)); }
+});
+$("sySyncNow").addEventListener("click", () => syncNow());
+$("syOffBtn").addEventListener("click", () => {
+  setSyncLocal(null); renderSyncCard(); renderSyncStatus();
+  toast("Sync off on this device. Her data here is kept.");
+});
+$("syWipe").addEventListener("click", async () => {
+  const b = $("syWipe");
+  if(b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Tap again to delete the synced copy"; setTimeout(() => { b.dataset.confirm = ""; b.textContent = "Start sync over"; }, 4000); return; }
+  b.dataset.confirm = ""; b.textContent = "Start sync over";
+  try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); renderSyncCard(); renderSyncStatus(); syMsg("The synced copy is deleted. Data on each device is kept. Turn sync on again to start fresh."); }
+  catch(e){ syMsg(errCopy(e)); }
+});
+$("syWipe2").addEventListener("click", async () => {
+  const b = $("syWipe2");
+  if(b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Tap again to confirm"; setTimeout(() => { b.dataset.confirm = ""; b.textContent = "Start sync over from this device"; }, 4000); return; }
+  b.dataset.confirm = ""; b.textContent = "Start sync over from this device";
+  try{ await workerFetch("/sync", {method:"DELETE"}); setSyncLocal(null); syShow("syCreate"); syMsg("Done. Create a new sync password. Her other devices will need it too."); }
+  catch(e){ syMsg(errCopy(e)); }
 });
 
 /* ---------- FILE UPLOAD ---------- */
@@ -2032,6 +2380,8 @@ updateMoreSummary();
 initDownloads();
 initTrends();
 updateLock();
+renderSyncCard(); renderSyncStatus();
+if(syncOn()) setTimeout(() => syncNow(true), 800);
 showTab(location.hash.slice(1) || "transcreate");
 initSample();
 initCloud();

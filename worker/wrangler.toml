@@ -9,9 +9,9 @@ ALLOWED_ORIGIN = "https://nuhihsan.github.io"
 PROVIDER_ORDER = "gemini,sealion,groq"
 GEMINI_PAID = "false"
 
-# Create a KV namespace called TRENDS in the dashboard, then paste its id here.
+# Create a KV namespace (e.g. meja-store) in the dashboard, then paste its id here.
 # [[kv_namespaces]]
-# binding = "TRENDS"
+# binding = "STORE"
 # id = "PASTE_KV_NAMESPACE_ID"
 
 [triggers]

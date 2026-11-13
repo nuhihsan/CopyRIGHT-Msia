@@ -1,6 +1,6 @@
 # CopyRIGHT-Msia
 
-**Meja Copy BM** is a small web app for Bahasa Melayu copywriters in Malaysian advertising. It turns English copy into natural Malaysian BM in each client's voice, and helps writers learn from their editors' corrections.
+**Meja Copy Hannah** is a small web app for Bahasa Melayu copywriters in Malaysian advertising. It turns English copy into natural Malaysian BM in each client's voice, and helps writers learn from their editors' corrections.
 
 ## Features
 
@@ -22,7 +22,7 @@
 | Where | `index.html` at the repo root, published as a Claude artifact | `docs/`, served by GitHub Pages |
 | AI | Claude, on the viewer's own Claude account | Gemini, then SEA-LION, then Groq, on the owner's free keys |
 | Middleman | None needed | `worker/worker.js` on Cloudflare Workers (free) |
-| Saving | The viewer's Claude account, or the browser | The browser, plus the Backup button |
+| Saving | The viewer's Claude account, or the browser | Each browser, with encrypted sync between devices |
 | Trends | Weekly Claude scheduled task | The Worker's weekly cron |
 | Privacy switch | Not needed | 🔒 Confidential mode skips free Gemini |
 

@@ -1,5 +1,5 @@
 /**
- * Meja Copy BM: Cloudflare Worker (the "middleman")
+ * Meja Copy Hannah: Cloudflare Worker (the "middleman")
  *
  * Keeps the AI keys secret, checks the passcode, and tries the AIs in order:
  *   Gemini  ->  SEA-LION  ->  Groq   (change with PROVIDER_ORDER)
@@ -21,8 +21,8 @@
  *   OPENAI_MODEL       default "gpt-5.4-mini"
  *   WORKERSAI_MODEL    default "@cf/aisingapore/gemma-sea-lion-v4-27b-it" (needs an AI binding named AI)
  *
- * Optional bindings:
- *   KV namespace named TRENDS   stores the weekly trend board
+ * Bindings:
+ *   KV namespace named STORE (or TRENDS)   stores her encrypted sync data and the weekly trend board
  *   Workers AI named AI         only if you add "workersai" to PROVIDER_ORDER
  *
  * Optional Cron Trigger (refreshes trends): 39 23 * * 0   (= Monday 7:39am Malaysia time)
@@ -41,6 +41,8 @@ const IMAGE_CAPABLE = new Set(["gemini", "openai"]);
 const PROVIDER_TIMEOUT_MS = 90000;
 const MAX_PROMPT_CHARS = 200000;
 const MAX_IMAGES = 6;
+const MAX_SYNC_BYTES = 20 * 1024 * 1024;
+const kvOf = env => env.STORE || env.TRENDS || null;
 
 const cfg = (env, k) => (env && env[k] != null && String(env[k]).trim() !== "" ? String(env[k]).trim() : DEFAULTS[k]);
 
@@ -51,7 +53,7 @@ function corsHeaders(env, req) {
   const allow = !allowed ? "*" : (allowed.split(",").map(s => s.trim()).includes(origin) ? origin : allowed.split(",")[0].trim());
   return {
     "Access-Control-Allow-Origin": allow,
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, X-Passcode",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
@@ -211,7 +213,7 @@ async function gatherHeadlines() {
   const results = await Promise.allSettled(FEEDS.map(async f => {
     const t = withTimeout(15000);
     try {
-      const r = await fetch(f.url, { signal: t.signal, headers: { "User-Agent": "MejaCopyBM/1.0 (+trend board)" } });
+      const r = await fetch(f.url, { signal: t.signal, headers: { "User-Agent": "MejaCopyHannah/1.0 (+trend board)" } });
       if (!r.ok) return [];
       return parseFeed(await r.text(), f.name);
     } finally { t.done(); }
@@ -257,8 +259,39 @@ Reply with only JSON:
   board.weekOf = board.weekOf || weekOfLabel();
   board.updated = new Date().toISOString();
   board.writtenBy = out.provider;
-  await env.TRENDS.put("current", JSON.stringify(board));
+  await kvOf(env).put("current", JSON.stringify(board));
   return board;
+}
+
+/* ---------------- Sync (end-to-end encrypted; the Worker only stores ciphertext) ---------------- */
+async function handleSync(env, req) {
+  const kv = kvOf(env);
+  if (!kv) return err(env, req, "not_configured", "Add a KV namespace named STORE first", 503);
+  if (req.method === "GET") {
+    const v = await kv.get("sync");
+    if (!v) return json(env, req, { exists: false });
+    return new Response(v, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...corsHeaders(env, req) } });
+  }
+  if (req.method === "PUT") {
+    const raw = await req.text();
+    if (raw.length > MAX_SYNC_BYTES) return err(env, req, "too_large", "Sync data too large", 413);
+    let body; try { body = JSON.parse(raw); } catch { return err(env, req, "invalid_request", "Body must be JSON", 400); }
+    const vault = body && body.vault;
+    const m = vault && vault.meta, d = vault && vault.data;
+    const okStr = x => typeof x === "string" && x.length > 0 && x.length < MAX_SYNC_BYTES;
+    if (!m || !d || !okStr(m.saltP) || !okStr(m.ivP) || !okStr(m.wrapP) || !okStr(m.saltR) || !okStr(m.ivR) || !okStr(m.wrapR) || !okStr(d.iv) || !okStr(d.ct)) {
+      return err(env, req, "invalid_request", "Vault is missing fields", 400);
+    }
+    const curRaw = await kv.get("sync");
+    const cur = curRaw ? JSON.parse(curRaw) : null;
+    const curRev = cur && Number.isFinite(cur.rev) ? cur.rev : 0;
+    if (Number(body.baseRev || 0) !== curRev) return json(env, req, { error: { code: "conflict", message: "Newer data on the server" }, current: cur }, 409);
+    const next = { v: 1, meta: m, data: d, rev: curRev + 1, updated: new Date().toISOString() };
+    await kv.put("sync", JSON.stringify(next));
+    return json(env, req, { ok: true, rev: next.rev, updated: next.updated });
+  }
+  if (req.method === "DELETE") { await kv.delete("sync"); return json(env, req, { ok: true }); }
+  return err(env, req, "not_found", "Not found", 404);
 }
 
 /* ---------------- Router ---------------- */
@@ -266,7 +299,7 @@ export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(env, req) });
-    if (url.pathname === "/" && req.method === "GET") return json(env, req, { ok: true, app: "Meja Copy BM worker" });
+    if (url.pathname === "/" && req.method === "GET") return json(env, req, { ok: true, app: "Meja Copy Hannah worker" });
 
     const pass = await checkPass(env, req);
     if (pass === "not_configured") return err(env, req, "not_configured", "Set the PASSCODE secret first", 503);
@@ -274,22 +307,23 @@ export default {
 
     if (url.pathname === "/ai" && req.method === "POST") return handleAI(env, req);
     if (url.pathname === "/check" && req.method === "GET") {
-      return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!env.TRENDS, geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
+      return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!kvOf(env), sync: !!kvOf(env), geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
     }
+    if (url.pathname === "/sync") return handleSync(env, req);
     if (url.pathname === "/trends" && req.method === "GET") {
-      if (!env.TRENDS) return json(env, req, {});
-      const v = await env.TRENDS.get("current");
+      if (!kvOf(env)) return json(env, req, {});
+      const v = await kvOf(env).get("current");
       return new Response(v || "{}", { headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(env, req) } });
     }
     if (url.pathname === "/trends/refresh" && req.method === "POST") {
-      if (!env.TRENDS) return err(env, req, "not_configured", "Add a KV namespace named TRENDS first", 503);
+      if (!kvOf(env)) return err(env, req, "not_configured", "Add a KV namespace named STORE first", 503);
       try { return json(env, req, await buildTrends(env)); }
       catch (e) { return err(env, req, "upstream_error", String(e && e.message || e).slice(0, 200), 502); }
     }
     return err(env, req, "not_found", "Not found", 404);
   },
   async scheduled(event, env, ctx) {
-    if (!env.TRENDS) return;
+    if (!kvOf(env)) return;
     ctx.waitUntil(buildTrends(env).catch(e => console.log("[meja] trends failed: " + (e && e.message))));
   },
 };

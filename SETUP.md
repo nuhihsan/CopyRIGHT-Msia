@@ -1,4 +1,4 @@
-# Setting up the free version of Meja Copy BM
+# Setting up the free version of Meja Copy Hannah
 
 This puts the app on a normal website that runs on **your** free accounts. She doesn't need a Claude account. Expect about 30 minutes. No credit card is needed for any step.
 
@@ -42,13 +42,15 @@ Also pick a **passcode** for her, at least 10 characters. This is what stops str
 
 5. Copy the Worker's address. It looks like `https://meja-copy.YOURNAME.workers.dev`.
 
-**Check it:** open that address in a browser. You should see `{"ok":true,"app":"Meja Copy BM worker"}`.
+**Check it:** open that address in a browser. You should see `{"ok":true,"app":"Meja Copy Hannah worker"}`.
 
-### Optional: the weekly trend board (5 minutes)
+### Storage for sync and trends (5 minutes)
 
-1. In Cloudflare, open **Storage & Databases**, then **Workers KV**, and create a namespace called `meja-trends`.
-2. In your Worker, open **Settings**, then **Bindings**, click **Add binding**, choose **KV namespace**, set the variable name to `TRENDS` and pick `meja-trends`.
-3. Still in **Settings**, open **Trigger Events**, add a **Cron Trigger** and enter `39 23 * * 0`. That's every Monday at 7:39am Malaysia time.
+This is needed for syncing her data between devices and for the weekly trend board.
+
+1. In Cloudflare, open **Storage & Databases**, then **Workers KV**, and create a namespace called `meja-store`.
+2. In your Worker, open **Settings**, then **Bindings**, click **Add binding**, choose **KV namespace**, set the variable name to `STORE` and pick `meja-store`.
+3. Still in **Settings**, open **Trigger Events**, add a **Cron Trigger** and enter `39 23 * * 0`. That's every Monday at 7:39am Malaysia time, for the trend board.
 
 The Worker reads Google Trends Malaysia plus Malaysian news feeds, then asks the AI to build the board. In the app, the **⚙ Connection** page has a **Refresh trends now** button for the first run.
 
@@ -68,6 +70,14 @@ https://nuhihsan.github.io/CopyRIGHT-Msia/?w=https://meja-copy.YOURNAME.workers.
 ```
 
 She opens it, taps **⚙**, types the passcode and taps **Save and test**. It should say **Connected ✓** and list the three AIs. Tell her the passcode in person or by phone, not in the same message as the link.
+
+## Step 5: Turn on sync (2 minutes, on her laptop first)
+
+1. On her laptop, under **⚙**, tap **Turn on sync** and create a **sync password**. This is hers alone, separate from the passcode. You don't need to know it.
+2. The app shows a **recovery code** once. She should copy it into a password manager or notes app, or download it, then tick "I've saved it".
+3. On her phone, open the app, tap **⚙**, **Turn on sync**, and type the same sync password. Her clients, rules, styles, slang bank and history appear.
+
+From then on, changes sync by themselves a few seconds after she makes them, and whenever she opens the app.
 
 ---
 
@@ -105,9 +115,17 @@ All of these are Worker variables (type Text). No code changes are needed.
 | Everything comes from the backup | Gemini may have renamed its models. Set `GEMINI_MODEL` to a current name from AI Studio. Same idea for SEA-LION and Groq. |
 | "All the AIs are busy or at their daily limit" | Free limits reset daily. Try later, or add the Workers AI backup. |
 | The app doesn't load from another site | `ALLOWED_ORIGIN` must be exactly `https://nuhihsan.github.io`. |
+| Sync says it isn't set up | Add the KV binding named `STORE` (Step 2, Storage). |
+| "That password didn't work" on sync | Check caps lock, or use Forgot password with the recovery code. |
 
 To see why a request failed, open the Worker in Cloudflare and check **Logs**. Lines starting with `[meja]` show which AI failed and why.
 
-## Her data
+## Her data and sync
 
-Her clients, history, styles and slang bank are saved in **her browser** on each device. They aren't stored on GitHub or Cloudflare. She should use the **Backup** button (in Client tone) now and then, and to move to a new phone or laptop.
+- Each device keeps its own copy in the browser. With sync on, the devices share one locked copy stored in your Cloudflare KV.
+- That copy is **encrypted on her device** with a key protected by her sync password (AES-256-GCM, with the key derived using PBKDF2). The server, Cloudflare and you only ever see scrambled data.
+- **Forgot the sync password?** Under ⚙, tap Turn on sync, then **Forgot password?** and enter the recovery code. If any of her devices still has sync on, she can also tap **Change password** there without the old one.
+- **Lost the password and the recovery code, with no device synced?** Use **Start sync over from this device**. Only the synced copy is deleted. What's on each device stays, and syncs again after she sets a new password.
+- **New recovery code** (on an unlocked device) makes a fresh code and stops the old one working. Use it if someone else may have seen the old code.
+- The **Backup** button in Client tone still works as an extra safety copy.
+- If she uses two devices within the same minute, give it a moment: Cloudflare storage can take up to a minute to show the newest copy everywhere.
