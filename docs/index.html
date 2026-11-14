@@ -866,7 +866,7 @@ nav button{position:relative}
       <img id="fbPreview" class="hidden" alt="Screenshot preview" style="max-width:160px;border-radius:10px;margin-top:8px;border:1px solid var(--line)">
       <div class="row"><button class="primary" id="fbSend" type="button">Send to Nuh</button><span class="status" id="fbStatus"></span></div>
     </div>
-    <div class="card"><h3>Sent from this device</h3><div id="fbSent"></div></div>
+    <div class="card"><h3>Sent from this device</h3><div id="fbSent"></div><div class="row"><button class="small" id="fbCheck" type="button">↻ Check for replies</button><span class="status" id="fbCheckStat"></span></div></div>
   </section>
 
   <section id="help">
@@ -2052,6 +2052,7 @@ $("fbSend").addEventListener("click", async () => {
   }catch(e){ $("fbStatus").textContent = e && e.code === "not_found" ? "The server needs an update before feedback works. Tell Nuh." : errCopy(e); }
   finally{ $("fbSend").disabled = false; }
 });
+$("fbCheck").addEventListener("click", async () => { $("fbCheckStat").textContent = "Checking…"; await checkReplies(true); const n = LS.get("mc_fb_sent", []).reduce((t, x) => t + (x.replies || []).length, 0); $("fbCheckStat").textContent = n ? "" : "No replies yet."; renderFbSent(); });
 $("fbTest").addEventListener("click", async () => {
   $("fbTestStat").textContent = "Sending…";
   try{
@@ -3477,12 +3478,14 @@ function updateFbDot(){
 }
 async function checkReplies(force){
   if(sampleState !== "ok") return;
-  const sent = LS.get("mc_fb_sent", []); if(!sent.some(x => x.id)) return;
+  const sent = LS.get("mc_fb_sent", []); if(!sent.length) return;
   if(!force && Date.now() - lastReplyCheck < 5 * 60e3) return;
   lastReplyCheck = Date.now();
   try{
     const {items} = await workerFetch("/feedback", {method:"GET"});
     const byId = {}; (items || []).forEach(x => byId[x.id] = x);
+    // Messages sent before the app kept their server id: match them by text and time
+    sent.forEach(x => { if(x.id) return; const m = (items || []).find(it => it.message.slice(0, 1000) === x.message && Math.abs(Date.parse(it.at) - x.at) < 5 * 60e3); if(m) x.id = m.id; });
     let fresh = 0;
     sent.forEach(x => { const r = x.id && byId[x.id] && byId[x.id].replies; if(Array.isArray(r)){ if(r.length > (x.replies || []).length) fresh += r.length - (x.replies || []).length; x.replies = r; } });
     LS.set("mc_fb_sent", sent);

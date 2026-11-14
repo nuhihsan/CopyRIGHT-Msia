@@ -450,7 +450,7 @@ async function handleFeedback(env, req, url) {
     if (!kv) return json(env, req, { items: [] });
     const list = await kv.list({ prefix: "fb:", limit: 120 });
     const keys = list.keys.map(k => k.name).filter(n => !n.endsWith(":img")).slice(0, 50);
-    const items = (await Promise.all(keys.map(k => kv.get(k)))).map(v => { try { return JSON.parse(v); } catch { return null; } }).filter(Boolean);
+    const items = (await Promise.all(keys.map(k => kv.get(k, { cacheTtl: 30 })))).map(v => { try { return JSON.parse(v); } catch { return null; } }).filter(Boolean);
     return json(env, req, { items });
   }
   if (req.method !== "POST") return err(env, req, "not_found", "Not found", 404);
