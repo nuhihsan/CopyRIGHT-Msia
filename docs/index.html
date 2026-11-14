@@ -359,6 +359,19 @@ html[data-theme=dark] img{opacity:.95}
 @media (min-width:1100px){html[data-theme=dark] nav{background:transparent}}
 #tour,#moveBox{position:fixed;inset:0;z-index:100;background:rgba(40,20,26,.45);display:flex;align-items:center;justify-content:center;padding:18px}
 #tour.hidden{display:none}
+#popup{position:fixed;inset:0;z-index:110;background:rgba(40,20,26,.45);display:flex;align-items:center;justify-content:center;padding:18px}
+#popup.hidden{display:none}
+#popup .tbox{background:var(--card);border-radius:22px;max-width:380px;width:100%;padding:22px 20px 16px;box-shadow:0 10px 40px rgba(0,0,0,.25);text-align:center;animation:popin .18s ease-out}
+#popup .tem{font-size:40px;line-height:1}
+#popup h3{font-family:"Fraunces",Georgia,serif;font-size:21px;margin:10px 0 6px}
+#popup p{margin:0;color:var(--muted)}
+#popup .row{justify-content:center;margin-top:16px}
+#popup.good h3{color:var(--ok)} #popup.bad h3{color:var(--bad)}
+@keyframes popin{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.pwwrap{position:relative}
+.pwwrap input{padding-right:48px!important}
+.pwwrap .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:none;font-size:19px;cursor:pointer;padding:6px;line-height:1;opacity:.75}
+.pwwrap .eye:hover{opacity:1}
 #tour .tbox,#moveBox .tbox{background:var(--card);border-radius:22px;max-width:420px;width:100%;padding:24px 22px 18px;box-shadow:0 10px 40px rgba(0,0,0,.25);position:relative}
 #tour .tem,#moveBox .tem{font-size:40px;line-height:1}
 #tour h3,#moveBox h3{font-family:"Fraunces",Georgia,serif;font-size:22px;margin:10px 0 6px}
@@ -738,7 +751,7 @@ nav button{position:relative}
       <label class="f" for="cnUrl">Server link</label>
       <input id="cnUrl" type="text" inputmode="url" placeholder="https://meja-copy.yourname.workers.dev">
       <label class="f" for="cnPass">Passcode</label>
-      <input id="cnPass" type="password" autocomplete="current-password" placeholder="Passcode">
+      <div class="pwwrap"><input id="cnPass" type="password" autocomplete="current-password" placeholder="Passcode" autocapitalize="off" autocorrect="off" spellcheck="false"><button type="button" id="cnEye" class="eye" aria-label="Show passcode" title="Show passcode">👁</button></div>
       <div class="row">
         <button class="primary" id="cnSave" type="button">Save and test</button>
         <span class="status" id="cnStatus"></span>
@@ -1018,6 +1031,10 @@ nav button{position:relative}
       </dl>
     </details>
   </section>
+<div id="popup" class="hidden" role="alertdialog" aria-modal="true" aria-labelledby="popTitle"><div class="tbox">
+  <div class="tem" id="popIcon"></div><h3 id="popTitle"></h3><p id="popText"></p>
+  <div class="row"><button class="ghost hidden" id="popAlt" type="button"></button><button class="primary" id="popOk" type="button">OK</button></div>
+</div></div>
 <div id="tour" class="hidden" role="dialog" aria-modal="true" aria-label="Welcome tour"><div class="tbox">
   <div id="tourBody"></div>
   <div class="dots" id="tourDots"></div>
@@ -1455,6 +1472,7 @@ function showAiBanner(msg){
   const b = $("aiBanner");
   if(msg){ b.textContent = msg; b.classList.remove("hidden"); return; }
   if(sampleState === "none"){ b.innerHTML = 'Connect the app first: tap <b>⚙</b> at the top and enter the server link and passcode. Client profiles and term checks already work.'; b.classList.remove("hidden"); }
+  else if(sampleState === "badpass"){ b.innerHTML = 'The saved passcode is wrong. Tap <b>⚙</b> at the top and enter the right one.'; b.classList.remove("hidden"); }
   else b.classList.add("hidden");
 }
 function errCopy(e){
@@ -1511,7 +1529,7 @@ function runner(goId, stopId, statusId){
   const go = $(goId), stop = $(stopId), status = $(statusId);
   stop.addEventListener("click", () => ctl && ctl.abort());
   return async function(prompt, opts = {}){
-    if(sampleState !== "ok"){ status.textContent = errCopy({code:"not_connected"}); return null; }
+    if(sampleState !== "ok"){ status.textContent = errCopy({code:sampleState === "badpass" ? "bad_passcode" : "not_connected"}); sampleState === "badpass" ? wrongPasscode() : needConnection(); return null; }
     ctl = new AbortController();
     go.disabled = true; stop.classList.remove("hidden");
     const t0 = Date.now();
@@ -1544,6 +1562,8 @@ function runner(goId, stopId, statusId){
     }catch(e){
       P.hide();
       status.textContent = errCopy(e);
+      if(e && e.code === "bad_passcode"){ sampleState = "badpass"; showAiBanner(); wrongPasscode(); }
+      if(e && e.code === "not_connected") needConnection();
       return null;
     }finally{
       clearInterval(timer); ctl = null;
@@ -1553,22 +1573,59 @@ function runner(goId, stopId, statusId){
 }
 /* connection page */
 $("cnUrl").value = CONN.url; $("cnPass").value = CONN.pass;
-async function testConnection(){
+/* ---------- POPUPS ---------- */
+let popCb = null;
+function popup({icon = "", title = "", text = "", ok = "OK", alt = "", kind = "", onOk = null, onAlt = null}){
+  $("popIcon").textContent = icon; $("popTitle").textContent = title; $("popText").innerHTML = text;
+  $("popOk").textContent = ok; $("popAlt").textContent = alt; $("popAlt").classList.toggle("hidden", !alt);
+  $("popup").className = kind; popCb = {onOk, onAlt};
+  setTimeout(() => $("popOk").focus(), 50);
+}
+function closePopup(which){ $("popup").className = "hidden"; const cb = popCb && popCb[which]; popCb = null; if(cb) cb(); }
+$("popOk").addEventListener("click", () => closePopup("onOk"));
+$("popAlt").addEventListener("click", () => closePopup("onAlt"));
+$("popup").addEventListener("click", e => { if(e.target.id === "popup") closePopup(null); });
+document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("popup").classList.contains("hidden")) closePopup(null); });
+function goToPasscode(){ showTab("connection"); setTimeout(() => { $("cnPass").focus(); try{ $("cnPass").scrollIntoView({block:"center"}); }catch(e){} }, 100); }
+function needConnection(){
+  popup({icon:"🔑", title:"Enter the passcode first", text:"The writing tools need the passcode before they can work. You only do this once on each phone or laptop.", ok:"Enter passcode", alt:"Later", onOk:goToPasscode});
+}
+function wrongPasscode(){
+  popup({icon:"✗", kind:"bad", title:"Wrong passcode", text:"That passcode didn't work. Check capital letters and that there's no space at the start or end, then try again.", ok:"Try again", alt:"Close", onOk:goToPasscode});
+}
+$("cnEye").addEventListener("click", () => {
+  const show = $("cnPass").type === "password";
+  $("cnPass").type = show ? "text" : "password";
+  $("cnEye").textContent = show ? "🙈" : "👁";
+  $("cnEye").setAttribute("aria-label", show ? "Hide passcode" : "Show passcode"); $("cnEye").title = show ? "Hide passcode" : "Show passcode";
+});
+$("cnPass").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); $("cnSave").click(); } });
+
+async function testConnection(fromButton){
   const st = $("cnStatus"); st.textContent = "Testing…"; $("cnInfo").innerHTML = "";
   try{
     const d = await workerFetch("/check", {method:"GET"});
     st.textContent = "Connected ✓";
+    if(fromButton) popup({icon:"✓", kind:"good", title:"Passcode correct", text:"You're connected. All the writing tools are ready.", ok:"Start writing", alt:"Stay here", onOk:() => showTab("transcreate")});
     const ps = (d.providers || []).map(p => `${esc(p.name)} ${p.key ? "✓" : "<span style='color:var(--bad)'>no key</span>"}`).join(" → ");
     $("cnInfo").innerHTML = `<b>AI order:</b> ${ps || "none"}<br><b>Trend board:</b> ${d.trends ? "on" : "not set up"}${d.geminiPaid ? "<br><b>Gemini:</b> paid plan, so it stays private even in 🔒 mode" : ""}`;
     sampleState = "ok"; showAiBanner(); initTrends(); if(syncOn()) syncNow(true);
-  }catch(e){ st.textContent = errCopy(e); }
+  }catch(e){
+    st.textContent = errCopy(e);
+    if(e && e.code === "bad_passcode"){ sampleState = "badpass"; showAiBanner(); if(fromButton) wrongPasscode(); }
+    else if(fromButton) popup({icon:"📡", kind:"bad", title:"Couldn't connect", text:esc(errCopy(e)) + (e && e.code === "network" ? " If you're online, check the server link above is exactly right." : ""), ok:"OK"});
+  }
 }
 $("cnSave").addEventListener("click", () => {
-  CONN.url = $("cnUrl").value.trim().replace(/\/+$/, ""); CONN.pass = $("cnPass").value;
-  if(CONN.url && !/^https:\/\//.test(CONN.url)){ $("cnStatus").textContent = "The link must start with https://"; return; }
+  const url = $("cnUrl").value.trim().replace(/\/+$/, ""), pass = $("cnPass").value.trim();
+  if(!url){ popup({icon:"🔗", kind:"bad", title:"Server link is empty", text:"Paste the server link Nuh gave you. It starts with https://", ok:"OK", onOk:() => $("cnUrl").focus()}); return; }
+  if(!/^https:\/\//.test(url)){ popup({icon:"🔗", kind:"bad", title:"Check the server link", text:"The link must start with <b>https://</b>", ok:"OK", onOk:() => $("cnUrl").focus()}); return; }
+  if(!pass){ popup({icon:"🔑", kind:"bad", title:"Passcode is empty", text:"Type the passcode first, then tap Save and test.", ok:"OK", onOk:() => $("cnPass").focus()}); return; }
+  $("cnPass").value = pass;
+  CONN.url = url; CONN.pass = pass;
   LS.set("mc_worker", CONN.url); LS.set("mc_pass", CONN.pass);
-  sampleState = CONN.url && CONN.pass ? "ok" : "none"; showAiBanner();
-  testConnection();
+  sampleState = "ok"; showAiBanner();
+  testConnection(true);
 });
 $("cnTrends").addEventListener("click", async () => {
   const st = $("cnTrStatus"); st.textContent = "Refreshing… this can take a minute";
@@ -1783,7 +1840,7 @@ const TWEAKS = [["shorter","Shorter","Make it noticeably shorter and tighter. Ke
   ["emotional","More emotional","Make it warmer and more emotional."],["simpler","Simpler words","Use simpler, everyday words a wide audience understands at once."]];
 /* One small AI call with its own progress bar under the given element. */
 async function quickAI(prompt, statusEl, expect, label){
-  if(sampleState !== "ok"){ toast(errCopy({code:"not_connected"})); return null; }
+  if(sampleState !== "ok"){ sampleState === "badpass" ? wrongPasscode() : needConnection(); return null; }
   const P = progressUI(statusEl); const t0 = Date.now(); let chars = 0, who = "", stage = "send", shown = 4;
   const render = () => { const secs = Math.round((Date.now() - t0) / 1000);
     const f = Math.min(1, chars / expect), target = stage === "write" ? 18 + f * 77 : stage === "think" ? 12 : 6; shown = Math.max(shown, target);
@@ -1792,7 +1849,7 @@ async function quickAI(prompt, statusEl, expect, label){
   try{
     const res = await sampleFn.json(prompt, {onProgress: ev => { if(ev.t === "start") who = ev.provider || ""; if(ev.t === "think" && stage === "send") stage = "think"; if(ev.t === "delta"){ stage = "write"; chars = ev.n || chars; } render(); }});
     P.hide(); return res;
-  }catch(e){ P.hide(); toast(errCopy(e)); return null; }
+  }catch(e){ P.hide(); if(e && e.code === "bad_passcode"){ sampleState = "badpass"; showAiBanner(); wrongPasscode(); } else toast(errCopy(e)); return null; }
   finally{ clearInterval(timer); }
 }
 function looksBM(text){
@@ -2041,7 +2098,7 @@ function renderFbSent(){
 $("fbSend").addEventListener("click", async () => {
   const message = $("fbMsg").value.trim();
   if(!message){ toast("Write your message first"); $("fbMsg").focus(); return; }
-  if(sampleState !== "ok"){ $("fbStatus").textContent = errCopy({code:"not_connected"}); return; }
+  if(sampleState !== "ok"){ $("fbStatus").textContent = errCopy({code:"not_connected"}); sampleState === "badpass" ? wrongPasscode() : needConnection(); return; }
   $("fbSend").disabled = true; $("fbStatus").textContent = "Sending…";
   try{
     const out = await workerFetch("/feedback", {method:"POST", body:JSON.stringify({kind:fbKind, message, tab:lastTab || "", device:deviceName(), version:APP_BUILD, image:fbImage})});
@@ -3147,7 +3204,7 @@ $("syDlCode").addEventListener("click", () => saveFile("MejaCopyHannah-recovery-
 $("syDone").addEventListener("click", () => { pendingCode = ""; renderSyncCard(); renderSyncStatus(); syncNow(); });
 
 $("syStart").addEventListener("click", async () => {
-  if(sampleState !== "ok"){ syMsg("Connect to the server first (above)."); return; }
+  if(sampleState !== "ok"){ syMsg("Connect to the server first (above)."); sampleState === "badpass" ? wrongPasscode() : needConnection(); return; }
   syMsg("Checking…");
   try{
     const cur = await syncGet();
@@ -3418,7 +3475,7 @@ async function handleFiles(files, targetId){
       ta.dispatchEvent(new Event("input"));
       added++;
       if(cut) lastErr = `${f.name} was long, so only the first part was added.`;
-    }catch(e){ lastErr = uploadErr(e); }
+    }catch(e){ lastErr = uploadErr(e); if(e && e.code === "not_connected") needConnection(); }
   }
   btn.disabled = false;
   stat.textContent = lastErr || (added ? `Added ${added} file${added > 1 ? "s" : ""}. Check the text, then carry on.` : "Word, PDF, PowerPoint, text or image");
@@ -3588,6 +3645,7 @@ else if(!onOldAddress && !LS.get("mc_tour_done", false)) setTimeout(() => showTo
 initSample();
 initCloud();
 updateFbDot();
+if(CONN.url && CONN.pass) setTimeout(() => workerFetch("/check", {method:"GET"}).catch(e => { if(e && e.code === "bad_passcode"){ sampleState = "badpass"; showAiBanner(); } }), 1200);
 setTimeout(() => checkReplies(true), 2500);
 })();
 </script>
