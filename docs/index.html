@@ -220,6 +220,25 @@ details.guide[open]>summary{margin-bottom:6px}
 .prog .pline{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px}
 .prog .plab{font-weight:600;color:var(--accent)}
 .prog .pnote{font-size:12.5px;color:#9a6a2f;margin-top:3px}
+.modeSeg{margin-bottom:6px;flex-wrap:wrap}
+.opt .bm[contenteditable]{outline:none;border-radius:8px;padding:2px 4px;margin:0 -4px;transition:background .2s}
+.opt .bm[contenteditable]:focus{background:#fff6f4;box-shadow:0 0 0 2px var(--accent-soft)}
+.opt .edited{font-size:12px;color:var(--accent);font-weight:600}
+.tweak{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.tweak button{font-size:13px}
+.tweak input{flex:1 1 180px;min-width:0}
+.resbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.resbar select{width:auto;max-width:100%}
+.dkwrap{overflow-x:auto;margin-top:12px;border:1px solid var(--line);border-radius:12px;background:#fffefd}
+table.dk{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+table.dk th{position:sticky;top:0;background:#fbeeec;text-align:left;font-size:12px;color:var(--muted);padding:8px;font-weight:700}
+table.dk td{border-top:1px solid var(--line);padding:8px;vertical-align:top}
+table.dk td.n{color:var(--muted);width:28px}
+table.dk td.bmc{min-width:220px;outline:none;white-space:pre-wrap}
+table.dk td.bmc:focus{background:#fff6f4}
+table.dk td.bmc.ed{background:#fff8e8}
+table.dk td.bt{color:var(--muted);font-size:13px}
+table.dk tr.fail td.bmc{color:var(--bad);font-style:italic}
 .brand{white-space:nowrap}
 @media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
 
@@ -240,7 +259,7 @@ nav button b{font-weight:inherit}
   nav button svg{width:23px;height:23px;flex-basis:auto}
   nav button.active{color:var(--accent)!important}
   nav button.active svg{fill:var(--accent-soft)}
-  main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  main.wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
   #toast{bottom:calc(86px + env(safe-area-inset-bottom))}
   .clientbar{padding-bottom:10px}
   textarea,input[type=text],input[type=number],input[type=password],select{font-size:16px}
@@ -318,15 +337,35 @@ nav button b{font-weight:inherit}
     <p class="sub">English in, natural Malaysian BM out, in the selected client's voice.</p>
     <div id="tcHint" class="banner hidden">Tip: add a client under <b>Client tone</b> so drafts follow their rules automatically.</div>
     <div class="card">
+      <div class="seg modeSeg" id="tcMode"><button type="button" data-m="one" class="on">One piece</button><button type="button" data-m="deck">Copy deck (many lines)</button></div>
+      <div class="oneOnly">
       <label class="f" for="tcSrc">English copy</label>
       <div class="up"><button class="small" type="button" data-up="tcSrc">📎 Upload file</button><span class="upstat" id="up_tcSrc">Word, PDF, PowerPoint, text or image</span></div>
       <textarea id="tcSrc" placeholder="Paste the English copy here"></textarea>
+      <div id="tcBmHint" class="banner hidden">This already looks like Bahasa Melayu. Want it proofread instead?
+        <div class="row"><button class="small" id="tcProof" type="button">✅ Proofread it</button><button class="small ghost" id="tcAnyway" type="button">Transcreate anyway</button></div></div>
+      </div>
+      <div class="deckOnly hidden">
+        <p class="status" style="margin:10px 0 0">Upload a copy deck (Excel, CSV or Word) or paste lines. Every line is transcreated in the selected client's tone, and you download a filled-in deck.</p>
+        <div class="up"><button class="small" type="button" id="dkUp">📎 Upload deck</button><span class="upstat" id="dkUpStat">Excel, CSV, Word or text</span></div>
+        <input type="file" id="dkFile" class="hidden" accept=".xlsx,.xls,.csv,.docx,.txt">
+        <div id="dkPick" class="grid hidden">
+          <div><label class="f" for="dkSheet">Sheet</label><select id="dkSheet"></select></div>
+          <div><label class="f" for="dkCol">Column with the English copy</label><select id="dkCol"></select></div>
+          <div><label class="f" for="dkCtx">Column with notes or format (optional)</label><select id="dkCtx"></select></div>
+        </div>
+        <label class="f" for="dkPaste">Or paste lines (one per row)</label>
+        <textarea id="dkPaste" placeholder="Headline: Fresh deals every weekend&#10;CTA: Shop now&#10;Caption: Your weekend just got better"></textarea>
+        <p class="status" id="dkCount"></p>
+      </div>
       <label class="f" for="tcFormality">Formality: <span class="fval" id="tcFormalityLabel"></span></label>
       <input id="tcFormality" type="range" min="1" max="5" step="1" value="3">
       <div class="scale"><span>Baku</span><span>Formal</span><span>Neutral</span><span>Santai</span><span>Bahasa pasar</span></div>
+      <div class="oneOnly">
       <label class="f" for="tcCount">How many versions</label>
       <div class="seg" id="tcCountSeg"><button type="button" data-n="1">Just 1</button><button type="button" data-n="3" class="on">3</button><button type="button" data-n="5">5</button></div>
       <input type="hidden" id="tcCount" value="3">
+      </div>
       <label class="trendtog"><input type="checkbox" id="tcTrend"> ✿ Trend-aware <span class="status" id="tcTrendInfo"></span></label>
       <details class="more" id="tcMore">
         <summary>More options <span class="status" id="tcMoreSum"></span></summary>
@@ -383,13 +422,19 @@ nav button b{font-weight:inherit}
         <textarea id="tcContext" class="short" placeholder="Campaign, festive season, what must stay, character limit…"></textarea>
         </details>
       <p class="status" id="tcDialectNote" style="margin:8px 0 0"></p>
-      <div class="row">
+      <div class="row oneOnly">
         <button class="primary" id="tcGo" type="button">Transcreate</button>
         <button class="ghost hidden" id="tcStop" type="button">Stop</button>
         <span class="status" id="tcStatus"></span>
       </div>
+      <div class="row deckOnly hidden">
+        <button class="primary" id="dkGo" type="button">Transcreate deck</button>
+        <button class="ghost hidden" id="dkStop" type="button">Stop</button>
+        <span class="status" id="dkStatus"></span>
+      </div>
     </div>
-    <div id="tcOut"></div>
+    <div id="tcOut" class="oneOnly"></div>
+    <div id="dkOut" class="deckOnly hidden"></div>
   </section>
 
   <!-- VARIANTS -->
@@ -689,7 +734,7 @@ nav button b{font-weight:inherit}
       <input id="libQ" type="text" placeholder="Search words, client, campaign…">
       <div class="grid">
         <div><label class="f" for="libType">Type</label>
-          <select id="libType"><option value="">All</option><option>Transcreate</option><option>Variants</option><option>Check</option><option>Brief</option><option>Trend angles</option></select></div>
+          <select id="libType"><option value="">All</option><option>Transcreate</option><option>Copy deck</option><option>Variants</option><option>Check</option><option>Brief</option><option>Trend angles</option></select></div>
         <div><label class="f" for="libClient">Client</label><select id="libClient"></select></div>
         <div><label class="f" for="libWhen">When</label>
           <select id="libWhen"><option value="">Any time</option><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></div>
@@ -716,7 +761,7 @@ nav button b{font-weight:inherit}
         <li>Tap <b>Write</b> at the bottom.</li>
         <li>Paste English copy, or tap <b>📎 Upload file</b> to read a Word, PDF, PowerPoint or photo.</li>
         <li>Slide <b>Formality</b> to how casual it should sound, pick <b>Just 1</b>, <b>3</b> or <b>5</b> versions.</li>
-        <li>Tap <b>Transcreate</b>. Copy the version you like with its copy button.</li>
+        <li>Tap <b>Transcreate</b>. Tap a version to edit it, use <b>✨ Tweak</b> to adjust it, then copy or share it.</li>
       </ol>
       <p class="meta">Everything you make is saved automatically under <b>Saved</b>.</p>
     </div>
@@ -742,6 +787,28 @@ nav button b{font-weight:inherit}
         <dt>More options</dt><dd><b>Format</b> (caption, headline, billboard, script…), <b>Audience</b>, <b>Flavour</b> (Gen Z, rojak, festive, corporate), <b>Dialect</b> (Kelantan, Utara, Sabah and others), <b>Script</b> (Rumi, Jawi or both), plus your own style notes.</dd>
         <dt>My saved styles</dt><dd>Set the options once, tap <b>Save current</b>, and reuse that setup later in one tap.</dd>
         <dt>Stop</dt><dd>Cancels if it's taking too long.</dd>
+        <dt>Progress bar</dt><dd>Fills as the AI actually writes. If one AI is busy it says so and switches to a backup.</dd>
+      </dl>
+      <p><b>On each result</b></p>
+      <dl>
+        <dt>Tap the text to edit it</dt><dd>Fix any word yourself. Your edit is what gets copied, shared and saved. <b>Undo edit</b> puts it back.</dd>
+        <dt>🧠 Learn from my edit</dt><dd>Appears after you edit. It works out the rule behind your change (like "use anda, not awak") so you can save it to the client.</dd>
+        <dt>✨ Tweak</dt><dd>One tap to make it Shorter, Punchier, More santai, More formal, More emotional or Simpler. Or type your own change, like "use 'jom'".</dd>
+        <dt>Length check</dt><dd>Pick a platform (Instagram, Google Ads headline, SMS, billboard…) and each result shows if it fits.</dd>
+        <dt>Share / Copy all</dt><dd>Send a version to WhatsApp, Teams or email, or copy every version at once.</dd>
+        <dt>Already BM?</dt><dd>If you paste text that's already in BM, the app offers to proofread it in <b>Check</b> instead.</dd>
+      </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>📑 Copy deck (many lines at once)</summary>
+      <p>At the top of <b>Write</b>, switch to <b>Copy deck</b>.</p>
+      <dl>
+        <dt>Upload deck</dt><dd>Excel, CSV, Word or text. For Excel, pick the sheet and the column with the English copy. A notes or format column (optional) helps the AI.</dd>
+        <dt>Or paste lines</dt><dd>One headline, CTA or caption per line.</dd>
+        <dt>Transcreate deck</dt><dd>Done in batches, with a progress bar for each. Uses the client, formality and style options above.</dd>
+        <dt>Results table</dt><dd>Tap any BM cell to edit it. Lines that failed say "Not done yet": tap <b>Transcreate deck</b> again and only those are redone.</dd>
+        <dt>⬇ Download Excel</dt><dd>Your own sheet comes back with BM, back-translation and character count columns added.</dd>
       </dl>
     </details>
 
@@ -1309,21 +1376,22 @@ function runner(goId, stopId, statusId){
     const t0 = Date.now();
     const expect = Math.max(300, (opts.expect || estimateOut(goId)) | 0);
     const P = progressUI(status);
-    let stage = "send", who = "", chars = 0, note = "", shown = 3;
+    let stage = "send", who = "", chars = 0, note = "", shown = 3, failed = "";
     const render = () => {
       const secs = Math.round((Date.now() - t0) / 1000);
       let target, label;
-      if(stage === "send"){ target = 6; label = who ? `Asking ${who}…` : "Sending…"; }
-      else if(stage === "think"){ target = Math.min(18, 8 + secs * 0.4); label = `${who || "The AI"} is thinking…`; }
-      else { const f = Math.min(1, chars / expect); target = 18 + f * 77; label = f >= 1 ? "Almost done…" : `Writing… ${Math.round(target)}%`; }
+      const pre = opts.label ? opts.label + " · " : "";
+      if(stage === "send"){ target = 6; label = pre + (who ? `Asking ${who}…` : "Sending…"); }
+      else if(stage === "think"){ target = Math.min(18, 8 + secs * 0.4); label = pre + `${who || "The AI"} is thinking…`; }
+      else { const f = Math.min(1, chars / expect); target = 18 + f * 77; label = pre + (f >= 1 ? "Almost done…" : `Writing… ${Math.round(target)}%`); }
       shown = Math.max(shown, target);
       P.set(shown, label, note, secs);
     };
     const onProgress = ev => {
       if(ev.t === "start"){ who = ev.provider || ""; stage = "send"; chars = 0; shown = Math.min(shown, 6); }
-      else if(ev.t === "fail"){ note = `${ev.provider} ${ev.code === "rate_limited" ? "is busy" : ev.code === "timeout" ? "was too slow" : "didn't answer"}, switching to a backup…`; shown = 3; }
+      else if(ev.t === "fail"){ failed = `${ev.provider} ${ev.code === "rate_limited" ? "was busy" : ev.code === "timeout" ? "was too slow" : "didn't answer"}`; note = failed.replace("was busy", "is busy") + ", switching to a backup…"; shown = 3; stage = "send"; }
       else if(ev.t === "think"){ if(stage === "send") stage = "think"; }
-      else if(ev.t === "delta"){ stage = "write"; chars = ev.n || chars; if(note && /switching/.test(note)) note = ""; }
+      else if(ev.t === "delta"){ stage = "write"; chars = ev.n || chars; if(failed) note = `${failed}, so ${who || "a backup"} is writing this.`; }
       render();
     };
     render(); timer = setInterval(render, 1000);
@@ -1337,7 +1405,8 @@ function runner(goId, stopId, statusId){
       status.textContent = errCopy(e);
       return null;
     }finally{
-      clearInterval(timer); go.disabled = false; stop.classList.add("hidden"); ctl = null;
+      clearInterval(timer); ctl = null;
+      if(!opts.keepBusy){ go.disabled = false; stop.classList.add("hidden"); }
     }
   };
 }
@@ -1497,9 +1566,18 @@ function styleBlock(){
 
 /* ---------- TRANSCREATE ---------- */
 const tcRun = runner("tcGo", "tcStop", "tcStatus");
+let tcForce = false;
+$("tcSrc").addEventListener("input", () => { tcForce = false; $("tcBmHint").classList.add("hidden"); });
+$("tcAnyway").addEventListener("click", () => { tcForce = true; $("tcBmHint").classList.add("hidden"); $("tcGo").click(); });
+$("tcProof").addEventListener("click", () => {
+  $("tcBmHint").classList.add("hidden");
+  $("cSrc").value = $("tcSrc").value.replace(/\n?\s*please proof ?read\.?\s*$/i, "").trim(); scanCheck(); showTab("check");
+  setTimeout(() => $("cGo").click(), 200);
+});
 $("tcGo").addEventListener("click", async () => {
   const src = $("tcSrc").value.trim();
   if(!src){ toast("Paste the English copy first"); return; }
+  if(!tcForce && looksBM(src)){ $("tcBmHint").classList.remove("hidden"); return; }
   const n = Number($("tcCount").value);
   if($("tcDialect").value === "custom" && !dialectName()){ toast("Type the dialect name, or pick one from the list"); $("tcDialectCustom").focus(); return; }
   const wantJawi = $("tcScript").value !== "rumi";
@@ -1523,49 +1601,395 @@ Reply with only JSON in this shape:
 {"literal":"a plain literal standard BM translation for reference only","options":[{"label":"2-4 word angle name","bm":"the copy in Rumi script${dialectName() ? ", in the dialect" : ""}","jawi":"${wantJawi ? "the same copy in Jawi script" : "leave empty"}","standard_bm":"${dialectName() ? "the same line in standard Malay, so non-speakers on the team can follow" : "leave empty"}","back_translation":"English back-translation","why":"1-2 sentences on the key word, tone${dialectName() ? ", dialect" : ""} choices"}],"notes":["anything she should know, e.g. a pun that does not work in BM, or a dialect word to double-check"],"questions":["anything ambiguous to confirm with the team, or empty"]}`;
   const res = await tcRun(prompt);
   if(res){
-    renderTranscreate(res);
-    const opts = (Array.isArray(res.options) ? res.options : []).filter(o => o && (o.bm || o.jawi));
+    const clean = v => { const x = String(v || "").trim(); return /^leave empty$/i.test(x) ? "" : x; };
+    const opts = (Array.isArray(res.options) ? res.options : []).filter(o => o && (clean(o.bm) || clean(o.jawi)));
+    res.options = opts;
+    let he = null;
     if(opts.length){
-      const he = addHistory({type:"Transcreate", input:src, meta:styleSummary(),
-        items: opts.map((o,i) => ({label:String(o.label || "Option " + (i+1)), text:String(o.bm || ""), jawi:$("tcScript").value !== "rumi" ? String(o.jawi || "") : "", note:String(o.back_translation || "")}))});
-      prependDl("tcOut", he);
+      he = addHistory({type:"Transcreate", input:src, meta:styleSummary(),
+        items: opts.map((o,i) => ({label:String(o.label || "Option " + (i+1)), text:clean(o.bm), jawi:$("tcScript").value !== "rumi" ? clean(o.jawi) : "", note:String(o.back_translation || "")}))});
     }
+    renderTranscreate(res, he);
+    if(he) prependDl("tcOut", he);
   }
 });
-function renderTranscreate(res){
+/* Length limits people commonly write to. "words" limits count words instead of characters. */
+const LEN_PLATS = [
+  ["", "Length check: off"], ["125", "Instagram caption (125 before “more”)"], ["125m", "Facebook / Meta primary text (125)"],
+  ["40", "Meta headline (40)"], ["30", "Google Ads headline (30)"], ["90", "Google Ads description (90)"], ["280", "X post (280)"],
+  ["150", "TikTok caption (150)"], ["160", "SMS (160)"], ["50", "Push notification title (50)"], ["60", "Email subject (60)"], ["w7", "Billboard (7 words)"], ["w12", "Banner / key visual (12 words)"]
+];
+function lenPlatOptions(sel){ return LEN_PLATS.map(([v, l]) => `<option value="${v}"${v === sel ? " selected" : ""}>${l}</option>`).join(""); }
+function lenCheck(text){
+  const p = LS.get("mc_lenplat", "");
+  if(!p) return `<span class="chip">${len(text)} characters</span>`;
+  if(p[0] === "w"){
+    const max = Number(p.slice(1)), n = String(text).trim().split(/\s+/).filter(Boolean).length;
+    return n <= max ? `<span class="chip ok">${n} / ${max} words ✓</span>` : `<span class="chip bad">${n} / ${max} words, ${n - max} too many</span>`;
+  }
+  const max = parseInt(p, 10), n = len(String(text).trim());
+  return n <= max ? `<span class="chip ok">${n} / ${max} characters ✓</span>` : `<span class="chip bad">${n} / ${max} characters, over by ${n - max}</span>`;
+}
+/* Sharing: the phone's share sheet (WhatsApp, Teams, email…) when available, otherwise WhatsApp in the browser. */
+async function shareText(text){
+  if(navigator.share){ try{ await navigator.share({text}); return; }catch(e){ if(e && e.name === "AbortError") return; } }
+  window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
+}
+const TWEAKS = [["shorter","Shorter","Make it noticeably shorter and tighter. Keep the key message."],["punchier","Punchier","Make it punchier and more attention-grabbing, with stronger verbs."],
+  ["santai","More santai","Make it more casual and conversational, like a friend talking. Do not go into crude slang."],["formal","More formal","Make it more formal and polished, but still natural, not stiff."],
+  ["emotional","More emotional","Make it warmer and more emotional."],["simpler","Simpler words","Use simpler, everyday words a wide audience understands at once."]];
+/* One small AI call with its own progress bar under the given element. */
+async function quickAI(prompt, statusEl, expect, label){
+  if(sampleState !== "ok"){ toast(errCopy({code:"not_connected"})); return null; }
+  const P = progressUI(statusEl); const t0 = Date.now(); let chars = 0, who = "", stage = "send", shown = 4;
+  const render = () => { const secs = Math.round((Date.now() - t0) / 1000);
+    const f = Math.min(1, chars / expect), target = stage === "write" ? 18 + f * 77 : stage === "think" ? 12 : 6; shown = Math.max(shown, target);
+    P.set(shown, stage === "write" ? `${label}… ${Math.round(shown)}%` : stage === "think" ? `${who || "The AI"} is thinking…` : `${label}…`, "", secs); };
+  const timer = setInterval(render, 1000); render();
+  try{
+    const res = await sampleFn.json(prompt, {onProgress: ev => { if(ev.t === "start") who = ev.provider || ""; if(ev.t === "think" && stage === "send") stage = "think"; if(ev.t === "delta"){ stage = "write"; chars = ev.n || chars; } render(); }});
+    P.hide(); return res;
+  }catch(e){ P.hide(); toast(errCopy(e)); return null; }
+  finally{ clearInterval(timer); }
+}
+function looksBM(text){
+  const w = String(text).toLowerCase().match(/[a-z']+/g) || [];
+  if(w.length < 4) return false;
+  const BM = new Set("yang dan untuk dengan ini itu kita anda awak kamu korang saya kami akan di ke dari pada boleh lebih sahaja saja juga adalah ialah tak tidak nak hendak dah sudah jom mari sila kerana sebab bagi pun lagi semua kepada dalam atau telah sedang masih belum ada tiada jadi macam mana apa siapa bila kenapa sangat paling dapatkan baru hari ni tu lah kan je".split(" "));
+  const EN = new Set("the and to of you your for with is are this that it be on in at our we can will get now from by as an or more all new just".split(" "));
+  let bm = 0, en = 0; w.forEach(x => { if(BM.has(x)) bm++; if(EN.has(x)) en++; });
+  return bm >= 2 && bm > en * 1.5;
+}
+
+let tcCurrent = null; // {opts, he}
+function renderTranscreate(res, he){
   const c = active();
   const opts = Array.isArray(res.options) ? res.options : [];
+  tcCurrent = {opts, he, res};
   let html = "";
   const script = $("tcScript").value;
   const clean = v => { const s = String(v || "").trim(); return /^leave empty$/i.test(s) ? "" : s; };
+  const good = [];
   opts.forEach((o, i) => {
     const bm = clean(o.bm), jawi = clean(o.jawi), std = clean(o.standard_bm);
-    o.bm = bm; o.jawi = jawi;
+    o.bm = bm; o.jawi = jawi; o.orig = bm;
+    if(!bm && !jawi) return;
+    good.push(i);
     const showRumi = script !== "jawi" || !jawi;
-    html += `<div class="opt"><span class="lab">${esc(o.label || "Option " + (i+1))}</span>
-      ${showRumi ? `<div class="bm">${highlight(bm, c)}</div>` : ""}
-      ${jawi && script !== "rumi" ? `<div class="jawi" lang="ms-Arab" dir="rtl">${esc(jawi)}</div>` : ""}
-      <div class="meta"><span class="chip">${len(bm)} characters</span> ${hitSummary(bm, c)}</div>
+    const J = jawi && script !== "rumi";
+    html += `<div class="opt" data-o="${i}"><span class="lab">${esc(o.label || "Option " + (i+1))}</span> <span class="edited hidden">✎ edited</span>
+      ${showRumi ? `<div class="bm" contenteditable="true" spellcheck="false" title="Tap to edit">${highlight(bm, c)}</div>` : ""}
+      ${J ? `<div class="jawi" lang="ms-Arab" dir="rtl">${esc(jawi)}</div>` : ""}
+      <div class="meta mlen">${lenCheck(bm)} ${hitSummary(bm, c)}</div>
       ${std && std !== bm ? `<div class="meta"><b>Standard BM:</b> ${esc(std)}</div>` : ""}
-      ${o.back_translation ? `<div class="meta"><b>Back-translation:</b> ${esc(o.back_translation)}</div>` : ""}
-      ${o.why ? `<div class="meta"><b>Why:</b> ${esc(o.why)}</div>` : ""}
-      <div class="row"><button class="small" data-copy="${i}" type="button">Copy${jawi && script !== "rumi" ? " Rumi" : ""}</button>${jawi && script !== "rumi" ? `<button class="small" data-copyj="${i}" type="button">Copy Jawi</button>` : ""}<button class="small" data-check="${i}" type="button">Check this</button><button class="small" data-var="${i}" type="button">Make variants</button></div></div>`;
+      <div class="meta mbt"${o.back_translation ? "" : ' style="display:none"'}><b>Back-translation:</b> <span>${esc(o.back_translation || "")}</span></div>
+      <div class="meta mwhy"${o.why ? "" : ' style="display:none"'}><b>Why:</b> <span>${esc(o.why || "")}</span></div>
+      <div class="row"><button class="small" data-a="copy" type="button">Copy${J ? " Rumi" : ""}</button>${J ? `<button class="small" data-a="copyj" type="button">Copy Jawi</button>` : ""}<button class="small" data-a="tweak" type="button">✨ Tweak</button><button class="small" data-a="share" type="button">Share</button><button class="small" data-a="check" type="button">Check this</button><button class="small" data-a="var" type="button">Make variants</button>
+        <button class="small hidden" data-a="learn" type="button">🧠 Learn from my edit</button><button class="small ghost hidden" data-a="undo" type="button">Undo edit</button><span class="status tstat"></span></div>
+      <div class="tweak hidden">${TWEAKS.map(([k, l]) => `<button class="small" data-tw="${k}" type="button">${l}</button>`).join("")}<input type="text" class="twc" placeholder="Or say what to change, e.g. use 'jom'"><button class="small" data-tw="custom" type="button">Go</button></div></div>`;
   });
+  if(good.length) html = `<div class="resbar"><select class="lenSel" aria-label="Length check">${lenPlatOptions(LS.get("mc_lenplat", ""))}</select>${good.length > 1 ? '<button class="small" data-a="copyall" type="button">Copy all</button>' : ""}<button class="small" data-a="shareall" type="button">Share${good.length > 1 ? " all" : ""}</button><span class="status">Tap any version to edit it.</span></div>` + html;
   if(res.literal) html += `<div class="card" style="margin-top:12px"><div class="kv"><div class="k">Literal translation (reference only)</div><div class="v">${esc(res.literal)}</div></div></div>`;
   const notes = (res.notes || []).filter(Boolean), qs = (res.questions || []).filter(Boolean);
   if(notes.length || qs.length){
     html += `<div class="card">${notes.length ? `<div class="kv"><div class="k">Notes</div><ul class="clean">${notes.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}${qs.length ? `<div class="kv"><div class="k">Check with the team</div><ul class="clean">${qs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}</div>`;
   }
-  $("tcOut").innerHTML = html || '<div class="empty">No options came back. Try again.</div>';
-  $("tcOut").onclick = e => {
+  const out = $("tcOut");
+  out.innerHTML = html || '<div class="empty">No options came back. Try again.</div>';
+  const allText = () => good.map(i => `${opts[i].label || "Option " + (i+1)}:\n${opts[i].bm}${opts[i].jawi && script !== "rumi" ? "\n" + opts[i].jawi : ""}`).join("\n\n");
+  const card = i => out.querySelector(`.opt[data-o="${i}"]`);
+  const refreshMeta = i => {
+    const o = opts[i], el = card(i); if(!el) return;
+    el.querySelector(".mlen").innerHTML = `${lenCheck(o.bm)} ${hitSummary(o.bm, active())}`;
+    const edited = o.bm !== o.orig;
+    el.querySelector(".edited").classList.toggle("hidden", !edited);
+    el.querySelector('[data-a="learn"]').classList.toggle("hidden", !edited);
+    el.querySelector('[data-a="undo"]').classList.toggle("hidden", !edited);
+  };
+  let saveT;
+  const saveHist = () => { clearTimeout(saveT); saveT = setTimeout(() => {
+    if(!he) return; let k = 0;
+    good.forEach(i => { if(he.items[k]){ he.items[k].text = opts[i].bm; he.items[k].note = String(opts[i].back_translation || ""); } k++; });
+    updateHistory(he);
+  }, 800); };
+  out.oninput = e => {
+    const bmEl = e.target.closest(".bm[contenteditable]"); if(!bmEl) return;
+    const i = Number(bmEl.closest(".opt").dataset.o);
+    opts[i].bm = bmEl.innerText.replace(/ /g, " ").replace(/\n+$/, "");
+    refreshMeta(i); saveHist();
+  };
+  if(!out.dataset.fo){ out.dataset.fo = "1"; out.addEventListener("focusout", e => {
+    const bmEl = e.target.closest && e.target.closest(".bm[contenteditable]"); if(!bmEl || !tcCurrent) return;
+    const o = tcCurrent.opts[Number(bmEl.closest(".opt").dataset.o)]; if(o) bmEl.innerHTML = highlight(o.bm, active());
+  }); }
+  out.onchange = e => {
+    if(!e.target.classList.contains("lenSel")) return;
+    LS.set("mc_lenplat", e.target.value); good.forEach(refreshMeta);
+  };
+  out.onkeydown = e => {
+    if(e.target.classList.contains("twc") && e.key === "Enter"){ e.preventDefault(); e.target.parentElement.querySelector('[data-tw="custom"]').click(); }
+  };
+  out.onclick = async e => {
     const b = e.target.closest("button"); if(!b) return;
-    const o = opts[Number(b.dataset.copy ?? b.dataset.copyj ?? b.dataset.check ?? b.dataset.var)]; if(!o) return;
-    if(b.dataset.copy != null) copyText(String(o.bm || ""));
-    if(b.dataset.copyj != null) copyText(String(o.jawi || ""));
-    if(b.dataset.check != null){ $("cSrc").value = String(o.bm || ""); scanCheck(); showTab("check"); }
-    if(b.dataset.var != null){ $("vSrc").value = String(o.bm || ""); showTab("variants"); }
+    if(b.dataset.a === "copyall"){ copyText(allText()); return; }
+    if(b.dataset.a === "shareall"){ shareText(allText()); return; }
+    const el = b.closest(".opt"); if(!el) return;
+    const i = Number(el.dataset.o), o = opts[i]; if(!o) return;
+    const a = b.dataset.a;
+    if(a === "copy") copyText(String(o.bm || ""));
+    if(a === "copyj") copyText(String(o.jawi || ""));
+    if(a === "share") shareText(String(o.bm || o.jawi || ""));
+    if(a === "check"){ $("cSrc").value = String(o.bm || ""); scanCheck(); showTab("check"); }
+    if(a === "var"){ $("vSrc").value = String(o.bm || ""); showTab("variants"); }
+    if(a === "tweak"){ el.querySelector(".tweak").classList.toggle("hidden"); }
+    if(a === "undo"){ o.bm = o.orig; const bm = el.querySelector(".bm"); if(bm) bm.innerHTML = highlight(o.bm, active()); refreshMeta(i); saveHist(); }
+    if(a === "learn") learnFromEdit(o.orig, o.bm);
+    if(b.dataset.tw){
+      let how;
+      if(b.dataset.tw === "custom"){ how = el.querySelector(".twc").value.trim(); if(!how){ toast("Type what to change first"); el.querySelector(".twc").focus(); return; } }
+      else how = TWEAKS.find(t => t[0] === b.dataset.tw)[2];
+      el.querySelectorAll(".tweak button").forEach(x => x.disabled = true);
+      const wantJ = script !== "rumi" && !!o.jawi;
+      const prompt = `${baseRules()}
+
+${clientBlock()}
+
+STYLE SETTINGS:
+${styleBlock()}
+
+TASK: Revise this Malaysian BM copy. Change only what the instruction asks; keep the same language variety${dialectName() ? " (" + dialectName() + " dialect)" : ""}, the client's rules, and the meaning of the original English.
+Original English: """${String($("tcSrc").value).slice(0, 4000)}"""
+Current BM: """${o.bm}"""
+INSTRUCTION: ${how}
+
+Reply with only JSON: {"bm":"the revised copy","jawi":"${wantJ ? "the revised copy in Jawi script" : "leave empty"}","back_translation":"English back-translation","why":"one sentence on what changed"}`;
+      const r = await quickAI(prompt, el.querySelector(".tstat"), len(o.bm) * 2 + 260, "Tweaking");
+      el.querySelectorAll(".tweak button").forEach(x => x.disabled = false);
+      if(!r || !r.bm) return;
+      o.bm = String(r.bm).trim(); o.orig = o.bm;
+      if(wantJ && r.jawi && !/^leave empty$/i.test(r.jawi)){ o.jawi = String(r.jawi).trim(); const jEl = el.querySelector(".jawi"); if(jEl) jEl.textContent = o.jawi; }
+      o.back_translation = String(r.back_translation || ""); o.why = String(r.why || "");
+      const bmEl = el.querySelector(".bm"); if(bmEl) bmEl.innerHTML = highlight(o.bm, active());
+      const bt = el.querySelector(".mbt"); bt.style.display = o.back_translation ? "" : "none"; bt.querySelector("span").textContent = o.back_translation;
+      const wy = el.querySelector(".mwhy"); wy.style.display = o.why ? "" : "none"; wy.querySelector("span").textContent = o.why;
+      el.querySelector(".twc").value = ""; el.querySelector(".tweak").classList.add("hidden");
+      refreshMeta(i); saveHist(); toast("Updated");
+    }
   };
 }
+/* Send an original and her edited version to the Clients tab's "learn from a correction" tool. */
+function learnFromEdit(before, after){
+  if(!String(after || "").trim() || before === after){ toast("No edit to learn from"); return; }
+  if(!active()){ toast("Pick the client at the top first, so the rules are saved to them"); $("clientSel").focus(); return; }
+  $("lcDraft").value = before; $("lcFixed").value = after; $("lcComment").value = "My own edit of the app's draft";
+  showTab("tone");
+  try{ $("lcDraft").scrollIntoView({behavior:"smooth", block:"center"}); }catch(e){}
+  setTimeout(() => $("lcGo").click(), 300);
+}
+
+/* ---------- COPY DECK (many lines at once) ---------- */
+const DECK_MAX = 300;
+const deck = {wb:null, name:"", rows:[], aoa:null, sheet:"", col:-1, ctx:-1, hdr:false, results:null, he:null};
+function setMode(m){
+  document.querySelectorAll("#transcreate .oneOnly").forEach(x => x.classList.toggle("hidden", m === "deck"));
+  document.querySelectorAll("#transcreate .deckOnly").forEach(x => x.classList.toggle("hidden", m !== "deck"));
+  $("tcMode").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
+  LS.set("mc_tcmode", m);
+}
+$("tcMode").addEventListener("click", e => { const b = e.target.closest("button[data-m]"); if(b) setMode(b.dataset.m); });
+const colName = i => { let n = "", x = i + 1; while(x > 0){ const r = (x - 1) % 26; n = String.fromCharCode(65 + r) + n; x = Math.floor((x - 1) / 26); } return n; };
+function deckLines(){
+  if(deck.aoa && deck.col >= 0){
+    const start = deck.hdr ? 1 : 0, out = [];
+    for(let r = start; r < deck.aoa.length; r++){
+      const v = String((deck.aoa[r] || [])[deck.col] ?? "").trim();
+      if(v) out.push({r, src:v, ctx: deck.ctx >= 0 ? String((deck.aoa[r] || [])[deck.ctx] ?? "").trim() : ""});
+    }
+    return out;
+  }
+  return $("dkPaste").value.split(/\r?\n/).map(x => x.trim()).filter(Boolean).map((src, i) => ({r:i, src, ctx:""}));
+}
+function updateDeckCount(){
+  const n = deckLines().length;
+  $("dkCount").textContent = n ? `${n} line${n === 1 ? "" : "s"} to transcreate${n > DECK_MAX ? `. Only the first ${DECK_MAX} will be done this time.` : "."}` : "";
+}
+function fillDeckCols(){
+  const aoa = deck.aoa || []; const width = Math.max(0, ...aoa.slice(0, 50).map(r => (r || []).length));
+  const head = aoa[0] || [];
+  // Guess: first row is headers if it's all short text and row 2 exists
+  deck.hdr = aoa.length > 1 && head.length > 0 && head.every(h => h === "" || h == null || (typeof h === "string" && h.length < 40));
+  const label = i => `${colName(i)}${deck.hdr && head[i] ? ": " + String(head[i]).slice(0, 30) : ""}`;
+  const opts = Array.from({length: width}, (_, i) => `<option value="${i}">${esc(label(i))}</option>`).join("");
+  $("dkCol").innerHTML = opts; $("dkCtx").innerHTML = '<option value="-1">None</option>' + opts;
+  // Pick the column whose header mentions English/copy, else the one with the most text
+  let best = 0, bestScore = -1;
+  for(let i = 0; i < width; i++){
+    const h = String(head[i] || "").toLowerCase();
+    let score = aoa.slice(deck.hdr ? 1 : 0, 80).reduce((t, r) => t + String((r || [])[i] ?? "").length, 0);
+    if(/english|\ben\b|copy|source|text/.test(h)) score += 1e6;
+    if(/bm|malay|melayu|translation|terjemahan/.test(h)) score -= 1e6;
+    if(score > bestScore){ bestScore = score; best = i; }
+  }
+  deck.col = best; $("dkCol").value = String(best);
+  deck.ctx = -1; $("dkCtx").value = "-1";
+  for(const re of [/note|remark|context|brief/, /format|deliverable|placement|type|asset/]){
+    const i = head.findIndex((h, k) => k !== best && re.test(String(h || "").toLowerCase()));
+    if(i >= 0){ deck.ctx = i; $("dkCtx").value = String(i); break; }
+  }
+}
+function loadSheet(name){
+  const X = window.XLSX; deck.sheet = name;
+  deck.aoa = X.utils.sheet_to_json(deck.wb.Sheets[name], {header:1, raw:false, defval:""});
+  fillDeckCols(); updateDeckCount();
+}
+$("dkUp").addEventListener("click", () => { $("dkFile").value = ""; $("dkFile").click(); });
+$("dkFile").addEventListener("change", async () => {
+  const f = $("dkFile").files[0]; if(!f) return;
+  const st = $("dkUpStat"); st.textContent = `Reading ${f.name}…`;
+  const ext = (f.name.split(".").pop() || "").toLowerCase();
+  try{
+    deck.wb = null; deck.aoa = null; deck.name = f.name.replace(/\.[^.]+$/, "");
+    if(ext === "xlsx" || ext === "xls" || ext === "csv"){
+      const X = await loadLib("lib/xlsx.mini.min.js", "XLSX");
+      deck.wb = ext === "csv" ? X.read(await f.text(), {type:"string"}) : X.read(new Uint8Array(await f.arrayBuffer()), {type:"array"});
+      const names = deck.wb.SheetNames || [];
+      if(!names.length) throw {code:"empty"};
+      $("dkSheet").innerHTML = names.map(n => `<option>${esc(n)}</option>`).join("");
+      $("dkSheet").parentElement.classList.toggle("hidden", names.length < 2);
+      $("dkPick").classList.remove("hidden");
+      loadSheet(names[0]); $("dkPaste").value = "";
+      st.textContent = `${f.name} loaded. Check the column below.`;
+    } else if(ext === "docx" || ext === "txt"){
+      const text = ext === "docx" ? await readDocx(f) : await f.text();
+      $("dkPick").classList.add("hidden");
+      $("dkPaste").value = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean).join("\n");
+      updateDeckCount(); st.textContent = `${f.name} loaded: one line per row below. Delete any lines you don't need.`;
+    } else throw {code:"unsupported"};
+  }catch(e){ st.textContent = e && e.code === "unsupported" ? "Use an Excel, CSV, Word or text file." : "Couldn't read that file. If it's password-protected, remove the password first."; }
+});
+$("dkSheet").addEventListener("change", () => loadSheet($("dkSheet").value));
+$("dkCol").addEventListener("change", () => { deck.col = Number($("dkCol").value); updateDeckCount(); });
+$("dkCtx").addEventListener("change", () => { deck.ctx = Number($("dkCtx").value); });
+$("dkPaste").addEventListener("input", () => {
+  if(deck.aoa && $("dkPaste").value.trim()){ deck.aoa = null; deck.wb = null; $("dkPick").classList.add("hidden"); $("dkUpStat").textContent = "Using the pasted lines."; }
+  updateDeckCount();
+});
+const dkRun = runner("dkGo", "dkStop", "dkStatus");
+let dkStopped = false;
+$("dkStop").addEventListener("click", () => { dkStopped = true; });
+$("dkGo").addEventListener("click", async () => {
+  const lines = deckLines().slice(0, DECK_MAX);
+  if(!lines.length){ toast("Upload a deck or paste some lines first"); return; }
+  if($("tcDialect").value === "custom" && !dialectName()){ toast("Type the dialect name, or pick one from the list"); return; }
+  // Keep lines that are already done (same English, same notes), so "try again" only redoes what's missing or changed
+  const prev = new Map(); (deck.results || []).forEach(x => { if(x.bm && !x.fail) prev.set(x.src + "\u0000" + x.ctx, x); });
+  deck.results = lines.map(l => { const old = prev.get(l.src + "\u0000" + l.ctx); if(old){ prev.delete(l.src + "\u0000" + l.ctx); return Object.assign(old, {r:l.r}); } return {r:l.r, src:l.src, ctx:l.ctx, bm:"", back:"", note:"", orig:"", fail:false}; });
+  const todo = deck.results.map((x, i) => i).filter(i => !deck.results[i].bm);
+  const batches = []; let cur = [], size = 0;
+  todo.forEach(i => { const n = deck.results[i].src.length + 40; if(cur.length && (cur.length >= 15 || size + n > 2500)){ batches.push(cur); cur = []; size = 0; } cur.push(i); size += n; });
+  if(cur.length) batches.push(cur);
+  renderDeck();
+  dkStopped = false; $("dkGo").disabled = true;
+  for(let b = 0; b < batches.length; b++){
+    if(dkStopped) break;
+    const idx = batches[b];
+    const list = idx.map(i => ({id:i + 1, en:deck.results[i].src, note:deck.results[i].ctx || undefined}));
+    const prompt = `${baseRules()}
+
+${clientBlock()}
+
+TASK: Transcreate each line of this copy deck into Malaysian Bahasa Melayu${dialectName() ? " (" + dialectName() + " dialect)" : ""}. Each line is a separate piece of copy (headline, CTA, caption, body line…). Give your single best version for each. Keep each line's length and job: a short CTA stays a short CTA. Keep brand names, numbers, prices and hashtags. Keep the same voice across all lines so the deck reads as one campaign.
+Default format if a line has no note: ${$("tcFormat").value}
+Audience: ${$("tcAudience").value}
+STYLE SETTINGS:
+${styleBlock()}
+${$("tcTrend").checked ? trendBlock() : ""}
+Extra context: ${$("tcContext").value.trim() || "none"}
+
+LINES (JSON):
+${JSON.stringify(list)}
+
+Reply with only JSON: {"rows":[{"id":1,"bm":"the copy in Rumi script","back":"English back-translation","note":"only if something needs flagging, else empty"}]}
+Return every id exactly once.`;
+    const expect = idx.reduce((t, i) => t + deck.results[i].src.length * 2.3 + 90, 60);
+    const res = await dkRun(prompt, {expect, label:`Batch ${b + 1} of ${batches.length}`, keepBusy: b < batches.length - 1});
+    if(!res){ idx.forEach(i => { if(!deck.results[i].bm) deck.results[i].fail = true; }); renderDeck(); if(dkStopped) break; continue; }
+    const rows = Array.isArray(res.rows) ? res.rows : [];
+    idx.forEach(i => {
+      const got = rows.find(r => r && Number(r.id) === i + 1);
+      const x = deck.results[i];
+      if(got && String(got.bm || "").trim()){ x.bm = String(got.bm).trim(); x.orig = x.bm; x.back = String(got.back || ""); x.note = String(got.note || ""); x.fail = false; }
+      else x.fail = true;
+    });
+    renderDeck();
+  }
+  $("dkGo").disabled = false; $("dkStop").classList.add("hidden");
+  deck.results.forEach(x => { if(!x.bm) x.fail = true; }); renderDeck();
+  const done = deck.results.filter(x => x.bm).length, failed = deck.results.length - done;
+  $("dkStatus").textContent = failed ? `${done} of ${deck.results.length} done. Tap Transcreate deck again to finish the rest.` : `All ${done} lines done.`;
+  if(done){
+    const items = deck.results.filter(x => x.bm).map((x, k) => ({label:`Line ${k + 1}`, text:x.bm, note:x.src}));
+    if(deck.he){ deck.he.items = items; deck.he.input = deck.results.map(x => x.src).join("\n"); updateHistory(deck.he); }
+    else deck.he = addHistory({type:"Copy deck", input:deck.results.map(x => x.src).join("\n"), meta:`${deck.results.length} lines · ${styleSummary()}`, items});
+  }
+});
+function renderDeck(){
+  const R = deck.results || [];
+  if(!R.length){ $("dkOut").innerHTML = ""; return; }
+  const c = active();
+  const edited = R.some(x => x.bm && x.orig && x.bm !== x.orig);
+  $("dkOut").innerHTML = `<div class="resbar"><select class="lenSel" aria-label="Length check">${lenPlatOptions(LS.get("mc_lenplat", ""))}</select>
+    <button class="small" data-d="xlsx" type="button">⬇ Download Excel</button><button class="small" data-d="copy" type="button">Copy all BM</button>
+    ${edited ? '<button class="small" data-d="learn" type="button">🧠 Learn from my edits</button>' : ""}<span class="status">Tap a BM cell to edit it.</span></div>
+    <div class="dkwrap"><table class="dk"><thead><tr><th>#</th><th>English</th><th>BM</th><th>Length</th><th>Back-translation / note</th></tr></thead><tbody>
+    ${R.map((x, i) => `<tr data-i="${i}" class="${x.fail ? "fail" : ""}"><td class="n">${i + 1}</td><td>${esc(x.src)}${x.ctx ? `<div class="status">${esc(x.ctx)}</div>` : ""}</td>
+      <td class="bmc${x.bm && x.bm !== x.orig ? " ed" : ""}" ${x.bm ? 'contenteditable="true" spellcheck="false"' : ""}>${x.bm ? esc(x.bm) : (x.fail ? "Not done yet" : "…")}</td>
+      <td class="ln">${x.bm ? lenCheck(x.bm) + " " + hitSummary(x.bm, c) : ""}</td><td class="bt">${esc(x.back)}${x.note ? `<div class="status" style="color:var(--warn)">⚠ ${esc(x.note)}</div>` : ""}</td></tr>`).join("")}
+    </tbody></table></div>`;
+}
+$("dkOut").addEventListener("input", e => {
+  const td = e.target.closest("td.bmc"); if(!td) return;
+  const x = deck.results[Number(td.parentElement.dataset.i)]; if(!x) return;
+  x.bm = td.innerText.replace(/ /g, " ").trim();
+  td.classList.toggle("ed", x.bm !== x.orig);
+  td.parentElement.querySelector(".ln").innerHTML = lenCheck(x.bm) + " " + hitSummary(x.bm, active());
+  const bar = $("dkOut").querySelector(".resbar");
+  if(!bar.querySelector('[data-d="learn"]') && x.bm !== x.orig) bar.querySelector('[data-d="copy"]').insertAdjacentHTML("afterend", '<button class="small" data-d="learn" type="button">🧠 Learn from my edits</button>');
+  clearTimeout(deck.saveT); deck.saveT = setTimeout(() => { if(deck.he){ deck.he.items = deck.results.filter(r => r.bm).map((r, k) => ({label:`Line ${k + 1}`, text:r.bm, note:r.src})); updateHistory(deck.he); } }, 800);
+});
+$("dkOut").addEventListener("change", e => { if(e.target.classList.contains("lenSel")){ LS.set("mc_lenplat", e.target.value); renderDeck(); } });
+$("dkOut").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-d]"); if(!b) return;
+  const R = (deck.results || []).filter(x => x.bm);
+  if(b.dataset.d === "copy"){ copyText(R.map(x => x.bm).join("\n")); return; }
+  if(b.dataset.d === "learn"){
+    const ed = R.filter(x => x.orig && x.bm !== x.orig);
+    learnFromEdit(ed.map(x => x.orig).join("\n"), ed.map(x => x.bm).join("\n")); return;
+  }
+  if(b.dataset.d === "xlsx"){
+    if(!R.length){ toast("Nothing to download yet"); return; }
+    try{
+      const X = await loadLib("lib/xlsx.mini.min.js", "XLSX");
+      let aoa;
+      if(deck.aoa && deck.wb){
+        // Their own sheet, with BM columns added on the right
+        aoa = deck.aoa.map(r => (r || []).slice());
+        const w = Math.max(...aoa.map(r => r.length));
+        aoa.forEach(r => { while(r.length < w) r.push(""); });
+        if(deck.hdr) aoa[0].push("BM", "Back-translation", "Characters", "BM notes");
+        deck.results.forEach(x => { const row = aoa[x.r]; if(row) row.push(x.bm, x.back, x.bm ? len(x.bm) : "", x.note); });
+        if(!deck.hdr) aoa.unshift([...Array(w).fill(""), "BM", "Back-translation", "Characters", "BM notes"]);
+      } else {
+        aoa = [["#", "English", "BM", "Back-translation", "Characters", "Notes", "Status", "Feedback"]].concat(deck.results.map((x, i) => [i + 1, x.src, x.bm, x.back, x.bm ? len(x.bm) : "", x.note, "", ""]));
+      }
+      const ws = X.utils.aoa_to_sheet(aoa);
+      const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, (deck.sheet || "Copy deck").slice(0, 31));
+      const c = active();
+      saveFile(`${(deck.name || "Copy deck").replace(/[\\/:*?"<>|]+/g, "-")}${c ? " - " + c.name.replace(/[\\/:*?"<>|]+/g, "-") : ""} - BM.xlsx`, X.write(wb, {bookType:"xlsx", type:"array"}));
+    }catch(err){ toast("Couldn't build the Excel file. Try again."); }
+  }
+});
+setMode(LS.get("mc_tcmode", "one") === "deck" ? "deck" : "one");
 
 /* ---------- VARIANTS ---------- */
 $("vPlat").addEventListener("change", () => {
@@ -1915,8 +2339,9 @@ function renderLibrary(reset){
       <div class="head"><button class="star ${he.star ? "on" : ""}" data-act="star" type="button" aria-label="Star">${he.star ? "★" : "☆"}</button><span class="chip">${esc(he.type)}</span>${he.client ? `<span class="chip ok">${esc(he.client)}</span>` : ""}<span class="date">${esc(fmtDate(he.ts))}</span></div>
       ${he.meta ? `<div class="meta">${hlQ(he.meta)}</div>` : ""}
       ${he.input ? `<div class="src">${hlQ(he.input.slice(0, 400))}</div>` : ""}
+      ${(he.items || []).length > items.length ? `<div class="status" style="margin-top:6px">…and ${he.items.length - items.length} more. Download to see them all.</div>` : ""}
       ${items.map((it, i) => `<div class="item">${it.label ? `<div class="il">${hlQ(it.label)}</div>` : ""}<div class="it">${hlQ(it.text || "")}</div>${it.jawi ? `<div class="jawi" dir="rtl" lang="ms-Arab">${esc(it.jawi)}</div>` : ""}<div class="row" style="margin-top:6px"><button class="small" data-act="copy" data-i="${i}" type="button">Copy</button>${it.jawi ? `<button class="small" data-act="copyj" data-i="${i}" type="button">Copy Jawi</button>` : ""}</div></div>`).join("")}
-      <div class="dlrow">${dlSelect(he.id)}${he.type === "Transcreate" || he.type === "Check" || he.type === "Brief" ? `<button class="small" data-act="reuse" type="button">Use again</button>` : ""}<button class="small danger" data-act="del" type="button">Delete</button></div>
+      <div class="dlrow">${dlSelect(he.id)}${["Transcreate","Copy deck","Check","Brief"].includes(he.type) ? `<button class="small" data-act="reuse" type="button">Use again</button>` : ""}<button class="small danger" data-act="del" type="button">Delete</button></div>
     </div>`;
   }).join("");
   $("libMore").classList.toggle("hidden", list.length <= libShown);
@@ -1933,8 +2358,10 @@ $("libList").addEventListener("click", async e => {
   if(act === "copyj") copyText(he.items[Number(b.dataset.i)].jawi || "");
   if(act === "star"){ he.star = !he.star; b.classList.toggle("on", he.star); b.textContent = he.star ? "★" : "☆"; await updateHistory(he); }
   if(act === "reuse"){
-    const tab = {Transcreate:"transcreate", Check:"check", Brief:"brief"}[he.type];
-    const box = {Transcreate:"tcSrc", Check:"cSrc", Brief:"bSrc"}[he.type];
+    const tab = {Transcreate:"transcreate", "Copy deck":"transcreate", Check:"check", Brief:"brief"}[he.type];
+    const box = {Transcreate:"tcSrc", "Copy deck":"dkPaste", Check:"cSrc", Brief:"bSrc"}[he.type];
+    if(he.type === "Transcreate") setMode("one");
+    if(he.type === "Copy deck"){ setMode("deck"); deck.aoa = null; deck.wb = null; deck.results = null; deck.he = null; $("dkPick").classList.add("hidden"); $("dkOut").innerHTML = ""; }
     $(box).value = he.input || ""; $(box).dispatchEvent(new Event("input"));
     if(he.clientId && state.clients[he.clientId]){ state.activeId = he.clientId; persistLocal(); renderClientSelect(); fillClientForm(); syncFormalityToClient(); }
     showTab(tab); toast("Loaded. Tweak and run again.");
@@ -2635,7 +3062,8 @@ async function extractFile(file, onStatus){
   if(ext === "pptx") return readPptx(file);
   if(ext === "pdf"){
     const {text, pdf} = await readPdf(file, onStatus);
-    if(text.replace(/\s/g, "").length >= 30) return text;
+    const chars = text.replace(/\s/g, "").length;
+    if(chars >= 30 || (chars >= 5 && chars / pdf.numPages >= 5)) return text; // short PDFs with real text count too
     onStatus && onStatus("Looks scanned. Reading pages as images…");
     let max = 4; try{ const l = await sampleFn.limits(); if(l?.images?.maxCount) max = Math.min(l.images.maxCount, 8); }catch(e){}
     return readImagesWithAI(await pdfToImages(pdf, max), onStatus);
