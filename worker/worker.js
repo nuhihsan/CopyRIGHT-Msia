@@ -10,6 +10,7 @@
  *   SEALION_API_KEY    from the SEA-LION playground
  *   GROQ_API_KEY       from console.groq.com
  *   OPENAI_API_KEY     optional spare slot
+ *   TELEGRAM_BOT_TOKEN from @BotFather, so feedback from the app is sent to you on Telegram
  *
  * Plain variables (optional):
  *   ALLOWED_ORIGIN     e.g. https://nuhihsan.github.io   (recommended)
@@ -304,6 +305,84 @@ async function handleAIStream(env, req, ctx) {
   return new Response(readable, { headers: { "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-cache", ...corsHeaders(env, req) } });
 }
 
+/* ---------------- Feedback: stored in KV, and sent to Telegram if a bot is set up ----------------
+   POST /feedback        {kind, message, tab, device, version, image:{mime,data}}  -> {ok, notified}
+   GET  /feedback        latest 50 (without image data)
+   GET  /feedback/image?id=...   one screenshot
+   POST /feedback/test   sends a test message to Telegram -> {ok, notified} */
+const FB_MAX_MSG = 5000, FB_MAX_IMG = 3_000_000;
+async function tgChatId(env) {
+  if (env.TELEGRAM_CHAT_ID) return String(env.TELEGRAM_CHAT_ID).trim();
+  const kv = kvOf(env);
+  if (kv) { const saved = await kv.get("tg_chat"); if (saved) return saved; }
+  // Not known yet: use the private chat of whoever last messaged the bot (that's you, after you tap Start)
+  const r = await fetch(`https://api.telegram.org/bot${String(env.TELEGRAM_BOT_TOKEN).trim()}/getUpdates`);
+  if (!r.ok) return "";
+  const d = await r.json();
+  const ups = Array.isArray(d.result) ? d.result : [];
+  for (let i = ups.length - 1; i >= 0; i--) {
+    const m = ups[i].message || ups[i].edited_message;
+    if (m && m.chat && m.chat.type === "private") { const id = String(m.chat.id); if (kv) await kv.put("tg_chat", id); return id; }
+  }
+  return "";
+}
+async function tgSend(env, text, image) {
+  if (!env.TELEGRAM_BOT_TOKEN) return { ok: false, why: "no_bot" };
+  const chat = await tgChatId(env);
+  if (!chat) return { ok: false, why: "no_chat" };
+  const base = `https://api.telegram.org/bot${String(env.TELEGRAM_BOT_TOKEN).trim()}`;
+  const r = await fetch(`${base}/sendMessage`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: chat, text: text.slice(0, 4000), disable_web_page_preview: true }) });
+  if (!r.ok) return { ok: false, why: "telegram_" + r.status };
+  if (image) {
+    try {
+      const bin = Uint8Array.from(atob(image.data), c => c.charCodeAt(0));
+      const fd = new FormData(); fd.append("chat_id", chat); fd.append("photo", new Blob([bin], { type: image.mime }), "screenshot." + (image.mime.split("/")[1] || "jpg"));
+      await fetch(`${base}/sendPhoto`, { method: "POST", body: fd });
+    } catch (e) {}
+  }
+  return { ok: true };
+}
+async function handleFeedback(env, req, url) {
+  const kv = kvOf(env);
+  if (url.pathname === "/feedback/test" && req.method === "POST") {
+    const out = await tgSend(env, "✅ Meja Copy Hannah is connected. Feedback from the app will arrive here.");
+    return json(env, req, { ok: out.ok, notified: out.ok, why: out.why || "" });
+  }
+  if (url.pathname === "/feedback/image" && req.method === "GET") {
+    if (!kv) return err(env, req, "not_configured", "No storage", 503);
+    const id = url.searchParams.get("id") || "";
+    if (!/^fb:[\w:.-]+$/.test(id)) return err(env, req, "invalid_request", "Bad id", 400);
+    const v = await kv.get(id + ":img");
+    if (!v) return err(env, req, "not_found", "No image", 404);
+    return new Response(v, { headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(env, req) } });
+  }
+  if (url.pathname !== "/feedback") return err(env, req, "not_found", "Not found", 404);
+  if (req.method === "GET") {
+    if (!kv) return json(env, req, { items: [] });
+    const list = await kv.list({ prefix: "fb:", limit: 120 });
+    const keys = list.keys.map(k => k.name).filter(n => !n.endsWith(":img")).slice(0, 50);
+    const items = (await Promise.all(keys.map(k => kv.get(k)))).map(v => { try { return JSON.parse(v); } catch { return null; } }).filter(Boolean);
+    return json(env, req, { items });
+  }
+  if (req.method !== "POST") return err(env, req, "not_found", "Not found", 404);
+  let body; try { body = await req.json(); } catch { return err(env, req, "invalid_request", "Body must be JSON", 400); }
+  const message = String(body.message || "").trim().slice(0, FB_MAX_MSG);
+  if (!message) return err(env, req, "invalid_request", "Write something first", 400);
+  const kind = String(body.kind || "Idea").slice(0, 30);
+  let image = null;
+  if (body.image && typeof body.image.data === "string" && /^image\/(png|jpeg|webp)$/.test(String(body.image.mime)) && body.image.data.length <= FB_MAX_IMG) image = { mime: String(body.image.mime), data: body.image.data };
+  // Newest first when listed: key sorts by (far future - now)
+  const id = `fb:${String(9e12 - Date.now()).padStart(13, "0")}:${Math.random().toString(36).slice(2, 7)}`;
+  const item = { id, at: new Date().toISOString(), kind, message, tab: String(body.tab || "").slice(0, 40), device: String(body.device || "").slice(0, 120), version: String(body.version || "").slice(0, 20), hasImage: !!image };
+  if (kv) {
+    await kv.put(id, JSON.stringify(item));
+    if (image) await kv.put(id + ":img", JSON.stringify(image));
+  }
+  const when = new Date().toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+  const out = await tgSend(env, `💌 Meja Copy feedback: ${kind}\n\n${message}\n\nSent ${when}${item.tab ? " · on " + item.tab : ""}${item.device ? " · " + item.device : ""}`, image);
+  return json(env, req, { ok: true, saved: !!kv, notified: out.ok, why: out.why || "" });
+}
+
 /* ---------------- Trends ---------------- */
 const FEEDS = [
   { name: "Google Trends Malaysia", url: "https://trends.google.com/trending/rss?geo=MY" },
@@ -426,9 +505,10 @@ export default {
     if (url.pathname === "/ai" && req.method === "POST") return handleAI(env, req);
     if (url.pathname === "/ai/stream" && req.method === "POST") return handleAIStream(env, req, ctx);
     if (url.pathname === "/check" && req.method === "GET") {
-      return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!kvOf(env), sync: !!kvOf(env), geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
+      return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!kvOf(env), sync: !!kvOf(env), telegram: !!env.TELEGRAM_BOT_TOKEN, geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
     }
     if (url.pathname === "/sync") return handleSync(env, req);
+    if (url.pathname === "/feedback" || url.pathname.startsWith("/feedback/")) return handleFeedback(env, req, url);
     if (url.pathname === "/trends" && req.method === "GET") {
       if (!kvOf(env)) return json(env, req, {});
       const v = await kvOf(env).get("current");

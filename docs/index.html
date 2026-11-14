@@ -239,6 +239,21 @@ table.dk td.bmc:focus{background:#fff6f4}
 table.dk td.bmc.ed{background:#fff8e8}
 table.dk td.bt{color:var(--muted);font-size:13px}
 table.dk tr.fail td.bmc{color:var(--bad);font-style:italic}
+#fbKind{flex-wrap:wrap;border-radius:18px}
+@media (max-width:440px){nav button{font-size:9.5px!important;letter-spacing:-.1px}}
+#fbKind button{flex:1 1 auto}
+.campbar{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:14px;color:var(--muted)}
+.campbar label{white-space:nowrap;font-weight:600}
+.campbar input{flex:1 1 auto;min-width:0;max-width:340px;padding:8px 12px}
+.campchip{background:#eef5ee;color:#3d6b45}
+.xl{margin-top:8px;padding:8px 10px;border-radius:10px;background:#fbf6f2}
+.xl .xh{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:2px}
+.ap{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px dashed var(--line)}
+.ap:first-child{border-top:0}.ap .t{flex:1;white-space:pre-wrap}
+.ap .s{font-size:12px;color:var(--muted)}
+.fbi{padding:10px 0;border-top:1px dashed var(--line)}.fbi:first-child{border-top:0}
+.fbi .h{font-size:12px;color:var(--muted)}.fbi .m{white-space:pre-wrap;margin-top:2px}
+.btn-ok{background:#e8f4ea!important;color:#2f6b3a!important;border-color:#bfe0c6!important}
 .brand{white-space:nowrap}
 @media (max-width:420px){ .brand{font-size:18px;gap:5px} .brand::before{width:16px;height:16px} #modeLabel{display:none} .topR{gap:6px} .lockBtn,.gearBtn{width:32px;height:32px} }
 
@@ -252,7 +267,7 @@ nav button b{font-weight:inherit}
 @media (max-width:1099px){
   header{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,247,244,.97);padding-top:env(safe-area-inset-top)}
   nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,251,249,.97);border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(194,77,105,.08);
-      padding:6px 2px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(7,1fr);gap:0;overflow:visible}
+      padding:6px 2px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(8,1fr);gap:0;overflow:visible}
   nav button{flex-direction:column;gap:3px;border:none!important;background:none!important;box-shadow:none!important;border-radius:12px;padding:4px 0;font-size:10.5px;color:var(--muted);min-width:0}
   nav button b{display:none}
   nav button em{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
@@ -326,10 +341,12 @@ nav button b{font-weight:inherit}
   <button data-tab="trends" title="Trends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg><b>Trends</b><em>Trends</em></button>
   <button data-tab="check" title="Check copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><b>Check copy</b><em>Check</em></button>
   <button data-tab="library" title="My copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><b>My copy</b><em>Saved</em></button>
+  <button data-tab="feedback" title="Feedback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M12 12.5s-3-1.8-3-3.8a1.6 1.6 0 0 1 3-.9 1.6 1.6 0 0 1 3 .9c0 2-3 3.8-3 3.8z"/></svg><b>Feedback</b><em>Feedback</em></button>
 </nav>
 
 <main class="wrap">
   <div id="aiBanner" class="banner hidden"></div>
+  <div id="campBar" class="campbar"><label for="campIn">📁 Campaign</label><input id="campIn" type="text" list="campList" placeholder="None (optional)" autocomplete="off" maxlength="60"><button class="small ghost hidden" id="campClear" type="button" aria-label="Clear campaign">✕</button><datalist id="campList"></datalist></div>
 
   <!-- TRANSCREATE -->
   <section id="transcreate" class="active">
@@ -415,6 +432,9 @@ nav button b{font-weight:inherit}
           <div><label class="f" for="tcScript">Script</label>
             <select id="tcScript"><option value="rumi">Rumi</option><option value="both">Rumi + Jawi</option><option value="jawi">Jawi</option></select></div>
         </div>
+        <div class="row" style="margin-top:8px"><span class="status">Also write:</span>
+          <label class="trendtog" style="color:var(--ink)"><input type="checkbox" id="tcZh"> Chinese 中文</label>
+          <label class="trendtog" style="color:var(--ink)"><input type="checkbox" id="tcTa"> Tamil தமிழ்</label></div>
         <input id="tcDialectCustom" class="hidden" type="text" placeholder="Name the dialect or community, e.g. Kedah Pattani, Banjar" style="margin-top:8px">
         <label class="f" for="tcStyleNote">Your style notes (optional)</label>
         <textarea id="tcStyleNote" class="short" placeholder="e.g. Use 'hang' for you. Keep sentences short. End with a light pantun."></textarea>
@@ -528,6 +548,12 @@ nav button b{font-weight:inherit}
         <input id="ruleAdd" type="text" placeholder="Add a rule yourself, e.g. Never start with 'Jom'">
         <button class="small" id="ruleAddBtn" type="button">Add rule</button>
       </div>
+    </div>
+
+    <div class="card">
+      <h3>Approved copy <span class="chip" id="apCount">0</span></h3>
+      <p class="status" style="margin-top:-4px">Copy this client signed off. Tap <b>✓ Approved</b> on any result to add it here. New drafts copy this voice.</p>
+      <div id="apList"></div>
     </div>
 
     <div class="card">
@@ -659,6 +685,16 @@ nav button b{font-weight:inherit}
       </div>
       <div id="cnInfo" class="meta"></div>
     </div>
+    <div class="card">
+      <h3>📊 Today's AI use</h3>
+      <div id="usageBox" class="status"></div>
+    </div>
+    <div class="card">
+      <h3>💌 Feedback alerts</h3>
+      <p class="status" style="margin-top:-4px">Feedback sent from the app goes to Nuh on Telegram.</p>
+      <div class="row"><button class="small" id="fbTest" type="button">Send a test alert</button><button class="small" id="fbInboxBtn" type="button">Show all feedback</button><span class="status" id="fbTestStat"></span></div>
+      <div id="fbInbox"></div>
+    </div>
     <div class="card" id="installCard">
       <h3>📱 Install as an app</h3>
       <p class="meta" style="margin-top:0">Puts Meja Copy on your home screen or laptop dock. It opens full screen in its own window, like a normal app, and starts even with a weak connection.</p>
@@ -736,6 +772,7 @@ nav button b{font-weight:inherit}
         <div><label class="f" for="libType">Type</label>
           <select id="libType"><option value="">All</option><option>Transcreate</option><option>Copy deck</option><option>Variants</option><option>Check</option><option>Brief</option><option>Trend angles</option></select></div>
         <div><label class="f" for="libClient">Client</label><select id="libClient"></select></div>
+        <div><label class="f" for="libCamp">Campaign</label><select id="libCamp"></select></div>
         <div><label class="f" for="libWhen">When</label>
           <select id="libWhen"><option value="">Any time</option><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></div>
       </div>
@@ -749,6 +786,22 @@ nav button b{font-weight:inherit}
     </div>
     <div id="libList"></div>
     <div class="row"><button class="ghost hidden" id="libMore" type="button">Show more</button></div>
+  </section>
+
+  <section id="feedback">
+    <h2>Feedback</h2>
+    <p class="sub">Something annoying, confusing or broken? An idea? Tell Nuh here. He gets it on his phone straight away.</p>
+    <div class="card">
+      <label class="f">What kind?</label>
+      <div class="seg" id="fbKind"><button type="button" data-k="Idea" class="on">💡 Idea</button><button type="button" data-k="Problem">🐞 Problem</button><button type="button" data-k="Confusing">😕 Confusing</button><button type="button" data-k="Love it">💗 Love it</button></div>
+      <label class="f" for="fbMsg">Your message</label>
+      <textarea id="fbMsg" placeholder="e.g. The Tweak button should have a 'more Gen Z' option"></textarea>
+      <div class="up"><button class="small" type="button" id="fbShotBtn">📷 Add a screenshot</button><span class="upstat" id="fbShotStat">Optional</span></div>
+      <input type="file" id="fbShot" class="hidden" accept="image/*">
+      <img id="fbPreview" class="hidden" alt="Screenshot preview" style="max-width:160px;border-radius:10px;margin-top:8px;border:1px solid var(--line)">
+      <div class="row"><button class="primary" id="fbSend" type="button">Send to Nuh</button><span class="status" id="fbStatus"></span></div>
+    </div>
+    <div class="card"><h3>Sent from this device</h3><div id="fbSent"></div></div>
   </section>
 
   <section id="help">
@@ -773,7 +826,8 @@ nav button b{font-weight:inherit}
         <dt>Simple switch</dt><dd>On: hides the extra settings so screens stay short. Off (Full): opens <b>More options</b> on every screen.</dd>
         <dt>⚙ Gear</dt><dd>Connection, install as an app, sync between phone and laptop, refresh trends.</dd>
         <dt>? Guide</dt><dd>This page.</dd>
-        <dt>Client + Edit</dt><dd>Pick which client you're writing for. Every tool then follows that client's tone, preferred words and banned words. <b>Edit</b> opens their profile.</dd>
+        <dt>Client + Edit</dt><dd>Pick which client you're writing for. Every tool then follows that client's tone, preferred words, banned words and approved copy. <b>Edit</b> opens their profile.</dd>
+        <dt>📁 Campaign</dt><dd>Type a campaign name (like "Raya 2027") and everything you make is filed under it in <b>Saved</b>. Clear it with ✕.</dd>
       </dl>
     </div>
 
@@ -784,7 +838,7 @@ nav button b{font-weight:inherit}
         <dt>Formality slider</dt><dd>Baku (very formal) → Formal → Neutral → Santai → Bahasa pasar (street casual).</dd>
         <dt>How many versions</dt><dd><b>Just 1</b> for a quick answer, <b>3</b> or <b>5</b> to compare options.</dd>
         <dt>✿ Trend-aware</dt><dd>Lets the AI use this week's safe trends and words from your slang bank.</dd>
-        <dt>More options</dt><dd><b>Format</b> (caption, headline, billboard, script…), <b>Audience</b>, <b>Flavour</b> (Gen Z, rojak, festive, corporate), <b>Dialect</b> (Kelantan, Utara, Sabah and others), <b>Script</b> (Rumi, Jawi or both), plus your own style notes.</dd>
+        <dt>More options</dt><dd><b>Format</b> (caption, headline, billboard, script…), <b>Audience</b>, <b>Flavour</b> (Gen Z, rojak, festive, corporate), <b>Dialect</b> (Kelantan, Utara, Sabah and others), <b>Script</b> (Rumi, Jawi or both), <b>Also write</b> Chinese and/or Tamil versions, plus your own style notes.</dd>
         <dt>My saved styles</dt><dd>Set the options once, tap <b>Save current</b>, and reuse that setup later in one tap.</dd>
         <dt>Stop</dt><dd>Cancels if it's taking too long.</dd>
         <dt>Progress bar</dt><dd>Fills as the AI actually writes. If one AI is busy it says so and switches to a backup.</dd>
@@ -795,6 +849,7 @@ nav button b{font-weight:inherit}
         <dt>🧠 Learn from my edit</dt><dd>Appears after you edit. It works out the rule behind your change (like "use anda, not awak") so you can save it to the client.</dd>
         <dt>✨ Tweak</dt><dd>One tap to make it Shorter, Punchier, More santai, More formal, More emotional or Simpler. Or type your own change, like "use 'jom'".</dd>
         <dt>Length check</dt><dd>Pick a platform (Instagram, Google Ads headline, SMS, billboard…) and each result shows if it fits.</dd>
+        <dt>✓ Approved</dt><dd>Tap when the client signs off. It's saved to that client and future drafts copy that voice.</dd>
         <dt>Share / Copy all</dt><dd>Send a version to WhatsApp, Teams or email, or copy every version at once.</dd>
         <dt>Already BM?</dt><dd>If you paste text that's already in BM, the app offers to proofread it in <b>Check</b> instead.</dd>
       </dl>
@@ -832,6 +887,7 @@ nav button b{font-weight:inherit}
         <dt>🔒 Always confidential</dt><dd>Tick for clients whose work must never go to free Gemini.</dd>
         <dt>Learn from a correction</dt><dd>Paste your draft and the version the client or CD corrected, tap <b>Find the rules</b>. The app suggests rules (like "use <i>anda</i>, not <i>awak</i>"). Keep the ones that are right and they're applied from then on.</dd>
         <dt>Learned rules</dt><dd>All rules for this client. Add or delete any.</dd>
+        <dt>Approved copy</dt><dd>Everything you marked ✓ Approved for this client. Remove anything that no longer fits.</dd>
         <dt>Backup</dt><dd>Copy all clients as text, or restore them on another device. Sync does this automatically.</dd>
       </dl>
     </details>
@@ -861,7 +917,8 @@ nav button b{font-weight:inherit}
     <details class="card guide">
       <summary>🔖 Saved (My copy)</summary>
       <dl>
-        <dt>Search</dt><dd>Type any word to find past work. Filter by type, client, date or starred ★.</dd>
+        <dt>Search</dt><dd>Type any word to find past work. Filter by type, client, campaign, date or starred ★.</dd>
+        <dt>📁 Campaigns</dt><dd>Pick a campaign in the filter, then <b>Download all shown</b> to get the whole campaign in one file. <b>📁 Move</b> files an entry under a different campaign.</dd>
         <dt>★ Star</dt><dd>Mark favourites so they're easy to find.</dd>
         <dt>Download</dt><dd>Save what's shown as Word, PDF, PowerPoint, an Excel copy deck or plain text. Each entry also has its own download.</dd>
       </dl>
@@ -873,8 +930,14 @@ nav button b{font-weight:inherit}
         <dt>Connection</dt><dd>Server link and passcode. Set once per device. <b>Connected ✓</b> means it's working.</dd>
         <dt>Install as an app</dt><dd>iPhone: Safari → Share → <b>Add to Home Screen</b>. Android or laptop: browser menu → <b>Install app</b>.</dd>
         <dt>Sync between devices</dt><dd>Turn on with a sync password so phone and laptop share clients, rules and history. Save the <b>recovery code</b> it gives you: it's the only way back if the password is forgotten.</dd>
+        <dt>Today's AI use</dt><dd>How many AI requests you've made today and which AI answered. If Gemini runs out, it says when its free allowance comes back.</dd>
         <dt>Refresh trends now</dt><dd>Updates the trend board without waiting for Monday.</dd>
       </dl>
+    </details>
+
+    <details class="card guide">
+      <summary>💌 Feedback</summary>
+      <p>Tap <b>Feedback</b> at the bottom. Pick what kind, write a message, add a screenshot if it helps, and tap <b>Send to Nuh</b>. He gets it on Telegram straight away.</p>
     </details>
 
     <details class="card guide">
@@ -921,12 +984,16 @@ async function copyText(text){
 }
 
 /* ---------- tabs ---------- */
-const TABS = ["transcreate","variants","tone","brief","trends","check","library","connection","help"];
+const APP_BUILD = "2026-11-15";
+const TABS = ["transcreate","variants","tone","brief","trends","check","library","feedback","connection","help"];
 function showTab(name){
   if(!TABS.includes(name)) name = "transcreate";
   document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === name));
   document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
   if(name === "library") renderLibrary(true);
+  if(name === "connection" && typeof renderUsage === "function") renderUsage();
+  if(name === "feedback" && typeof renderFbSent === "function") renderFbSent();
+  const cb = document.getElementById("campBar"); if(cb) cb.classList.toggle("hidden", !["transcreate","variants","brief","check","trends"].includes(name));
   if(location.hash !== "#" + name){ try{ history.replaceState(null, "", "#" + name); }catch(e){ location.hash = name; } }
   window.scrollTo(0,0); setTimeout(() => window.scrollTo(0,0), 0);
 }
@@ -1052,7 +1119,7 @@ function fillClientForm(){
   $("cfNotes").value = c?.notes || "";
   $("cfConf").checked = !!(c && c.confidential);
   $("cfDelete").classList.toggle("hidden", !c);
-  renderRules();
+  renderRules(); renderApproved();
 }
 function startNewClient(){
   state.activeId = ""; editingId = null; persistLocal();
@@ -1297,6 +1364,7 @@ function makeSample(){
     if(opts.onProgress && STREAM_OK) data = await streamAI(payload, opts.signal, opts.onProgress);
     if(!data) data = await workerFetch("/ai", {method:"POST", signal:opts.signal, body:payload});
     lastProvider = data.provider || ""; lastFallbacks = data.fallbacks || [];
+    try{ recordUsage(lastProvider, lastFallbacks); }catch(e){}
     if(opts.onText) try{ opts.onText({text:data.text, delta:data.text}); }catch(e){}
     return String(data.text || "");
   }
@@ -1464,7 +1532,9 @@ Rules learned from past corrections (follow strictly):
 ${rules || "- none"}
 Mandatories and notes: ${c.notes || "none"}
 Approved copy samples, match this voice:
-"""${(c.samples || "none").slice(0, 4000)}"""`;
+"""${(c.samples || "none").slice(0, 4000)}"""${(c.approved || []).length ? `
+Copy this client has APPROVED recently (the strongest signal of what they want; match its voice, word choices and length):
+${c.approved.slice(0, 12).map(a => `- "${String(a.text).slice(0, 400).replace(/\n/g, " / ")}"`).join("\n")}` : ""}`;
 }
 
 /* ---------- TRANSCREATE STYLE ---------- */
@@ -1598,7 +1668,7 @@ ENGLISH COPY:
 """${src.slice(0, 12000)}"""
 
 Reply with only JSON in this shape:
-{"literal":"a plain literal standard BM translation for reference only","options":[{"label":"2-4 word angle name","bm":"the copy in Rumi script${dialectName() ? ", in the dialect" : ""}","jawi":"${wantJawi ? "the same copy in Jawi script" : "leave empty"}","standard_bm":"${dialectName() ? "the same line in standard Malay, so non-speakers on the team can follow" : "leave empty"}","back_translation":"English back-translation","why":"1-2 sentences on the key word, tone${dialectName() ? ", dialect" : ""} choices"}],"notes":["anything she should know, e.g. a pun that does not work in BM, or a dialect word to double-check"],"questions":["anything ambiguous to confirm with the team, or empty"]}`;
+{"literal":"a plain literal standard BM translation for reference only","options":[{"label":"2-4 word angle name","bm":"the copy in Rumi script${dialectName() ? ", in the dialect" : ""}","jawi":"${wantJawi ? "the same copy in Jawi script" : "leave empty"}","standard_bm":"${dialectName() ? "the same line in standard Malay, so non-speakers on the team can follow" : "leave empty"}","back_translation":"English back-translation","why":"1-2 sentences on the key word, tone${dialectName() ? ", dialect" : ""} choices"${extraLangSpec()}}],"notes":["anything she should know, e.g. a pun that does not work in BM, or a dialect word to double-check"],"questions":["anything ambiguous to confirm with the team, or empty"]}`;
   const res = await tcRun(prompt);
   if(res){
     const clean = v => { const x = String(v || "").trim(); return /^leave empty$/i.test(x) ? "" : x; };
@@ -1607,7 +1677,7 @@ Reply with only JSON in this shape:
     let he = null;
     if(opts.length){
       he = addHistory({type:"Transcreate", input:src, meta:styleSummary(),
-        items: opts.map((o,i) => ({label:String(o.label || "Option " + (i+1)), text:clean(o.bm), jawi:$("tcScript").value !== "rumi" ? clean(o.jawi) : "", note:String(o.back_translation || "")}))});
+        items: opts.map((o,i) => ({label:String(o.label || "Option " + (i+1)), text:clean(o.bm), jawi:$("tcScript").value !== "rumi" ? clean(o.jawi) : "", note:[String(o.back_translation || ""), langNote({zh:extraLangs().zh ? clean(o.zh) : "", ta:extraLangs().ta ? clean(o.ta) : ""})].filter(Boolean).join("\n")}))});
     }
     renderTranscreate(res, he);
     if(he) prependDl("tcOut", he);
@@ -1661,6 +1731,17 @@ function looksBM(text){
   return bm >= 2 && bm > en * 1.5;
 }
 
+/* Optional Chinese and Tamil versions alongside the BM */
+function extraLangs(){ return {zh: $("tcZh").checked, ta: $("tcTa").checked}; }
+function extraLangSpec(){
+  const x = extraLangs(), out = [];
+  if(x.zh) out.push('"zh":"the same idea transcreated for Malaysian Chinese readers in Simplified Chinese (natural Malaysian Chinese usage, not a literal translation of the BM)"');
+  if(x.ta) out.push('"ta":"the same idea transcreated for Malaysian Tamil readers in Tamil script (natural Malaysian Tamil, not a literal translation of the BM)"');
+  return out.length ? "," + out.join(",") : "";
+}
+["tcZh","tcTa"].forEach(id => { $(id).checked = !!LS.get("mc_" + id, false); $(id).addEventListener("change", () => LS.set("mc_" + id, $(id).checked)); });
+function langNote(o){ return [o.zh ? "中文: " + o.zh : "", o.ta ? "தமிழ்: " + o.ta : ""].filter(Boolean).join("\n"); }
+
 let tcCurrent = null; // {opts, he}
 function renderTranscreate(res, he){
   const c = active();
@@ -1673,6 +1754,7 @@ function renderTranscreate(res, he){
   opts.forEach((o, i) => {
     const bm = clean(o.bm), jawi = clean(o.jawi), std = clean(o.standard_bm);
     o.bm = bm; o.jawi = jawi; o.orig = bm;
+    o.zh = extraLangs().zh ? clean(o.zh) : ""; o.ta = extraLangs().ta ? clean(o.ta) : "";
     if(!bm && !jawi) return;
     good.push(i);
     const showRumi = script !== "jawi" || !jawi;
@@ -1680,11 +1762,13 @@ function renderTranscreate(res, he){
     html += `<div class="opt" data-o="${i}"><span class="lab">${esc(o.label || "Option " + (i+1))}</span> <span class="edited hidden">✎ edited</span>
       ${showRumi ? `<div class="bm" contenteditable="true" spellcheck="false" title="Tap to edit">${highlight(bm, c)}</div>` : ""}
       ${J ? `<div class="jawi" lang="ms-Arab" dir="rtl">${esc(jawi)}</div>` : ""}
+      <div class="xl xzh"${o.zh ? "" : ' style="display:none"'}><div class="xh">中文 Chinese <button class="small" data-a="copyzh" type="button">Copy</button></div><div class="xt" lang="zh-Hans">${esc(o.zh)}</div></div>
+      <div class="xl xta"${o.ta ? "" : ' style="display:none"'}><div class="xh">தமிழ் Tamil <button class="small" data-a="copyta" type="button">Copy</button></div><div class="xt" lang="ta">${esc(o.ta)}</div></div>
       <div class="meta mlen">${lenCheck(bm)} ${hitSummary(bm, c)}</div>
       ${std && std !== bm ? `<div class="meta"><b>Standard BM:</b> ${esc(std)}</div>` : ""}
       <div class="meta mbt"${o.back_translation ? "" : ' style="display:none"'}><b>Back-translation:</b> <span>${esc(o.back_translation || "")}</span></div>
       <div class="meta mwhy"${o.why ? "" : ' style="display:none"'}><b>Why:</b> <span>${esc(o.why || "")}</span></div>
-      <div class="row"><button class="small" data-a="copy" type="button">Copy${J ? " Rumi" : ""}</button>${J ? `<button class="small" data-a="copyj" type="button">Copy Jawi</button>` : ""}<button class="small" data-a="tweak" type="button">✨ Tweak</button><button class="small" data-a="share" type="button">Share</button><button class="small" data-a="check" type="button">Check this</button><button class="small" data-a="var" type="button">Make variants</button>
+      <div class="row"><button class="small" data-a="copy" type="button">Copy${J ? " Rumi" : ""}</button>${J ? `<button class="small" data-a="copyj" type="button">Copy Jawi</button>` : ""}<button class="small" data-a="approve" type="button">✓ Approved</button><button class="small" data-a="tweak" type="button">✨ Tweak</button><button class="small" data-a="share" type="button">Share</button><button class="small" data-a="check" type="button">Check this</button><button class="small" data-a="var" type="button">Make variants</button>
         <button class="small hidden" data-a="learn" type="button">🧠 Learn from my edit</button><button class="small ghost hidden" data-a="undo" type="button">Undo edit</button><span class="status tstat"></span></div>
       <div class="tweak hidden">${TWEAKS.map(([k, l]) => `<button class="small" data-tw="${k}" type="button">${l}</button>`).join("")}<input type="text" class="twc" placeholder="Or say what to change, e.g. use 'jom'"><button class="small" data-tw="custom" type="button">Go</button></div></div>`;
   });
@@ -1696,7 +1780,7 @@ function renderTranscreate(res, he){
   }
   const out = $("tcOut");
   out.innerHTML = html || '<div class="empty">No options came back. Try again.</div>';
-  const allText = () => good.map(i => `${opts[i].label || "Option " + (i+1)}:\n${opts[i].bm}${opts[i].jawi && script !== "rumi" ? "\n" + opts[i].jawi : ""}`).join("\n\n");
+  const allText = () => good.map(i => `${opts[i].label || "Option " + (i+1)}:\n${opts[i].bm}${opts[i].jawi && script !== "rumi" ? "\n" + opts[i].jawi : ""}${langNote(opts[i]) ? "\n" + langNote(opts[i]) : ""}`).join("\n\n");
   const card = i => out.querySelector(`.opt[data-o="${i}"]`);
   const refreshMeta = i => {
     const o = opts[i], el = card(i); if(!el) return;
@@ -1709,7 +1793,7 @@ function renderTranscreate(res, he){
   let saveT;
   const saveHist = () => { clearTimeout(saveT); saveT = setTimeout(() => {
     if(!he) return; let k = 0;
-    good.forEach(i => { if(he.items[k]){ he.items[k].text = opts[i].bm; he.items[k].note = String(opts[i].back_translation || ""); } k++; });
+    good.forEach(i => { if(he.items[k]){ he.items[k].text = opts[i].bm; he.items[k].note = [String(opts[i].back_translation || ""), langNote(opts[i])].filter(Boolean).join("\n"); if(opts[i].approved) he.items[k].approved = true; } k++; });
     updateHistory(he);
   }, 800); };
   out.oninput = e => {
@@ -1738,6 +1822,9 @@ function renderTranscreate(res, he){
     const a = b.dataset.a;
     if(a === "copy") copyText(String(o.bm || ""));
     if(a === "copyj") copyText(String(o.jawi || ""));
+    if(a === "copyzh") copyText(String(o.zh || ""));
+    if(a === "copyta") copyText(String(o.ta || ""));
+    if(a === "approve"){ if(await approveCopy(o.bm, $("tcSrc").value)){ o.approved = true; b.textContent = "✓ Approved"; b.classList.add("btn-ok"); saveHist(); } }
     if(a === "share") shareText(String(o.bm || o.jawi || ""));
     if(a === "check"){ $("cSrc").value = String(o.bm || ""); scanCheck(); showTab("check"); }
     if(a === "var"){ $("vSrc").value = String(o.bm || ""); showTab("variants"); }
@@ -1750,6 +1837,7 @@ function renderTranscreate(res, he){
       else how = TWEAKS.find(t => t[0] === b.dataset.tw)[2];
       el.querySelectorAll(".tweak button").forEach(x => x.disabled = true);
       const wantJ = script !== "rumi" && !!o.jawi;
+      const xs = []; if(o.zh) xs.push('"zh":"the revised idea for Malaysian Chinese readers in Simplified Chinese"'); if(o.ta) xs.push('"ta":"the revised idea for Malaysian Tamil readers in Tamil script"');
       const prompt = `${baseRules()}
 
 ${clientBlock()}
@@ -1762,13 +1850,15 @@ Original English: """${String($("tcSrc").value).slice(0, 4000)}"""
 Current BM: """${o.bm}"""
 INSTRUCTION: ${how}
 
-Reply with only JSON: {"bm":"the revised copy","jawi":"${wantJ ? "the revised copy in Jawi script" : "leave empty"}","back_translation":"English back-translation","why":"one sentence on what changed"}`;
+Reply with only JSON: {"bm":"the revised copy","jawi":"${wantJ ? "the revised copy in Jawi script" : "leave empty"}","back_translation":"English back-translation","why":"one sentence on what changed"${xs.length ? "," + xs.join(",") : ""}}`;
       const r = await quickAI(prompt, el.querySelector(".tstat"), len(o.bm) * 2 + 260, "Tweaking");
       el.querySelectorAll(".tweak button").forEach(x => x.disabled = false);
       if(!r || !r.bm) return;
       o.bm = String(r.bm).trim(); o.orig = o.bm;
       if(wantJ && r.jawi && !/^leave empty$/i.test(r.jawi)){ o.jawi = String(r.jawi).trim(); const jEl = el.querySelector(".jawi"); if(jEl) jEl.textContent = o.jawi; }
       o.back_translation = String(r.back_translation || ""); o.why = String(r.why || "");
+      o.approved = false; const ab = el.querySelector('[data-a="approve"]'); if(ab) ab.classList.remove("btn-ok");
+      [["zh", ".xzh"], ["ta", ".xta"]].forEach(([k, sel]) => { if(o[k] && r[k]){ o[k] = String(r[k]).trim(); el.querySelector(sel + " .xt").textContent = o[k]; } });
       const bmEl = el.querySelector(".bm"); if(bmEl) bmEl.innerHTML = highlight(o.bm, active());
       const bt = el.querySelector(".mbt"); bt.style.display = o.back_translation ? "" : "none"; bt.querySelector("span").textContent = o.back_translation;
       const wy = el.querySelector(".mwhy"); wy.style.display = o.why ? "" : "none"; wy.querySelector("span").textContent = o.why;
@@ -1786,6 +1876,128 @@ function learnFromEdit(before, after){
   try{ $("lcDraft").scrollIntoView({behavior:"smooth", block:"center"}); }catch(e){}
   setTimeout(() => $("lcGo").click(), 300);
 }
+
+/* ---------- CAMPAIGNS ---------- */
+function currentCampaign(){ return String(LS.get("mc_campaign", "") || "").trim().slice(0, 60); }
+function allCampaigns(){ return [...new Set((state.history || []).map(h => h.campaign).filter(Boolean))].sort((a, b) => a.localeCompare(b)); }
+function renderCampList(){ $("campList").innerHTML = allCampaigns().map(n => `<option value="${esc(n)}"></option>`).join(""); }
+$("campIn").value = currentCampaign(); $("campClear").classList.toggle("hidden", !currentCampaign());
+$("campIn").addEventListener("input", () => { LS.set("mc_campaign", $("campIn").value.trim()); $("campClear").classList.toggle("hidden", !$("campIn").value.trim()); });
+$("campClear").addEventListener("click", () => { $("campIn").value = ""; LS.set("mc_campaign", ""); $("campClear").classList.add("hidden"); });
+renderCampList();
+
+/* ---------- APPROVED COPY (per client) ---------- */
+async function approveCopy(text, src){
+  const c = active(); text = String(text || "").trim();
+  if(!c){ toast("Pick the client at the top first, so it's saved to them"); try{ $("clientSel").focus(); }catch(e){} return false; }
+  if(!text) return false;
+  c.approved = Array.isArray(c.approved) ? c.approved : [];
+  if(c.approved.some(a => a.text === text)){ toast("Already in " + c.name + "'s approved copy"); return true; }
+  c.approved.unshift({text, src:String(src || "").slice(0, 300), at:Date.now()});
+  c.approved = c.approved.slice(0, 40);
+  await saveClient(c); renderApproved();
+  toast("✓ Saved as approved for " + c.name + ". New drafts will follow it.");
+  return true;
+}
+function renderApproved(){
+  const c = active(), box = $("apList"); const list = (c && c.approved) || [];
+  $("apCount").textContent = list.length;
+  if(!c){ box.innerHTML = '<div class="empty">Save a client first.</div>'; return; }
+  if(!list.length){ box.innerHTML = '<div class="empty">Nothing yet. Tap ✓ Approved on a result the client signed off.</div>'; return; }
+  box.innerHTML = list.map((a, i) => `<div class="ap"><div class="t">${esc(a.text)}<div class="s">${esc(fmtDate(a.at))}${a.src ? " · from: " + esc(a.src.slice(0, 80)) : ""}</div></div><button class="small danger" data-apdel="${i}" type="button">Remove</button></div>`).join("");
+}
+$("apList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-apdel]"); if(!b) return;
+  const c = active(); if(!c || !c.approved) return;
+  c.approved.splice(Number(b.dataset.apdel), 1); await saveClient(c); renderApproved();
+});
+
+/* ---------- AI USE TODAY (counted on this device) ---------- */
+function todayKey(){ return new Date().toLocaleDateString("en-CA", {timeZone:"Asia/Kuala_Lumpur"}); }
+function getUsage(){ let u = LS.get("mc_usage", null); if(!u || u.day !== todayKey()) u = {day:todayKey(), total:0, by:{}, busy:(u && u.busy) || {}}; return u; }
+function recordUsage(provider, fallbacks){
+  const u = getUsage(); u.total++;
+  if(provider) u.by[provider] = (u.by[provider] || 0) + 1;
+  (fallbacks || []).forEach(f => { if(f && f.code === "rate_limited" && f.provider) u.busy[f.provider] = Date.now(); });
+  LS.set("mc_usage", u);
+  if($("connection").classList.contains("active")) renderUsage();
+}
+/* Gemini's free daily allowance resets at midnight California time. */
+function nextGeminiReset(){
+  const now = Date.now(), start = Math.ceil(now / 36e5) * 36e5;
+  for(let h = 0; h <= 48; h++){
+    const t = start + h * 36e5;
+    const hr = Number(new Intl.DateTimeFormat("en-US", {timeZone:"America/Los_Angeles", hour:"numeric", hourCycle:"h23"}).format(new Date(t)));
+    if(hr === 0) return t;
+  }
+  return now + 864e5;
+}
+function renderUsage(){
+  const u = getUsage(), box = $("usageBox"); if(!box) return;
+  const by = Object.entries(u.by).sort((a, b) => b[1] - a[1]);
+  const reset = nextGeminiReset(), resetStr = new Date(reset).toLocaleTimeString("en-MY", {hour:"numeric", minute:"2-digit"});
+  const gBusy = u.busy.Gemini && Date.now() - u.busy.Gemini < 864e5 && u.busy.Gemini > reset - 864e5;
+  let html = `<div style="color:var(--ink);font-size:15px"><b>${u.total}</b> AI request${u.total === 1 ? "" : "s"} today on this device</div>`;
+  if(by.length) html += `<div class="row" style="margin-top:6px">${by.map(([k, v]) => `<span class="chip">${esc(k)}: ${v}</span>`).join("")}</div>`;
+  html += gBusy
+    ? `<p style="margin:8px 0 0;color:var(--warn)">Gemini hit its free limit at ${new Date(u.busy.Gemini).toLocaleTimeString("en-MY", {hour:"numeric", minute:"2-digit"})}, so the backups are answering (a bit slower). Gemini's allowance resets at about <b>${resetStr}</b> Malaysia time.</p>`
+    : `<p style="margin:8px 0 0">Gemini is answering normally. If it ever runs out, the backups take over and its allowance resets daily at about ${resetStr} Malaysia time.</p>`;
+  box.innerHTML = html;
+}
+
+/* ---------- FEEDBACK ---------- */
+let fbKind = "Idea", fbImage = null, lastTab = "";
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if(b && b.dataset.tab !== "feedback") lastTab = b.dataset.tab; }, true);
+$("fbKind").addEventListener("click", e => { const b = e.target.closest("button[data-k]"); if(!b) return; fbKind = b.dataset.k; $("fbKind").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); });
+$("fbShotBtn").addEventListener("click", () => { $("fbShot").value = ""; $("fbShot").click(); });
+$("fbShot").addEventListener("change", async () => {
+  const f = $("fbShot").files[0]; if(!f) return;
+  try{ fbImage = await blobToImage(f); $("fbPreview").src = "data:" + fbImage.mime + ";base64," + fbImage.data; $("fbPreview").classList.remove("hidden"); $("fbShotStat").textContent = "Screenshot added. Tap again to change it."; }
+  catch(e){ fbImage = null; $("fbShotStat").textContent = "Couldn't read that image."; }
+});
+function deviceName(){
+  const ua = navigator.userAgent;
+  const os = /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) ? "iPad" : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac/.test(ua) ? "Mac" : "device";
+  return `${os}, ${window.innerWidth}px${window.matchMedia("(display-mode: standalone)").matches ? ", app" : ", browser"}`;
+}
+function renderFbSent(){
+  const list = LS.get("mc_fb_sent", []);
+  $("fbSent").innerHTML = list.length ? list.map(x => `<div class="fbi"><div class="h">${esc(x.kind)} · ${esc(fmtDate(x.at))} · ${x.ok ? "✓ sent" : "saved, alert not delivered"}</div><div class="m">${esc(x.message)}</div></div>`).join("") : '<div class="empty">Nothing sent yet.</div>';
+}
+$("fbSend").addEventListener("click", async () => {
+  const message = $("fbMsg").value.trim();
+  if(!message){ toast("Write your message first"); $("fbMsg").focus(); return; }
+  if(sampleState !== "ok"){ $("fbStatus").textContent = errCopy({code:"not_connected"}); return; }
+  $("fbSend").disabled = true; $("fbStatus").textContent = "Sending…";
+  try{
+    const out = await workerFetch("/feedback", {method:"POST", body:JSON.stringify({kind:fbKind, message, tab:lastTab || "", device:deviceName(), version:APP_BUILD, image:fbImage})});
+    const list = LS.get("mc_fb_sent", []); list.unshift({kind:fbKind, message:message.slice(0, 1000), at:Date.now(), ok:!!out.notified}); LS.set("mc_fb_sent", list.slice(0, 30));
+    $("fbMsg").value = ""; fbImage = null; $("fbPreview").classList.add("hidden"); $("fbShotStat").textContent = "Optional";
+    $("fbStatus").textContent = out.notified ? "Sent ✓ Nuh has been notified." : "Saved ✓ (the phone alert isn't set up yet, Nuh can still read it in the app).";
+    renderFbSent();
+  }catch(e){ $("fbStatus").textContent = e && e.code === "not_found" ? "The server needs an update before feedback works. Tell Nuh." : errCopy(e); }
+  finally{ $("fbSend").disabled = false; }
+});
+$("fbTest").addEventListener("click", async () => {
+  $("fbTestStat").textContent = "Sending…";
+  try{
+    const out = await workerFetch("/feedback/test", {method:"POST", body:"{}"});
+    $("fbTestStat").textContent = out.notified ? "Sent ✓ Check Telegram." : out.why === "no_bot" ? "No Telegram bot set up on the server yet." : out.why === "no_chat" ? "Open your bot in Telegram, tap Start, then try again." : "Telegram didn't accept it. Check the bot token.";
+  }catch(e){ $("fbTestStat").textContent = e && e.code === "not_found" ? "The server needs an update first." : errCopy(e); }
+});
+$("fbInboxBtn").addEventListener("click", async () => {
+  $("fbInbox").innerHTML = '<p class="status">Loading…</p>';
+  try{
+    const {items} = await workerFetch("/feedback", {method:"GET"});
+    $("fbInbox").innerHTML = (items || []).length ? items.map(x => `<div class="fbi"><div class="h">${esc(x.kind)} · ${esc(fmtDate(Date.parse(x.at)))}${x.tab ? " · on " + esc(x.tab) : ""}${x.device ? " · " + esc(x.device) : ""}</div><div class="m">${esc(x.message)}</div>${x.hasImage ? `<button class="small" data-fbimg="${esc(x.id)}" type="button">Show screenshot</button>` : ""}</div>`).join("") : '<div class="empty">No feedback yet.</div>';
+  }catch(e){ $("fbInbox").innerHTML = `<p class="status">${esc(e && e.code === "not_found" ? "The server needs an update first." : errCopy(e))}</p>`; }
+});
+$("fbInbox").addEventListener("click", async e => {
+  const b = e.target.closest("[data-fbimg]"); if(!b) return;
+  b.textContent = "Loading…";
+  try{ const im = await workerFetch("/feedback/image?id=" + encodeURIComponent(b.dataset.fbimg), {method:"GET"}); const img = document.createElement("img"); img.src = "data:" + im.mime + ";base64," + im.data; img.style.cssText = "max-width:100%;border-radius:10px;margin-top:6px"; b.replaceWith(img); }
+  catch(err){ b.textContent = "Couldn't load it"; }
+});
 
 /* ---------- COPY DECK (many lines at once) ---------- */
 const DECK_MAX = 300;
@@ -1909,16 +2121,17 @@ Extra context: ${$("tcContext").value.trim() || "none"}
 LINES (JSON):
 ${JSON.stringify(list)}
 
-Reply with only JSON: {"rows":[{"id":1,"bm":"the copy in Rumi script","back":"English back-translation","note":"only if something needs flagging, else empty"}]}
+Reply with only JSON: {"rows":[{"id":1,"bm":"the copy in Rumi script","back":"English back-translation","note":"only if something needs flagging, else empty"${extraLangSpec()}}]}
 Return every id exactly once.`;
-    const expect = idx.reduce((t, i) => t + deck.results[i].src.length * 2.3 + 90, 60);
+    const xl = (extraLangs().zh ? 1 : 0) + (extraLangs().ta ? 1.6 : 0);
+    const expect = idx.reduce((t, i) => t + deck.results[i].src.length * (2.3 + xl) + 90, 60);
     const res = await dkRun(prompt, {expect, label:`Batch ${b + 1} of ${batches.length}`, keepBusy: b < batches.length - 1});
     if(!res){ idx.forEach(i => { if(!deck.results[i].bm) deck.results[i].fail = true; }); renderDeck(); if(dkStopped) break; continue; }
     const rows = Array.isArray(res.rows) ? res.rows : [];
     idx.forEach(i => {
       const got = rows.find(r => r && Number(r.id) === i + 1);
       const x = deck.results[i];
-      if(got && String(got.bm || "").trim()){ x.bm = String(got.bm).trim(); x.orig = x.bm; x.back = String(got.back || ""); x.note = String(got.note || ""); x.fail = false; }
+      if(got && String(got.bm || "").trim()){ x.bm = String(got.bm).trim(); x.orig = x.bm; x.back = String(got.back || ""); x.note = String(got.note || ""); x.zh = extraLangs().zh ? String(got.zh || "").trim() : ""; x.ta = extraLangs().ta ? String(got.ta || "").trim() : ""; x.fail = false; }
       else x.fail = true;
     });
     renderDeck();
@@ -1928,7 +2141,7 @@ Return every id exactly once.`;
   const done = deck.results.filter(x => x.bm).length, failed = deck.results.length - done;
   $("dkStatus").textContent = failed ? `${done} of ${deck.results.length} done. Tap Transcreate deck again to finish the rest.` : `All ${done} lines done.`;
   if(done){
-    const items = deck.results.filter(x => x.bm).map((x, k) => ({label:`Line ${k + 1}`, text:x.bm, note:x.src}));
+    const items = deck.results.filter(x => x.bm).map((x, k) => ({label:`Line ${k + 1}`, text:x.bm, note:[x.src, langNote(x)].filter(Boolean).join("\n")}));
     if(deck.he){ deck.he.items = items; deck.he.input = deck.results.map(x => x.src).join("\n"); updateHistory(deck.he); }
     else deck.he = addHistory({type:"Copy deck", input:deck.results.map(x => x.src).join("\n"), meta:`${deck.results.length} lines · ${styleSummary()}`, items});
   }
@@ -1941,10 +2154,10 @@ function renderDeck(){
   $("dkOut").innerHTML = `<div class="resbar"><select class="lenSel" aria-label="Length check">${lenPlatOptions(LS.get("mc_lenplat", ""))}</select>
     <button class="small" data-d="xlsx" type="button">⬇ Download Excel</button><button class="small" data-d="copy" type="button">Copy all BM</button>
     ${edited ? '<button class="small" data-d="learn" type="button">🧠 Learn from my edits</button>' : ""}<span class="status">Tap a BM cell to edit it.</span></div>
-    <div class="dkwrap"><table class="dk"><thead><tr><th>#</th><th>English</th><th>BM</th><th>Length</th><th>Back-translation / note</th></tr></thead><tbody>
+    <div class="dkwrap"><table class="dk"><thead><tr><th>#</th><th>English</th><th>BM</th><th>Length</th><th>Back-translation / note</th>${R.some(x => x.zh) ? "<th>中文</th>" : ""}${R.some(x => x.ta) ? "<th>தமிழ்</th>" : ""}</tr></thead><tbody>
     ${R.map((x, i) => `<tr data-i="${i}" class="${x.fail ? "fail" : ""}"><td class="n">${i + 1}</td><td>${esc(x.src)}${x.ctx ? `<div class="status">${esc(x.ctx)}</div>` : ""}</td>
       <td class="bmc${x.bm && x.bm !== x.orig ? " ed" : ""}" ${x.bm ? 'contenteditable="true" spellcheck="false"' : ""}>${x.bm ? esc(x.bm) : (x.fail ? "Not done yet" : "…")}</td>
-      <td class="ln">${x.bm ? lenCheck(x.bm) + " " + hitSummary(x.bm, c) : ""}</td><td class="bt">${esc(x.back)}${x.note ? `<div class="status" style="color:var(--warn)">⚠ ${esc(x.note)}</div>` : ""}</td></tr>`).join("")}
+      <td class="ln">${x.bm ? lenCheck(x.bm) + " " + hitSummary(x.bm, c) : ""}</td><td class="bt">${esc(x.back)}${x.note ? `<div class="status" style="color:var(--warn)">⚠ ${esc(x.note)}</div>` : ""}</td>${R.some(r => r.zh) ? `<td lang="zh-Hans">${esc(x.zh || "")}</td>` : ""}${R.some(r => r.ta) ? `<td lang="ta">${esc(x.ta || "")}</td>` : ""}</tr>`).join("")}
     </tbody></table></div>`;
 }
 $("dkOut").addEventListener("input", e => {
@@ -1976,11 +2189,14 @@ $("dkOut").addEventListener("click", async e => {
         aoa = deck.aoa.map(r => (r || []).slice());
         const w = Math.max(...aoa.map(r => r.length));
         aoa.forEach(r => { while(r.length < w) r.push(""); });
-        if(deck.hdr) aoa[0].push("BM", "Back-translation", "Characters", "BM notes");
-        deck.results.forEach(x => { const row = aoa[x.r]; if(row) row.push(x.bm, x.back, x.bm ? len(x.bm) : "", x.note); });
-        if(!deck.hdr) aoa.unshift([...Array(w).fill(""), "BM", "Back-translation", "Characters", "BM notes"]);
+        const zh = deck.results.some(x => x.zh), ta = deck.results.some(x => x.ta);
+        const heads = ["BM", "Back-translation", "Characters", "BM notes"].concat(zh ? ["Chinese"] : [], ta ? ["Tamil"] : []);
+        if(deck.hdr) aoa[0].push(...heads);
+        deck.results.forEach(x => { const row = aoa[x.r]; if(row) row.push(x.bm, x.back, x.bm ? len(x.bm) : "", x.note, ...(zh ? [x.zh || ""] : []), ...(ta ? [x.ta || ""] : [])); });
+        if(!deck.hdr) aoa.unshift([...Array(w).fill(""), ...heads]);
       } else {
-        aoa = [["#", "English", "BM", "Back-translation", "Characters", "Notes", "Status", "Feedback"]].concat(deck.results.map((x, i) => [i + 1, x.src, x.bm, x.back, x.bm ? len(x.bm) : "", x.note, "", ""]));
+        const zh = deck.results.some(x => x.zh), ta = deck.results.some(x => x.ta);
+        aoa = [["#", "English", "BM", "Back-translation", "Characters", "Notes", ...(zh ? ["Chinese"] : []), ...(ta ? ["Tamil"] : []), "Status", "Feedback"]].concat(deck.results.map((x, i) => [i + 1, x.src, x.bm, x.back, x.bm ? len(x.bm) : "", x.note, ...(zh ? [x.zh || ""] : []), ...(ta ? [x.ta || ""] : []), "", ""]));
       }
       const ws = X.utils.aoa_to_sheet(aoa);
       const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, (deck.sheet || "Copy deck").slice(0, 31));
@@ -2035,12 +2251,13 @@ function renderVariants(res, limit){
   let html = `<div class="card"><div class="row" style="margin-top:0;justify-content:space-between"><span class="status">${items.length} options${over ? `, ${over} over the limit` : ""}</span><button class="small" id="vCopyAll" type="button">Copy all within limit</button></div>`;
   items.forEach((v, i) => {
     const L = len(v.text); const bad = limit && L > limit;
-    html += `<div class="vitem"><div class="t">${highlight(String(v.text), c)}<div class="a">${esc(v.angle || "")}</div></div><span class="chip ${bad ? "bad" : "ok"}">${L}${limit ? "/" + limit : ""}</span><button class="small" data-i="${i}" type="button">Copy</button></div>`;
+    html += `<div class="vitem"><div class="t">${highlight(String(v.text), c)}<div class="a">${esc(v.angle || "")}</div></div><span class="chip ${bad ? "bad" : "ok"}">${L}${limit ? "/" + limit : ""}</span><button class="small" data-i="${i}" type="button">Copy</button><button class="small" data-ap="${i}" type="button" title="Client approved this">✓</button></div>`;
   });
   html += "</div>";
   $("vOut").innerHTML = html;
   $("vOut").onclick = e => {
     if(e.target.id === "vCopyAll"){ copyText(items.filter(v => !limit || len(v.text) <= limit).map(v => v.text).join("\n")); return; }
+    const ap = e.target.closest("[data-ap]"); if(ap){ approveCopy(items[Number(ap.dataset.ap)].text, $("vSrc").value).then(ok => { if(ok) ap.classList.add("btn-ok"); }); return; }
     const b = e.target.closest("[data-i]"); if(b) copyText(String(items[Number(b.dataset.i)].text));
   };
 }
@@ -2268,7 +2485,7 @@ function persistHistory(){
 }
 function addHistory(entry){
   const c = active();
-  const he = Object.assign({id:"h-" + Date.now().toString(36) + Math.random().toString(36).slice(2,6), ts:Date.now(), client:c ? c.name : "", clientId:c ? c.id : "", star:false, updated:Date.now()}, entry);
+  const he = Object.assign({id:"h-" + Date.now().toString(36) + Math.random().toString(36).slice(2,6), ts:Date.now(), client:c ? c.name : "", clientId:c ? c.id : "", campaign:currentCampaign(), star:false, updated:Date.now()}, entry);
   he.input = String(he.input || "").slice(0, 20000);
   state.history.unshift(he);
   const dropped = state.history.splice(HISTORY_CAP);
@@ -2306,10 +2523,12 @@ function filteredHistory(){
   return state.history.filter(he => {
     if(type && he.type !== type) return false;
     if(cl && (he.client || "(No client)") !== cl) return false;
+    const cp = $("libCamp").value;
+    if(cp && (cp === "__none__" ? !!he.campaign : he.campaign !== cp)) return false;
     if(star && !he.star) return false;
     if(since && he.ts < since) return false;
     if(q.length){
-      const hay = [he.client, he.type, he.meta, he.input, ...(he.items || []).map(i => [i.label, i.text, i.jawi, i.note].join(" "))].join(" ").toLowerCase();
+      const hay = [he.client, he.campaign, he.type, he.meta, he.input, ...(he.items || []).map(i => [i.label, i.text, i.jawi, i.note].join(" "))].join(" ").toLowerCase();
       return q.every(w => hay.includes(w));
     }
     return true;
@@ -2327,8 +2546,14 @@ function renderLibClients(){
   sel.innerHTML = '<option value="">All clients</option>' + names.map(n => `<option>${esc(n)}</option>`).join("");
   sel.value = names.includes(v) ? v : "";
 }
+function renderLibCamps(){
+  const sel = $("libCamp"), v = sel.value, names = allCampaigns();
+  sel.innerHTML = '<option value="">All campaigns</option>' + names.map(n => `<option>${esc(n)}</option>`).join("") + (names.length ? '<option value="__none__">No campaign</option>' : "");
+  sel.value = [...sel.options].some(o => o.value === v) ? v : "";
+  sel.parentElement.classList.toggle("hidden", !names.length);
+}
 function renderLibrary(reset){
-  if(reset){ libShown = 30; renderLibClients(); }
+  if(reset){ libShown = 30; renderLibClients(); renderLibCamps(); }
   const list = filteredHistory();
   $("libCount").textContent = state.history.length ? `${list.length} of ${state.history.length}` : "";
   if(!state.history.length){ $("libList").innerHTML = '<div class="card empty">Nothing yet. Everything you write in Transcreate, Variants, Check or Brief lands here automatically.</div>'; $("libMore").classList.add("hidden"); return; }
@@ -2336,19 +2561,20 @@ function renderLibrary(reset){
   $("libList").innerHTML = list.slice(0, libShown).map(he => {
     const items = (he.items || []).slice(0, he.type === "Variants" ? 15 : 12);
     return `<div class="card entry" data-id="${esc(he.id)}">
-      <div class="head"><button class="star ${he.star ? "on" : ""}" data-act="star" type="button" aria-label="Star">${he.star ? "★" : "☆"}</button><span class="chip">${esc(he.type)}</span>${he.client ? `<span class="chip ok">${esc(he.client)}</span>` : ""}<span class="date">${esc(fmtDate(he.ts))}</span></div>
+      <div class="head"><button class="star ${he.star ? "on" : ""}" data-act="star" type="button" aria-label="Star">${he.star ? "★" : "☆"}</button><span class="chip">${esc(he.type)}</span>${he.client ? `<span class="chip ok">${esc(he.client)}</span>` : ""}${he.campaign ? `<span class="chip campchip">📁 ${esc(he.campaign)}</span>` : ""}<span class="date">${esc(fmtDate(he.ts))}</span></div>
       ${he.meta ? `<div class="meta">${hlQ(he.meta)}</div>` : ""}
       ${he.input ? `<div class="src">${hlQ(he.input.slice(0, 400))}</div>` : ""}
       ${(he.items || []).length > items.length ? `<div class="status" style="margin-top:6px">…and ${he.items.length - items.length} more. Download to see them all.</div>` : ""}
       ${items.map((it, i) => `<div class="item">${it.label ? `<div class="il">${hlQ(it.label)}</div>` : ""}<div class="it">${hlQ(it.text || "")}</div>${it.jawi ? `<div class="jawi" dir="rtl" lang="ms-Arab">${esc(it.jawi)}</div>` : ""}<div class="row" style="margin-top:6px"><button class="small" data-act="copy" data-i="${i}" type="button">Copy</button>${it.jawi ? `<button class="small" data-act="copyj" data-i="${i}" type="button">Copy Jawi</button>` : ""}</div></div>`).join("")}
-      <div class="dlrow">${dlSelect(he.id)}${["Transcreate","Copy deck","Check","Brief"].includes(he.type) ? `<button class="small" data-act="reuse" type="button">Use again</button>` : ""}<button class="small danger" data-act="del" type="button">Delete</button></div>
+      <div class="dlrow">${dlSelect(he.id)}${["Transcreate","Copy deck","Check","Brief"].includes(he.type) ? `<button class="small" data-act="reuse" type="button">Use again</button>` : ""}<button class="small" data-act="camp" type="button">📁 ${he.campaign ? "Move" : "Add to campaign"}</button><button class="small danger" data-act="del" type="button">Delete</button></div>
+      <div class="row campedit hidden"><input type="text" list="campList" class="campNew" placeholder="Campaign name" value="${esc(he.campaign || "")}" maxlength="60"><button class="small" data-act="campsave" type="button">Save</button></div>
     </div>`;
   }).join("");
   $("libMore").classList.toggle("hidden", list.length <= libShown);
 }
 let libT;
 $("libQ").addEventListener("input", () => { clearTimeout(libT); libT = setTimeout(() => { libShown = 30; renderLibrary(); }, 200); });
-["libType","libClient","libStar","libWhen"].forEach(id => $(id).addEventListener("change", () => { libShown = 30; renderLibrary(); }));
+["libType","libClient","libCamp","libStar","libWhen"].forEach(id => $(id).addEventListener("change", () => { libShown = 30; renderLibrary(); }));
 $("libMore").addEventListener("click", () => { libShown += 30; renderLibrary(); });
 $("libList").addEventListener("click", async e => {
   const b = e.target.closest("[data-act]"); if(!b) return;
@@ -2356,6 +2582,8 @@ $("libList").addEventListener("click", async e => {
   const act = b.dataset.act;
   if(act === "copy") copyText(he.items[Number(b.dataset.i)].text || "");
   if(act === "copyj") copyText(he.items[Number(b.dataset.i)].jawi || "");
+  if(act === "camp"){ const ed = card.querySelector(".campedit"); ed.classList.toggle("hidden"); if(!ed.classList.contains("hidden")) ed.querySelector("input").focus(); return; }
+  if(act === "campsave"){ he.campaign = card.querySelector(".campNew").value.trim().slice(0, 60); await updateHistory(he); renderCampList(); renderLibCamps(); renderLibrary(); toast(he.campaign ? "Moved to " + he.campaign : "Removed from campaign"); return; }
   if(act === "star"){ he.star = !he.star; b.classList.toggle("on", he.star); b.textContent = he.star ? "★" : "☆"; await updateHistory(he); }
   if(act === "reuse"){
     const tab = {Transcreate:"transcreate", "Copy deck":"transcreate", Check:"check", Brief:"brief"}[he.type];
