@@ -1,3 +1,4 @@
+// Deployed automatically by Cloudflare Workers Builds from github.com/nuhihsan/CopyRIGHT-Msia (folder: worker)
 /**
  * Meja Copy Hannah: Cloudflare Worker (the "middleman")
  *
