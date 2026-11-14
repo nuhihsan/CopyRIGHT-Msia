@@ -1973,7 +1973,7 @@ $("fbSend").addEventListener("click", async () => {
     const out = await workerFetch("/feedback", {method:"POST", body:JSON.stringify({kind:fbKind, message, tab:lastTab || "", device:deviceName(), version:APP_BUILD, image:fbImage})});
     const list = LS.get("mc_fb_sent", []); list.unshift({kind:fbKind, message:message.slice(0, 1000), at:Date.now(), ok:!!out.notified}); LS.set("mc_fb_sent", list.slice(0, 30));
     $("fbMsg").value = ""; fbImage = null; $("fbPreview").classList.add("hidden"); $("fbShotStat").textContent = "Optional";
-    $("fbStatus").textContent = out.notified ? "Sent ✓ Nuh has been notified." : "Saved ✓ (the phone alert isn't set up yet, Nuh can still read it in the app).";
+    $("fbStatus").textContent = out.notified ? "Sent ✓ Nuh has been notified." : "Saved ✓ Nuh can read it in the app, but the Telegram alert didn't go out (" + ({no_bot:"no bot set up on the server", no_chat:"the bot hasn't been started in Telegram yet"}[out.why] || ("Telegram said " + (out.why || "no").replace("telegram_", "error "))) + ").";
     renderFbSent();
   }catch(e){ $("fbStatus").textContent = e && e.code === "not_found" ? "The server needs an update before feedback works. Tell Nuh." : errCopy(e); }
   finally{ $("fbSend").disabled = false; }
