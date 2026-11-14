@@ -1,24 +1,27 @@
-# Only needed if you deploy with the Wrangler command line.
-# If you use the Cloudflare dashboard (recommended in SETUP.md), you can ignore this file.
+# Cloudflare deploys the server from this folder automatically whenever main changes on GitHub
+# (Workers Builds: root directory "worker", deploy command "npx wrangler deploy").
+# Everything the live server needs is listed here, because a deploy replaces settings with what this file says.
+# Secrets (PASSCODE, GEMINI_API_KEY, GROQ_API_KEY, TELEGRAM_BOT_TOKEN...) are NOT stored here and are never touched by a deploy.
+
 name = "meja-copy"
 main = "worker.js"
-compatibility_date = "2026-11-01"
+compatibility_date = "2026-11-13"
+workers_dev = true
+keep_vars = true   # never wipe variables someone added in the dashboard
 
 [vars]
-ALLOWED_ORIGIN = "https://nuhihsan.github.io"
-PROVIDER_ORDER = "gemini,sealion,groq"
-GEMINI_PAID = "false"
+ALLOWED_ORIGIN = "https://nuhihsan.github.io,https://mejacopyhannah.pages.dev"
+PROVIDER_ORDER = "gemini,workersai,groq"
 
-# Create a KV namespace (e.g. meja-store) in the dashboard, then paste its id here.
-# [[kv_namespaces]]
-# binding = "STORE"
-# id = "PASTE_KV_NAMESPACE_ID"
+[ai]
+binding = "AI"
+
+[[kv_namespaces]]
+binding = "STORE"
+id = "ea6f1d192658469fa06114d8559c15ef"
 
 [triggers]
-crons = ["39 23 * * 0"]   # Monday 7:39am Malaysia time
+crons = ["39 23 * * SUN"]   # Monday 7:39am Malaysia time: trend board + weekly Telegram summary
 
-# Secrets are NOT stored here. Add them with:
-#   npx wrangler secret put PASSCODE
-#   npx wrangler secret put GEMINI_API_KEY
-#   npx wrangler secret put SEALION_API_KEY
-#   npx wrangler secret put GROQ_API_KEY
+[observability]
+enabled = true

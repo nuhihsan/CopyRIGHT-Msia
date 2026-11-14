@@ -242,6 +242,7 @@ async function runChain(env, args, opts) {
     }
   }
   if (!configured) throw new ProviderError(opts.needImages ? "images_unavailable" : "not_configured", "No AI key is set up");
+  if (!opts.needImages) await alertOnce(env, "ai", `⚠️ Meja Copy: every AI failed just now (${tried.map(t => t.provider + ": " + t.code).join(", ")}). Hannah can't generate copy until one recovers. You'll get at most one of these an hour.`, 60);
   throw new ProviderError(sawRateLimit ? "rate_limited" : "upstream_error", last && last.message ? last.message : "All AIs failed");
 }
 
@@ -333,6 +334,7 @@ async function tgSend(env, text, image) {
   const base = `https://api.telegram.org/bot${String(env.TELEGRAM_BOT_TOKEN).trim()}`;
   const r = await fetch(`${base}/sendMessage`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: chat, text: text.slice(0, 4000), disable_web_page_preview: true }) });
   if (!r.ok) return { ok: false, why: "telegram_" + r.status };
+  let messageId = 0; try { const d = await r.json(); messageId = d && d.result && d.result.message_id || 0; } catch (e) {}
   if (image) {
     try {
       const bin = Uint8Array.from(atob(image.data), c => c.charCodeAt(0));
@@ -340,12 +342,98 @@ async function tgSend(env, text, image) {
       await fetch(`${base}/sendPhoto`, { method: "POST", body: fd });
     } catch (e) {}
   }
-  return { ok: true };
+  return { ok: true, messageId };
+}
+
+/* Problem alerts: at most one Telegram message per kind per period, so a bad hour doesn't flood you */
+async function alertOnce(env, key, text, minutes = 60) {
+  try {
+    const kv = kvOf(env); if (!kv || !env.TELEGRAM_BOT_TOKEN) return;
+    if (await kv.get("alert:" + key)) return;
+    await kv.put("alert:" + key, "1", { expirationTtl: Math.max(60, minutes * 60) });
+    await tgSend(env, text);
+  } catch (e) { console.log("[meja] alert failed: " + (e && e.message)); }
+}
+
+/* Telegram replies: Telegram calls /tg/webhook when you message the bot. Replying to a feedback message sends your answer to the app. */
+async function tgSecret(env) {
+  const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("meja-webhook:" + String(env.TELEGRAM_BOT_TOKEN || "").trim()));
+  return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 48);
+}
+async function ensureWebhook(env, origin) {
+  try {
+    const kv = kvOf(env); if (!kv || !env.TELEGRAM_BOT_TOKEN) return;
+    const want = origin + "/tg/webhook";
+    if ((await kv.get("tg_hook")) === want) return;
+    await tgChatId(env); // learn your chat id first: Telegram stops answering getUpdates once a webhook is set
+    const r = await fetch(`https://api.telegram.org/bot${String(env.TELEGRAM_BOT_TOKEN).trim()}/setWebhook`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: want, secret_token: await tgSecret(env), allowed_updates: ["message"] }) });
+    if (r.ok) await kv.put("tg_hook", want);
+  } catch (e) { console.log("[meja] webhook setup failed: " + (e && e.message)); }
+}
+async function handleTelegram(env, req) {
+  if (!env.TELEGRAM_BOT_TOKEN) return new Response("ok");
+  if (req.headers.get("X-Telegram-Bot-Api-Secret-Token") !== await tgSecret(env)) return new Response("forbidden", { status: 403 });
+  let u; try { u = await req.json(); } catch { return new Response("ok"); }
+  const m = u && u.message; if (!m || !m.chat) return new Response("ok");
+  const kv = kvOf(env); const chat = await tgChatId(env);
+  if (!kv || String(m.chat.id) !== String(chat)) return new Response("ok"); // only you can use the bot
+  const text = String(m.text || "").trim();
+  if (/^\/summary\b/i.test(text)) { await sendWeeklySummary(env); return new Response("ok"); }
+  const replyTo = m.reply_to_message && m.reply_to_message.message_id;
+  const fbId = replyTo ? await kv.get("tgmsg:" + replyTo) : null;
+  if (fbId && text) {
+    const raw = await kv.get(fbId);
+    if (raw) {
+      const item = JSON.parse(raw);
+      item.replies = (Array.isArray(item.replies) ? item.replies : []).concat({ text: text.slice(0, 3000), at: new Date().toISOString() }).slice(-20);
+      await kv.put(fbId, JSON.stringify(item));
+      await tgSend(env, "✓ Sent. Hannah will see your reply in her Feedback tab.");
+      return new Response("ok");
+    }
+  }
+  await tgSend(env, "To answer Hannah, swipe left on (or long-press → Reply to) one of her feedback messages and type your answer.\nSend /summary for this week's summary.");
+  return new Response("ok");
+}
+
+/* Weekly summary (Monday morning, with the trend refresh) */
+async function sendWeeklySummary(env) {
+  const kv = kvOf(env); if (!kv) return;
+  const since = Date.now() - 7 * 864e5;
+  const days = new Set(); for (let i = 0; i < 7; i++) days.add(new Date(Date.now() - i * 864e5).toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" }));
+  let total = 0, busyDays = new Set(); const by = {}; const devices = new Set();
+  const ul = await kv.list({ prefix: "usage:", limit: 500 });
+  for (const k of ul.keys) {
+    const [, day, dev] = k.name.split(":");
+    if (!days.has(day)) continue;
+    try {
+      const u = JSON.parse(await kv.get(k.name)); devices.add(dev);
+      total += Number(u.total) || 0;
+      for (const [p, n] of Object.entries(u.by || {})) by[p] = (by[p] || 0) + (Number(n) || 0);
+      if (u.busy && u.busy.Gemini) busyDays.add(day);
+    } catch (e) {}
+  }
+  const fl = await kv.list({ prefix: "fb:", limit: 200 });
+  let fbNew = 0, fbUnanswered = 0;
+  for (const k of fl.keys) {
+    if (k.name.endsWith(":img")) continue;
+    const ts = 9e12 - Number(k.name.split(":")[1]); if (ts < since) continue;
+    fbNew++;
+    try { const it = JSON.parse(await kv.get(k.name)); if (!(it.replies || []).length) fbUnanswered++; } catch (e) {}
+  }
+  const t = await kv.get("current"); let trendNote = "Trend board: not built yet.";
+  try { const b = JSON.parse(t || "null"); if (b && b.weekOf) trendNote = `Trend board: updated for the week of ${b.weekOf}.`; } catch (e) {}
+  const byLine = Object.entries(by).sort((a, b) => b[1] - a[1]).map(([p, n]) => `${p} ${n}`).join(", ");
+  await tgSend(env, `📊 Meja Copy weekly summary\n\n` +
+    `AI requests (last 7 days): ${total}${byLine ? " (" + byLine + ")" : ""}${devices.size ? ` from ${devices.size} device${devices.size === 1 ? "" : "s"}` : ""}\n` +
+    `Gemini ran out on ${busyDays.size} day${busyDays.size === 1 ? "" : "s"}${busyDays.size ? " (backups covered it)" : ""}\n` +
+    `Feedback: ${fbNew} new${fbNew ? `, ${fbUnanswered} not replied yet` : ""}\n` +
+    trendNote);
 }
 async function handleFeedback(env, req, url) {
   const kv = kvOf(env);
   if (url.pathname === "/feedback/test" && req.method === "POST") {
-    const out = await tgSend(env, "✅ Meja Copy Hannah is connected. Feedback from the app will arrive here.");
+    await ensureWebhook(env, url.origin);
+    const out = await tgSend(env, "✅ Meja Copy Hannah is connected. Feedback from the app will arrive here. Reply to a feedback message to answer her, or send /summary for this week's summary.");
     return json(env, req, { ok: out.ok, notified: out.ok, why: out.why || "" });
   }
   if (url.pathname === "/feedback/image" && req.method === "GET") {
@@ -379,8 +467,10 @@ async function handleFeedback(env, req, url) {
     if (image) await kv.put(id + ":img", JSON.stringify(image));
   }
   const when = new Date().toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
-  const out = await tgSend(env, `💌 Meja Copy feedback: ${kind}\n\n${message}\n\nSent ${when}${item.tab ? " · on " + item.tab : ""}${item.device ? " · " + item.device : ""}`, image);
-  return json(env, req, { ok: true, saved: !!kv, notified: out.ok, why: out.why || "" });
+  await ensureWebhook(env, url.origin);
+  const out = await tgSend(env, `💌 Meja Copy feedback: ${kind}\n\n${message}\n\nSent ${when}${item.tab ? " · on " + item.tab : ""}${item.device ? " · " + item.device : ""}\n\n↩ Reply to this message to answer her.`, image);
+  if (kv && out.messageId) await kv.put("tgmsg:" + out.messageId, id, { expirationTtl: 90 * 86400 });
+  return json(env, req, { ok: true, id, saved: !!kv, notified: out.ok, why: out.why || "" });
 }
 
 /* ---------------- Trends ---------------- */
@@ -498,6 +588,16 @@ export default {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(env, req) });
     if (url.pathname === "/" && req.method === "GET") return json(env, req, { ok: true, app: "Meja Copy Hannah worker" });
 
+    if (url.pathname === "/tg/webhook" && req.method === "POST") return handleTelegram(env, req);
+    // Moving data to a new address: the blob is encrypted in the app with a key the server never sees
+    if (url.pathname.startsWith("/handoff/") && req.method === "GET") {
+      const kv = kvOf(env); const id = url.pathname.slice(9);
+      if (!kv || !/^[A-Za-z0-9_-]{16,64}$/.test(id)) return err(env, req, "not_found", "Not found", 404);
+      const v = await kv.get("handoff:" + id); if (!v) return err(env, req, "not_found", "Expired or already used", 404);
+      await kv.delete("handoff:" + id);
+      return new Response(v, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...corsHeaders(env, req) } });
+    }
+
     const pass = await checkPass(env, req);
     if (pass === "not_configured") return err(env, req, "not_configured", "Set the PASSCODE secret first", 503);
     if (pass) return err(env, req, "bad_passcode", "Wrong passcode", 401);
@@ -505,9 +605,33 @@ export default {
     if (url.pathname === "/ai" && req.method === "POST") return handleAI(env, req);
     if (url.pathname === "/ai/stream" && req.method === "POST") return handleAIStream(env, req, ctx);
     if (url.pathname === "/check" && req.method === "GET") {
-      return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!kvOf(env), sync: !!kvOf(env), telegram: !!env.TELEGRAM_BOT_TOKEN, geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
+      return json(env, req, { ok: true, providers: providerChain(env, { confidential: false, needImages: false }).map(p => ({ id: p, name: NAMES[p], key: !!(p === "workersai" ? env.AI : env[p.toUpperCase() + "_API_KEY"]) })), trends: !!kvOf(env), sync: !!kvOf(env), telegram: !!env.TELEGRAM_BOT_TOKEN, features: ["stream", "feedback", "replies", "usage", "handoff"], geminiPaid: String(env.GEMINI_PAID || "").toLowerCase() === "true" });
     }
-    if (url.pathname === "/sync") return handleSync(env, req);
+    if (url.pathname === "/sync") {
+      try { return await handleSync(env, req); }
+      catch (e) { await alertOnce(env, "sync", "⚠️ Meja Copy: sync hit a server error (" + String(e && e.message || e).slice(0, 150) + "). Hannah's devices may not be syncing.", 360); return err(env, req, "upstream_error", "Sync failed on the server", 500); }
+    }
+    if (url.pathname === "/usage" && req.method === "POST") {
+      const kv = kvOf(env); if (!kv) return json(env, req, { ok: false });
+      let b; try { b = await req.json(); } catch { return err(env, req, "invalid_request", "Body must be JSON", 400); }
+      const day = String(b.day || ""), dev = String(b.device || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 24);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !dev) return err(env, req, "invalid_request", "Bad usage report", 400);
+      await kv.put(`usage:${day}:${dev}`, JSON.stringify({ total: Number(b.total) || 0, by: b.by && typeof b.by === "object" ? b.by : {}, busy: b.busy && typeof b.busy === "object" ? b.busy : {} }), { expirationTtl: 40 * 86400 });
+      return json(env, req, { ok: true });
+    }
+    if (url.pathname === "/alert" && req.method === "POST") {
+      let b; try { b = await req.json(); } catch { b = {}; }
+      const kind = String(b.kind || "app").replace(/[^a-z_]/gi, "").slice(0, 20) || "app";
+      await alertOnce(env, "app_" + kind, "⚠️ Meja Copy (" + kind + "): " + String(b.detail || "a problem on Hannah's device").slice(0, 300), 360);
+      return json(env, req, { ok: true });
+    }
+    if (url.pathname === "/handoff" && req.method === "POST") {
+      const kv = kvOf(env); if (!kv) return err(env, req, "not_configured", "No storage", 503);
+      const raw = await req.text(); if (raw.length > 20_000_000) return err(env, req, "prompt_too_large", "Too big", 413);
+      const id = [...crypto.getRandomValues(new Uint8Array(18))].map(b => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"[b & 63]).join("");
+      await kv.put("handoff:" + id, raw, { expirationTtl: 3600 });
+      return json(env, req, { ok: true, id });
+    }
     if (url.pathname === "/feedback" || url.pathname.startsWith("/feedback/")) return handleFeedback(env, req, url);
     if (url.pathname === "/trends" && req.method === "GET") {
       if (!kvOf(env)) return json(env, req, {});
@@ -523,6 +647,10 @@ export default {
   },
   async scheduled(event, env, ctx) {
     if (!kvOf(env)) return;
-    ctx.waitUntil(buildTrends(env).catch(e => console.log("[meja] trends failed: " + (e && e.message))));
+    ctx.waitUntil((async () => {
+      try { await buildTrends(env); }
+      catch (e) { console.log("[meja] trends failed: " + (e && e.message)); await alertOnce(env, "trends", "⚠️ Meja Copy: this week's trend board couldn't be built (" + String(e && e.message || e).slice(0, 150) + "). The old board stays up.", 720); }
+      try { await sendWeeklySummary(env); } catch (e) { console.log("[meja] summary failed: " + (e && e.message)); }
+    })());
   },
 };

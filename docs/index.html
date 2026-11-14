@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
+<script>try{var t=localStorage.getItem("mc_theme");t=t?JSON.parse(t):"auto";if(t==="dark"||(t!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Meja Copy Hannah</title>
@@ -311,6 +312,65 @@ nav button b{font-weight:inherit}
   #library>.card:first-of-type{max-width:none}
   footer{margin-top:24px}
 }
+
+/* ---- dark mode: same flowers, darker room ---- */
+html[data-theme=dark]{color-scheme:dark;
+  --bg:#1d1517; --card:#281d20; --ink:#f4e6e8; --muted:#b9a1a6; --line:#43323a;
+  --accent:#ec8aa2; --accent-soft:#4a2531; --peach:#5a3a2e; --leaf:#7f9670;
+  --ok:#8fd3a0; --ok-soft:#1f3527; --warn:#f0bb6c; --warn-soft:#3b2c17; --bad:#f2899b; --bad-soft:#47222b}
+html[data-theme=dark],html[data-theme=dark] body{background-color:var(--bg);background-image:radial-gradient(circle at 0% 0%,#3a2128 0,transparent 38%),radial-gradient(circle at 100% 100%,#33241d 0,transparent 40%)}
+html[data-theme=dark] header{background:rgba(29,21,23,.92)}
+html[data-theme=dark] nav button{background:var(--card)}
+html[data-theme=dark] textarea,html[data-theme=dark] input[type=text],html[data-theme=dark] input[type=number],html[data-theme=dark] input[type=password],html[data-theme=dark] select{background:#2f2327;border-color:#4c3840;color:var(--ink)}
+html[data-theme=dark] textarea::placeholder,html[data-theme=dark] input::placeholder{color:#8f777d}
+html[data-theme=dark] .opt,html[data-theme=dark] .issue,html[data-theme=dark] .dkwrap{background:var(--card)}
+html[data-theme=dark] button.small{background:var(--accent-soft);color:#f6bccb}
+html[data-theme=dark] button.small.danger{background:#47222b;color:var(--bad)}
+html[data-theme=dark] button.ghost{border-color:#5a4048;color:var(--ink)}
+html[data-theme=dark] button.primary{color:#2a1016}
+html[data-theme=dark] button.primary:hover:not(:disabled){background:#f29db2}
+html[data-theme=dark] .pill,html[data-theme=dark] .chip{background:#3a2a30;color:var(--muted)}
+html[data-theme=dark] .chip.ok{background:var(--ok-soft);color:var(--ok)}
+html[data-theme=dark] .chip.bad{background:var(--bad-soft);color:var(--bad)}
+html[data-theme=dark] mark{background:#6b3446;color:var(--ink)}
+html[data-theme=dark] mark.q{background:#5f4f18}
+html[data-theme=dark] .jawi,html[data-theme=dark] .xl{background:#33262b}
+html[data-theme=dark] .stylebox{background:#2b2023;border-color:#4c3840}
+html[data-theme=dark] .seg{background:#3a2a30}
+html[data-theme=dark] .seg button.on{background:var(--card)}
+html[data-theme=dark] .dlSel{background:#2f2327!important}
+html[data-theme=dark] details.more{border-top-color:#4c3840}
+html[data-theme=dark] .switch .track{background:#4c3840}
+html[data-theme=dark] table.dk th{background:#3a2a30}
+html[data-theme=dark] table.dk td.bmc.ed{background:#3b3120}
+html[data-theme=dark] table.dk td.bmc:focus,html[data-theme=dark] .opt .bm[contenteditable]:focus{background:#35262b}
+html[data-theme=dark] .card::after,html[data-theme=dark] footer::before,html[data-theme=dark] header .vine{opacity:.35}
+html[data-theme=dark] .btn-ok{background:var(--ok-soft)!important;color:var(--ok)!important;border-color:#2f5a3b!important}
+html[data-theme=dark] .campchip{background:#22352a;color:#9fd4ad}
+html[data-theme=dark] .prog .pbar{background:#3a2a30}
+html[data-theme=dark] .star{color:#7d5a62}
+html[data-theme=dark] .lockBtn,html[data-theme=dark] .gearBtn{background:var(--card);border-color:var(--line);color:var(--ink)}
+html[data-theme=dark] .lockBtn.on{background:var(--accent)}
+html[data-theme=dark] .banner{color:#f3d2a0}
+html[data-theme=dark] #tcHint{color:#f6bccb}
+html[data-theme=dark] .switch .knob{background:#f4e6e8}
+html[data-theme=dark] img{opacity:.95}
+@media (max-width:1099px){html[data-theme=dark] nav{background:rgba(32,23,26,.97)!important}html[data-theme=dark] header{background:rgba(29,21,23,.97)!important}}
+@media (min-width:1100px){html[data-theme=dark] nav{background:transparent}}
+#tour,#moveBox{position:fixed;inset:0;z-index:100;background:rgba(40,20,26,.45);display:flex;align-items:center;justify-content:center;padding:18px}
+#tour.hidden{display:none}
+#tour .tbox,#moveBox .tbox{background:var(--card);border-radius:22px;max-width:420px;width:100%;padding:24px 22px 18px;box-shadow:0 10px 40px rgba(0,0,0,.25);position:relative}
+#tour .tem,#moveBox .tem{font-size:40px;line-height:1}
+#tour h3,#moveBox h3{font-family:"Fraunces",Georgia,serif;font-size:22px;margin:10px 0 6px}
+#tour p{margin:0 0 6px;color:var(--ink)}
+#tour ul{margin:6px 0 0;padding-left:20px}#tour li{margin:3px 0}
+#tour .dots{display:flex;gap:6px;justify-content:center;margin:16px 0 4px}
+#tour .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}#tour .dots i.on{background:var(--accent)}
+#tour .row{justify-content:space-between}
+nav button .dot{position:absolute;margin:-2px 0 0 14px;width:9px;height:9px;border-radius:50%;background:#e2445c;box-shadow:0 0 0 2px var(--card)}
+nav button{position:relative}
+.reply{margin-top:8px;padding:8px 10px;border-radius:12px;background:var(--accent-soft)}
+.reply .h{font-size:12px;font-weight:700;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -686,6 +746,11 @@ nav button b{font-weight:inherit}
       <div id="cnInfo" class="meta"></div>
     </div>
     <div class="card">
+      <h3>🌙 Appearance</h3>
+      <div class="seg" id="themeSeg"><button type="button" data-t="auto">Auto</button><button type="button" data-t="light">Light</button><button type="button" data-t="dark">Dark</button></div>
+      <p class="status" style="margin:8px 0 0">Auto follows your phone or laptop's dark mode setting.</p>
+    </div>
+    <div class="card">
       <h3>📊 Today's AI use</h3>
       <div id="usageBox" class="status"></div>
     </div>
@@ -807,6 +872,7 @@ nav button b{font-weight:inherit}
   <section id="help">
     <h2>How to use Meja Copy</h2>
     <p class="sub">Tap any heading to open it. Come back here anytime with the <b>?</b> button at the top.</p>
+    <div class="row" style="margin:-4px 0 14px"><button class="small" id="tourAgain" type="button">🌸 Show the welcome tour again</button></div>
 
     <div class="card guide">
       <h3>⚡ Quick start (2 minutes)</h3>
@@ -841,6 +907,7 @@ nav button b{font-weight:inherit}
         <dt>More options</dt><dd><b>Format</b> (caption, headline, billboard, script…), <b>Audience</b>, <b>Flavour</b> (Gen Z, rojak, festive, corporate), <b>Dialect</b> (Kelantan, Utara, Sabah and others), <b>Script</b> (Rumi, Jawi or both), <b>Also write</b> Chinese and/or Tamil versions, plus your own style notes.</dd>
         <dt>My saved styles</dt><dd>Set the options once, tap <b>Save current</b>, and reuse that setup later in one tap.</dd>
         <dt>Stop</dt><dd>Cancels if it's taking too long.</dd>
+        <dt>Ctrl + Enter</dt><dd>On a laptop, press Ctrl + Enter (⌘ + Enter on a Mac) in any text box to run that tool without reaching for the mouse.</dd>
         <dt>Progress bar</dt><dd>Fills as the AI actually writes. If one AI is busy it says so and switches to a backup.</dd>
       </dl>
       <p><b>On each result</b></p>
@@ -930,6 +997,7 @@ nav button b{font-weight:inherit}
         <dt>Connection</dt><dd>Server link and passcode. Set once per device. <b>Connected ✓</b> means it's working.</dd>
         <dt>Install as an app</dt><dd>iPhone: Safari → Share → <b>Add to Home Screen</b>. Android or laptop: browser menu → <b>Install app</b>.</dd>
         <dt>Sync between devices</dt><dd>Turn on with a sync password so phone and laptop share clients, rules and history. Save the <b>recovery code</b> it gives you: it's the only way back if the password is forgotten.</dd>
+        <dt>🌙 Appearance</dt><dd>Light, Dark, or Auto (follows your device).</dd>
         <dt>Today's AI use</dt><dd>How many AI requests you've made today and which AI answered. If Gemini runs out, it says when its free allowance comes back.</dd>
         <dt>Refresh trends now</dt><dd>Updates the trend board without waiting for Monday.</dd>
       </dl>
@@ -937,7 +1005,7 @@ nav button b{font-weight:inherit}
 
     <details class="card guide">
       <summary>💌 Feedback</summary>
-      <p>Tap <b>Feedback</b> at the bottom. Pick what kind, write a message, add a screenshot if it helps, and tap <b>Send to Nuh</b>. He gets it on Telegram straight away.</p>
+      <p>Tap <b>Feedback</b> at the bottom. Pick what kind, write a message, add a screenshot if it helps, and tap <b>Send to Nuh</b>. He gets it on Telegram straight away. When he replies, a red dot appears on the Feedback tab and his answer shows under your message.</p>
     </details>
 
     <details class="card guide">
@@ -950,6 +1018,11 @@ nav button b{font-weight:inherit}
       </dl>
     </details>
   </section>
+<div id="tour" class="hidden" role="dialog" aria-modal="true" aria-label="Welcome tour"><div class="tbox">
+  <div id="tourBody"></div>
+  <div class="dots" id="tourDots"></div>
+  <div class="row"><button class="ghost" id="tourSkip" type="button">Skip</button><button class="primary" id="tourNext" type="button">Next</button></div>
+</div></div>
   <footer>
     <span id="syncPill" class="pill">Loading…</span>
     Explanations in
@@ -992,7 +1065,7 @@ function showTab(name){
   document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
   if(name === "library") renderLibrary(true);
   if(name === "connection" && typeof renderUsage === "function") renderUsage();
-  if(name === "feedback" && typeof renderFbSent === "function") renderFbSent();
+  if(name === "feedback" && typeof renderFbSent === "function"){ renderFbSent(); markRepliesSeen(); checkReplies(true); }
   const cb = document.getElementById("campBar"); if(cb) cb.classList.toggle("hidden", !["transcreate","variants","brief","check","trends"].includes(name));
   if(location.hash !== "#" + name){ try{ history.replaceState(null, "", "#" + name); }catch(e){ location.hash = name; } }
   window.scrollTo(0,0); setTimeout(() => window.scrollTo(0,0), 0);
@@ -1921,6 +1994,7 @@ function recordUsage(provider, fallbacks){
   (fallbacks || []).forEach(f => { if(f && f.code === "rate_limited" && f.provider) u.busy[f.provider] = Date.now(); });
   LS.set("mc_usage", u);
   if($("connection").classList.contains("active")) renderUsage();
+  scheduleUsageReport();
 }
 /* Gemini's free daily allowance resets at midnight California time. */
 function nextGeminiReset(){
@@ -1962,7 +2036,7 @@ function deviceName(){
 }
 function renderFbSent(){
   const list = LS.get("mc_fb_sent", []);
-  $("fbSent").innerHTML = list.length ? list.map(x => `<div class="fbi"><div class="h">${esc(x.kind)} · ${esc(fmtDate(x.at))} · ${x.ok ? "✓ sent" : "saved, alert not delivered"}</div><div class="m">${esc(x.message)}</div></div>`).join("") : '<div class="empty">Nothing sent yet.</div>';
+  $("fbSent").innerHTML = list.length ? list.map(x => `<div class="fbi"><div class="h">${esc(x.kind)} · ${esc(fmtDate(x.at))} · ${x.ok ? "✓ sent" : "saved, alert not delivered"}</div><div class="m">${esc(x.message)}</div>${(x.replies || []).map(r => `<div class="reply"><div class="h">💬 Nuh replied · ${esc(fmtDate(Date.parse(r.at)))}</div><div class="m">${esc(r.text)}</div></div>`).join("")}</div>`).join("") : '<div class="empty">Nothing sent yet.</div>';
 }
 $("fbSend").addEventListener("click", async () => {
   const message = $("fbMsg").value.trim();
@@ -1971,7 +2045,7 @@ $("fbSend").addEventListener("click", async () => {
   $("fbSend").disabled = true; $("fbStatus").textContent = "Sending…";
   try{
     const out = await workerFetch("/feedback", {method:"POST", body:JSON.stringify({kind:fbKind, message, tab:lastTab || "", device:deviceName(), version:APP_BUILD, image:fbImage})});
-    const list = LS.get("mc_fb_sent", []); list.unshift({kind:fbKind, message:message.slice(0, 1000), at:Date.now(), ok:!!out.notified}); LS.set("mc_fb_sent", list.slice(0, 30));
+    const list = LS.get("mc_fb_sent", []); list.unshift({id:out.id || "", kind:fbKind, message:message.slice(0, 1000), at:Date.now(), ok:!!out.notified, replies:[], seen:0}); LS.set("mc_fb_sent", list.slice(0, 30));
     $("fbMsg").value = ""; fbImage = null; $("fbPreview").classList.add("hidden"); $("fbShotStat").textContent = "Optional";
     $("fbStatus").textContent = out.notified ? "Sent ✓ Nuh has been notified." : "Saved ✓ Nuh can read it in the app, but the Telegram alert didn't go out (" + ({no_bot:"no bot set up on the server", no_chat:"the bot hasn't been started in Telegram yet"}[out.why] || ("Telegram said " + (out.why || "no").replace("telegram_", "error "))) + ").";
     renderFbSent();
@@ -3022,11 +3096,13 @@ async function syncNow(quiet){
       setSyncLocal(Object.assign({}, SYNC, {rev:out.rev, last:Date.now()}));
       syncLastPull = Date.now();
       renderSyncStatus(); if(!quiet) toast("Synced ✓");
+      noteSyncResult(true);
       return;
     }
     renderSyncStatus("Sync busy, will retry");
   }catch(e){
     renderSyncStatus(e && e.code === "network" ? "Offline, will sync later" : "Sync failed: " + errCopy(e));
+    noteSyncResult(false, e);
   }finally{
     syncBusy = false;
     if(syncAgain){ syncAgain = false; setTimeout(() => syncNow(true), 500); }
@@ -3348,6 +3424,139 @@ async function handleFiles(files, targetId){
   if(added) ta.scrollTop = ta.scrollHeight;
 }
 
+/* ---------- APPEARANCE ---------- */
+function applyTheme(){
+  const t = LS.get("mc_theme", "auto");
+  const dark = t === "dark" || (t === "auto" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.toggleAttribute("data-theme", false);
+  if(dark) document.documentElement.setAttribute("data-theme", "dark");
+  const m = document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute("content", dark ? "#1d1517" : "#fff7f4");
+  $("themeSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+}
+$("themeSeg").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if(!b) return; LS.set("mc_theme", b.dataset.t); applyTheme(); });
+try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme); }catch(e){}
+
+/* ---------- CTRL + ENTER runs the tool for that box ---------- */
+const RUN_FOR = {tcSrc:"tcGo", dkPaste:"dkGo", vSrc:"vGo", bSrc:"bGo", cSrc:"cGo", lcDraft:"lcGo", lcFixed:"lcGo", lcComment:"lcGo", fbMsg:"fbSend", tcContext:"tcGo", tcStyleNote:"tcGo"};
+document.addEventListener("keydown", e => {
+  if(e.key !== "Enter" || !(e.ctrlKey || e.metaKey)) return;
+  const id = e.target && e.target.id; const go = RUN_FOR[id] && $(RUN_FOR[id]);
+  if(go && !go.disabled && go.offsetParent !== null){ e.preventDefault(); go.click(); }
+});
+if(!/iPhone|iPad|Android/.test(navigator.userAgent)) Object.values(RUN_FOR).forEach(id => { const b = $(id); if(b && !b.title) b.title = (/Mac/.test(navigator.platform) ? "⌘" : "Ctrl") + " + Enter"; });
+
+/* ---------- WELCOME TOUR ---------- */
+const TOUR = [
+  ["🌸", "Selamat datang, Hannah!", "<p>Meja Copy is your BM copywriting desk. It turns English into natural Malaysian BM, keeps each client's tone, and remembers everything you write.</p>"],
+  ["✏️", "Write", "<ul><li>Paste English, tap <b>Transcreate</b>.</li><li>Tap a version to edit it, or <b>✨ Tweak</b> it shorter, punchier, more santai…</li><li>Switch to <b>Copy deck</b> for a whole Excel deck at once.</li></ul>"],
+  ["💗", "Clients", "<ul><li>Pick the client at the top before you write.</li><li>Save their tone, words to use and words to avoid.</li><li>Tap <b>✓ Approved</b> on copy they sign off, and new drafts follow it.</li></ul>"],
+  ["💌", "Saved & Feedback", "<ul><li><b>Saved</b> keeps everything, searchable, with Word, PDF and Excel downloads.</li><li><b>Feedback</b> goes straight to Nuh. His replies show up there too.</li><li>Stuck? Tap <b>?</b> at the top for the full guide.</li></ul>"]
+];
+let tourI = 0;
+function showTour(i){
+  tourI = i; const [em, h, body] = TOUR[i];
+  $("tourBody").innerHTML = `<div class="tem">${em}</div><h3>${h}</h3>${body}`;
+  $("tourDots").innerHTML = TOUR.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("");
+  $("tourNext").textContent = i === TOUR.length - 1 ? "Let's start" : "Next";
+  $("tour").classList.remove("hidden");
+}
+function endTour(){ $("tour").classList.add("hidden"); LS.set("mc_tour_done", true); }
+$("tourNext").addEventListener("click", () => tourI < TOUR.length - 1 ? showTour(tourI + 1) : endTour());
+$("tourSkip").addEventListener("click", endTour);
+$("tourAgain").addEventListener("click", () => showTour(0));
+document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("tour").classList.contains("hidden")) endTour(); });
+
+/* ---------- REPLIES FROM NUH ---------- */
+let lastReplyCheck = 0;
+function updateFbDot(){
+  const unseen = LS.get("mc_fb_sent", []).some(x => (x.replies || []).length > (x.seen || 0));
+  const b = document.querySelector('#tabs button[data-tab="feedback"]'); if(!b) return;
+  let d = b.querySelector(".dot");
+  if(unseen && !d){ d = document.createElement("span"); d.className = "dot"; b.appendChild(d); }
+  if(!unseen && d) d.remove();
+}
+async function checkReplies(force){
+  if(sampleState !== "ok") return;
+  const sent = LS.get("mc_fb_sent", []); if(!sent.some(x => x.id)) return;
+  if(!force && Date.now() - lastReplyCheck < 5 * 60e3) return;
+  lastReplyCheck = Date.now();
+  try{
+    const {items} = await workerFetch("/feedback", {method:"GET"});
+    const byId = {}; (items || []).forEach(x => byId[x.id] = x);
+    let fresh = 0;
+    sent.forEach(x => { const r = x.id && byId[x.id] && byId[x.id].replies; if(Array.isArray(r)){ if(r.length > (x.replies || []).length) fresh += r.length - (x.replies || []).length; x.replies = r; } });
+    LS.set("mc_fb_sent", sent);
+    if(fresh && !$("feedback").classList.contains("active")) toast("💬 Nuh replied to your feedback");
+    if($("feedback").classList.contains("active")) markRepliesSeen();
+    updateFbDot(); if($("feedback").classList.contains("active")) renderFbSent();
+  }catch(e){}
+}
+function markRepliesSeen(){ const sent = LS.get("mc_fb_sent", []); sent.forEach(x => x.seen = (x.replies || []).length); LS.set("mc_fb_sent", sent); updateFbDot(); }
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") checkReplies(); });
+
+/* ---------- report today's use to the server (for Nuh's weekly summary), at most every 10 minutes ---------- */
+let usageT = null;
+function deviceId(){ let d = LS.get("mc_devid", ""); if(!d){ d = Math.random().toString(36).slice(2, 12); LS.set("mc_devid", d); } return d; }
+function scheduleUsageReport(){
+  if(usageT) return;
+  const wait = Math.max(15e3, (LS.get("mc_usage_sent", 0) + 10 * 60e3) - Date.now());
+  usageT = setTimeout(async () => {
+    usageT = null; if(sampleState !== "ok") return;
+    const u = getUsage();
+    try{ await workerFetch("/usage", {method:"POST", body:JSON.stringify({day:u.day, device:deviceId(), total:u.total, by:u.by, busy:u.busy})}); LS.set("mc_usage_sent", Date.now()); }catch(e){}
+  }, wait);
+}
+
+/* ---------- tell Nuh if sync keeps failing on this device ---------- */
+let syncFails = 0;
+function noteSyncResult(ok, e){
+  if(ok){ syncFails = 0; return; }
+  if(e && e.code === "network") return;
+  syncFails++;
+  if(syncFails === 3) workerFetch("/alert", {method:"POST", body:JSON.stringify({kind:"sync", detail:"Sync failed 3 times in a row on " + deviceName() + ": " + errCopy(e)})}).catch(() => {});
+}
+
+/* ---------- ONE ADDRESS: move from the old GitHub address to mejacopyhannah.pages.dev ---------- */
+const HOME = "https://mejacopyhannah.pages.dev/";
+const b64u = u8 => b64(u8).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const unb64u = s => unb64(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4));
+function myData(){ const o = {}; for(let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if(k && k.startsWith("mc_")) o[k] = localStorage.getItem(k); } return o; }
+async function moveHome(){
+  const data = myData();
+  if(!Object.keys(data).length || !CONN.url || !CONN.pass){ location.replace(HOME + (CONN.url ? "?w=" + encodeURIComponent(CONN.url) : "")); return; }
+  $("moveMsg").textContent = "Packing your clients, saved copy and settings…";
+  try{
+    const key = rand(32);
+    const blob = await encryptBundle(key, data);
+    const out = await workerFetch("/handoff", {method:"POST", body:JSON.stringify(blob)});
+    localStorage.setItem("mc_moved", "1");
+    location.replace(HOME + "#move=" + out.id + "." + b64u(key) + "." + b64u(te.encode(CONN.url)));
+  }catch(e){ $("moveMsg").textContent = "Couldn't move automatically (" + errCopy(e) + "). Tap Try again, or open the new address and turn on Sync with your sync password."; }
+}
+async function receiveMove(hash){
+  const m = hash.match(/^#move=([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)$/); if(!m) return false;
+  try{
+    const server = td.decode(unb64u(m[3]));
+    const res = await fetch(server.replace(/\/+$/, "") + "/handoff/" + m[1], {cache:"no-store"});
+    if(!res.ok) throw {code:"gone"};
+    const data = await decryptBundle(unb64u(m[2]), await res.json());
+    const fresh = !localStorage.getItem("mc_history") && !localStorage.getItem("mc_clients");
+    for(const [k, v] of Object.entries(data)){
+      if(k === "mc_moved") continue;
+      if(fresh || localStorage.getItem(k) === null) localStorage.setItem(k, v);
+    }
+    if(!fresh){
+      // Both places had data: merge clients and history the same way sync does
+      const parse = k => { try{ return JSON.parse(data[k]); }catch(e){ return null; } };
+      mergeBundle({clients:parse("mc_clients") || {}, history:parse("mc_history") || [], deleted:parse("mc_deleted") || [], styles:parse("mc_styles") || [], bank:parse("mc_bank") || undefined});
+      persistLocal(); persistHistory(); persistStyles(); LS.set("mc_bank", state.bank);
+    }
+    localStorage.setItem("mc_just_moved", "1");
+    location.reload();
+    return true;
+  }catch(e){ toast("The move link expired. If anything's missing, turn on Sync under ⚙."); return false; }
+}
+
 /* ---------- boot ---------- */
 renderClientSelect();
 fillClientForm();
@@ -3361,9 +3570,22 @@ initTrends();
 updateLock();
 renderSyncCard(); renderSyncStatus();
 if(syncOn()) setTimeout(() => syncNow(true), 800);
-showTab(location.hash.slice(1) || "transcreate");
+applyTheme();
+const onOldAddress = /(^|\.)github\.io$/.test(location.hostname);
+if(onOldAddress){
+  document.body.insertAdjacentHTML("beforeend", `<div id="moveBox"><div class="tbox"><div class="tem">🏡</div><h3>Meja Copy has moved</h3><p>From now on it lives at <b>mejacopyhannah.pages.dev</b>. Your clients, saved copy and settings come with you.</p><p class="status" id="moveMsg">If you added the old one to your Home Screen, delete that icon afterwards and add the new one (Share → Add to Home Screen).</p><div class="row"><button class="primary" id="moveGo" type="button">Take me there</button></div></div></div>`);
+  $("moveGo").addEventListener("click", () => { $("moveGo").textContent = "Try again"; moveHome(); });
+  if(localStorage.getItem("mc_moved") === "1") location.replace(HOME);
+}
+const moveHash = location.hash.startsWith("#move=") ? location.hash : "";
+showTab(moveHash ? "transcreate" : (location.hash.slice(1) || "transcreate"));
+if(moveHash) receiveMove(moveHash);
+if(localStorage.getItem("mc_just_moved") === "1"){ localStorage.removeItem("mc_just_moved"); setTimeout(() => toast("Moved ✓ Everything came with you. If the old icon is on your Home Screen, swap it for this one."), 800); }
+else if(!onOldAddress && !LS.get("mc_tour_done", false)) setTimeout(() => showTour(0), 600);
 initSample();
 initCloud();
+updateFbDot();
+setTimeout(() => checkReplies(true), 2500);
 })();
 </script>
 </body>

@@ -138,3 +138,13 @@ To see why a request failed, open the Worker in Cloudflare and check **Logs**. L
 - **New recovery code** (on an unlocked device) makes a fresh code and stops the old one working. Use it if someone else may have seen the old code.
 - The **Backup** button in Client tone still works as an extra safety copy.
 - If she uses two devices within the same minute, give it a moment: Cloudflare storage can take up to a minute to show the newest copy everywhere.
+
+## Automatic server updates
+The Worker is connected to this GitHub repo (Cloudflare → meja-copy → Settings → Builds, root directory `worker`).
+Every change to `main` redeploys it using `worker/wrangler.toml`, which lists the storage, AI binding, schedule and variables.
+Secrets are never touched by a deploy. To change a variable such as ALLOWED_ORIGIN, change it in `worker/wrangler.toml`.
+
+## Telegram alerts
+Secret `TELEGRAM_BOT_TOKEN` (from @BotFather). Open the bot and tap Start once.
+You get: Hannah's feedback (reply to a message to answer her in the app), problem alerts (at most one per hour per kind),
+and a weekly summary every Monday morning. Send `/summary` to the bot for one any time.
